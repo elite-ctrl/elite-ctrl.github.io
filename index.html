@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LedgerLex — Financial Storytelling That Never Drops a Language</title>
+  <meta name="description" content="LedgerLex Language Studio. Specialist financial translation desk. Ten years on the desk. Indicative quote within one business day.">
+  <meta name="theme-color" content="#F5F0E6">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE500' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Manrope,sans-serif' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --ink: #000000;
+      --cream: #FAF7F0;
+      --yellow: #FFE500;
+      --accent: #FF4D1A;
+      --muted: rgba(0, 0, 0, 0.3);
+      --frame: 4px;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --radius: 0;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "Manrope", system-ui, sans-serif;
+      --max: 720px;
+      --page: 1100px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      background: var(--yellow);
+      color: var(--ink);
+      border: var(--frame) solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    /* —— Layout shell —— */
+    .page {
+      max-width: var(--page);
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    @media (min-width: 768px) {
+      .page { padding: 32px 40px 96px; }
+    }
+
+    .block {
+      min-height: min(100vh, 920px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0;
+    }
+
+    .frame {
+      width: 100%;
+      background: var(--cream);
+      border: var(--frame) solid var(--ink);
+      box-shadow: var(--shadow-lg);
+      padding: 48px 24px;
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .frame { padding: 64px 48px; }
+    }
+
+    .frame--yellow {
+      background: var(--yellow);
+    }
+
+    /* —— Typography —— */
+    .brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 28px;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 768px) {
+      .brand { font-size: 24px; line-height: 32px; }
+    }
+
+    .hero-title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    @media (min-width: 640px) {
+      .hero-title { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .hero-title { font-size: 60px; }
+    }
+
+    .hero-title span { display: block; }
+
+    .section-title {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      margin-bottom: 32px;
+      text-wrap: balance;
+    }
+
+    .section-title--caps {
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    @media (min-width: 768px) {
+      .section-title { font-size: 36px; line-height: 40px; margin-bottom: 40px; }
+    }
+
+    .lede {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      max-width: 480px;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .lede { font-size: 18px; line-height: 28px; }
+    }
+
+    .small {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .tiny {
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* —— Nav —— */
+    .nav {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      width: 100%;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (min-width: 768px) {
+      .nav { margin-bottom: 64px; }
+    }
+
+    .nav__brand {
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .nav__engage {
+      grid-column: 3;
+      justify-self: end;
+    }
+
+    /* —— Chips / buttons —— */
+    .chip,
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+      border-radius: var(--radius);
+    }
+
+    .chip {
+      font-size: 11px;
+      line-height: 16px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 640px) {
+      .chip { font-size: 12px; padding: 8px 12px; }
+    }
+
+    .btn {
+      font-size: 16px;
+      line-height: 24px;
+      padding: 12px 24px;
+    }
+
+    .btn--lg {
+      font-size: 18px;
+      line-height: 28px;
+      padding: 16px 32px;
+    }
+
+    .btn--cream {
+      background: var(--cream);
+    }
+
+    .chip:hover,
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .chip:active,
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .chip:focus-visible,
+    .btn:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* —— Yellow bar —— */
+    .yellow-bar {
+      display: inline-block;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 12px 24px;
+      margin: 32px auto 24px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      text-wrap: balance;
+      max-width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .yellow-bar {
+        font-size: 16px;
+        line-height: 24px;
+        padding: 16px 32px;
+        margin: 40px auto 24px;
+      }
+    }
+
+    /* —— Accent dots —— */
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    .dot--sm { width: 8px; height: 8px; border-width: 1.5px; }
+
+    .dot--abs {
+      position: absolute;
+    }
+
+    /* —— Hero stack —— */
+    .hero-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero-cta { margin-top: 32px; }
+    .hero-risk {
+      margin-top: 40px;
+      max-width: 360px;
+    }
+    .hero-risk p + p { margin-top: 4px; }
+
+    /* —— Tagline reveal —— */
+    .tagline {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      max-width: 680px;
+      margin: 0 auto;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 640px) {
+      .tagline { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .tagline { font-size: 60px; }
+    }
+
+    .tagline .word {
+      display: inline-block;
+      opacity: 0.3;
+      transition: opacity 700ms var(--ease);
+      margin: 0 0.12em;
+    }
+
+    .tagline .word.is-on { opacity: 1; }
+
+    .tagline .line { display: block; }
+
+    /* —— Cards / lists —— */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .card {
+      background: var(--cream);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      border-radius: var(--radius);
+      position: relative;
+    }
+
+    .frame--yellow .card {
+      background: var(--cream);
+    }
+
+    .card--center {
+      text-align: center;
+    }
+
+    .card__num {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .card__title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 28px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
+    }
+
+    .card__body {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      margin-top: 8px;
+      text-wrap: pretty;
+    }
+
+    .benefit-item {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 16px;
+      align-items: start;
+      background: var(--cream);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      text-align: left;
+    }
+
+    .benefit-item .dot { margin-top: 6px; }
+
+    .benefit-item p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .benefit-item p { font-size: 18px; line-height: 28px; }
+    }
+
+    /* —— Coverage grid —— */
+    .cov-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .cov-grid { gap: 24px; }
+    }
+
+    .cov-item {
+      background: var(--cream);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 32px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 640px) {
+      .cov-item {
+        font-size: 18px;
+        line-height: 28px;
+        padding: 40px 24px;
+      }
+    }
+
+    /* —— How it works —— */
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 720px) {
+      .steps {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        align-items: stretch;
+      }
+    }
+
+    .step {
+      background: var(--cream);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 32px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step__n {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent);
+    }
+
+    .step__label {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 720px) {
+      .step__label { font-size: 18px; line-height: 28px; }
+    }
+
+    /* —— Diff + pricing —— */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    @media (min-width: 720px) {
+      .split { grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+
+    .split .card { height: 100%; }
+
+    .split h3 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .split p,
+    .split li {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .split ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .split li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .split li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 8px;
+      background: var(--accent);
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* —— Engage —— */
+    .engage-title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 640px) {
+      .engage-title { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .engage-title { font-size: 60px; }
+    }
+
+    .engage-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .engage-mail {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 2px;
+      transition: background-color 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    @media (min-width: 640px) {
+      .engage-mail { font-size: 18px; line-height: 28px; }
+    }
+
+    .engage-mail:hover {
+      background: var(--yellow);
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .engage-note {
+      margin-top: 24px;
+      max-width: 400px;
+    }
+
+    .engage-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    /* —— Footer —— */
+    .site-footer {
+      margin-top: 48px;
+      padding: 32px 16px;
+      border-top: 3px solid var(--ink);
+      text-align: center;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .site-footer a:hover { background: var(--yellow); }
+
+    .site-footer p + p { margin-top: 8px; }
+
+    /* —— Scroll reveals —— */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        opacity 700ms var(--ease),
+        transform 700ms var(--ease);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .tagline .word {
+        opacity: 1;
+        transition: none;
+      }
+      .chip, .btn, .engage-mail {
+        transition: none;
+      }
+      .chip:hover, .btn:hover,
+      .chip:active, .btn:active {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="page">
+    <main id="main">
+
+      <!-- 1. HERO -->
+      <section class="block" id="hero" aria-label="Hero">
+        <div class="frame reveal">
+          <header class="nav">
+            <div class="nav__brand">
+              <p class="brand">LedgerLex</p>
+            </div>
+            <a class="chip nav__engage" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+          </header>
+
+          <div class="hero-stack">
+            <h1 class="hero-title">
+              <span>Financial</span>
+              <span>Storytelling</span>
+              <span>That Never</span>
+              <span>Drops a Language</span>
+            </h1>
+
+            <p class="yellow-bar">
+              Where the ledger meets the lexicon.
+              <span class="dot dot--sm dot--abs" style="right:-18px; top:50%; transform:translateY(-50%);" aria-hidden="true"></span>
+            </p>
+
+            <p class="lede">Ten years on the desk. Specialist, not generalist.</p>
+
+            <div class="hero-cta">
+              <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+            </div>
+
+            <div class="hero-risk tiny">
+              <p>One business day quote.</p>
+              <p>Short pilot, no fee on a live job.</p>
+            </div>
+          </div>
+
+          <span class="dot dot--abs" style="left:24px; bottom:24px;" aria-hidden="true"></span>
+          <span class="dot dot--sm dot--abs" style="right:32px; bottom:40px;" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <!-- 2. TAGLINE REVEAL -->
+      <section class="block" id="tagline" aria-label="Tagline">
+        <div class="frame frame--yellow reveal">
+          <h2 class="tagline" id="tagline-words">
+            <span class="line">
+              <span class="word">Where</span>
+            </span>
+            <span class="line">
+              <span class="word">the</span>
+              <span class="word">Ledger</span>
+            </span>
+            <span class="line">
+              <span class="word">meets</span>
+              <span class="word">the</span>
+              <span class="word">Lexicon</span>
+            </span>
+          </h2>
+          <span class="dot dot--abs" style="right:32px; bottom:32px;" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <!-- 3. BENEFITS -->
+      <section class="block" id="benefits" aria-labelledby="benefits-title">
+        <div class="frame reveal">
+          <h2 class="section-title" id="benefits-title">benefits</h2>
+          <div class="card-list">
+            <div class="benefit-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>House voice that survives the cycle</p>
+            </div>
+            <div class="benefit-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Regulatory fluency as the baseline, not the upsell</p>
+            </div>
+            <div class="benefit-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Speed without the agency fog. Indicative quote within one business day.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. COVERAGE -->
+      <section class="block" id="coverage" aria-labelledby="coverage-title">
+        <div class="frame frame--yellow reveal">
+          <h2 class="section-title section-title--caps" id="coverage-title">coverage</h2>
+          <div class="cov-grid">
+            <div class="cov-item">Funds and ETFs</div>
+            <div class="cov-item">Listed Reporting</div>
+            <div class="cov-item">IPO</div>
+            <div class="cov-item">IR</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. HOW IT WORKS -->
+      <section class="block" id="how" aria-labelledby="how-title">
+        <div class="frame frame--yellow reveal">
+          <h2 class="section-title section-title--caps" id="how-title">How It Works</h2>
+          <ol class="steps">
+            <li class="step">
+              <span class="step__n" aria-hidden="true">1</span>
+              <span class="step__label">Send the Brief</span>
+            </li>
+            <li class="step">
+              <span class="step__n" aria-hidden="true">2</span>
+              <span class="step__label">Get the Quote</span>
+            </li>
+            <li class="step">
+              <span class="step__n" aria-hidden="true">3</span>
+              <span class="step__label">Desk Delivers</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 6. DIFFERENCE + PRICING -->
+      <section class="block" id="difference" aria-labelledby="diff-title">
+        <div class="frame reveal">
+          <h2 class="section-title" id="diff-title">The Difference + Pricing</h2>
+          <div class="split">
+            <article class="card">
+              <h3>The Difference</h3>
+              <p>MTPE tier translation. Boutique judgment on market metaphors.</p>
+            </article>
+            <article class="card">
+              <h3>Pricing</h3>
+              <ul>
+                <li>Word / Character / Page / Slide</li>
+                <li>volume from 3,000 source words</li>
+                <li>rate card on request</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. ENGAGE -->
+      <section class="block" id="engage" aria-labelledby="engage-title">
+        <div class="frame frame--yellow reveal">
+          <h2 class="engage-title" id="engage-title">Engage the Studio</h2>
+          <div class="engage-links">
+            <a class="btn" href="mailto:elite@ledgerlexlanguagestudio.com">Contact Us</a>
+            <a class="engage-mail" href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+          </div>
+          <p class="lede engage-note">Short pilots, no fee, on live jobs.</p>
+          <div class="engage-actions">
+            <a class="btn btn--lg btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Let’s Talk</a>
+          </div>
+          <span class="dot dot--abs" style="left:24px; top:24px;" aria-hidden="true"></span>
+          <span class="dot dot--sm dot--abs" style="right:28px; bottom:28px;" aria-hidden="true"></span>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <p class="brand" style="margin-bottom:12px;">LedgerLex</p>
+      <p class="small">Language studio for financial storytelling.</p>
+      <p class="small" style="margin-top:16px;">
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* Section rise + fade once */
+      var reveals = document.querySelectorAll(".reveal");
+      if (reduce) {
+        reveals.forEach(function (el) { el.classList.add("is-in"); });
+      } else if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        reveals.forEach(function (el) { el.classList.add("is-in"); });
+      }
+
+      /* Tagline word activation in reading order */
+      var words = document.querySelectorAll("#tagline-words .word");
+      if (reduce) {
+        words.forEach(function (w) { w.classList.add("is-on"); });
+      } else if ("IntersectionObserver" in window && words.length) {
+        var wordIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var list = Array.prototype.slice.call(words);
+            list.forEach(function (w, i) {
+              window.setTimeout(function () {
+                w.classList.add("is-on");
+              }, i * 140);
+            });
+            wordIo.disconnect();
+          });
+        }, { threshold: 0.45 });
+        var tagSection = document.getElementById("tagline");
+        if (tagSection) wordIo.observe(tagSection);
+      } else {
+        words.forEach(function (w) { w.classList.add("is-on"); });
+      }
+    })();
+  </script>
+</body>
+</html>

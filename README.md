@@ -1,2 +1,3 @@
-# elite-ctrl.github.io
-LedgerLex Language Studio site (GitHub Pages user site)
+# LedgerLex Language Studio
+
+Production homepage for https://ledgerlexlanguagestudio.net
