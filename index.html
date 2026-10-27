@@ -22,7 +22,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE566' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Consolas,monospace' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
   <style>
     :root {
       --bg: #F5F0E6;
@@ -114,11 +115,15 @@
     }
 
     .topnav__brand {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 28px;
-      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .topnav__brand img {
+      display: block;
+      height: 36px;
+      width: auto;
     }
 
     .topnav__links {
@@ -246,7 +251,7 @@
       .topnav__cta { display: inline-flex !important; }
       .topnav__toggle { display: none; }
       .topnav__panel { display: none !important; }
-      .topnav__brand { font-size: 20px; }
+      .topnav__brand img { height: 32px; }
     }
 
     /* —— Buttons —— */
@@ -1049,10 +1054,15 @@
     }
 
     .site-footer .brand {
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 28px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      line-height: 0;
+    }
+
+    .site-footer .brand img {
+      display: block;
+      height: 44px;
+      width: auto;
+      margin: 0 auto;
     }
 
     .site-footer .tag {
@@ -1142,7 +1152,7 @@
 
   <nav class="topnav" id="topnav" aria-label="Primary">
     <div class="topnav__bar">
-      <a class="topnav__brand" href="#hero">LedgerLex</a>
+      <a class="topnav__brand" href="#hero"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
 
       <div class="topnav__links" role="list">
         <a href="#benefits" role="listitem">Benefits</a>
@@ -1434,7 +1444,7 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p class="brand">LedgerLex</p>
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
       <p class="tag">Where the ledger meets the lexicon.</p>
       <p>
         <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
