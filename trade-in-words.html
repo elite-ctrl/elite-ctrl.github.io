@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Trade in Words — LedgerLex</title>
+  <meta name="description" content="Lost in the literal: what the Greenspan Put teaches about etymology in financial translation. From the Desk at LedgerLex Language Studio.">
+  <meta name="theme-color" content="#F5F0E6">
+  <meta property="og:title" content="The Trade in Words — LedgerLex">
+  <meta property="og:description" content="Notes on financial translation from a boutique that values precision over pedigree.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE566' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Manrope,sans-serif' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --ink: #000000;
+      --surface: #FAF7F0;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "Manrope", system-ui, sans-serif;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+      --prose: 700px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(250, 247, 240, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 28px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 900px) {
+      .topnav__brand { font-size: 20px; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn--cream { background: var(--surface); }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    .article-hero {
+      padding: 40px 0 32px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero { padding: 48px 0 40px; }
+    }
+
+    .article-hero__inner {
+      max-width: var(--prose);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .article-hero h1 {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #000 0%, #666 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero h1 {
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .article-hero__sub {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero__sub {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .article-body {
+      padding: 0 0 64px;
+    }
+
+    @media (min-width: 768px) {
+      .article-body { padding-bottom: 80px; }
+    }
+
+    .prose {
+      max-width: var(--prose);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .prose-card {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .prose-card { padding: 32px 40px; }
+    }
+
+    .prose-card--yellow {
+      background: var(--yellow);
+    }
+
+    .prose-card h2 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .prose-card h2 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+    }
+
+    .prose-card p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      margin-bottom: 16px;
+    }
+
+    .prose-card p:last-child { margin-bottom: 0; }
+
+    .prose-card .source {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      color: var(--muted);
+      border-top: 2px solid var(--ink);
+      padding-top: 16px;
+      margin-top: 8px;
+    }
+
+    .tc-block {
+      font-size: 16px;
+      line-height: 28px;
+      font-weight: 600;
+      text-wrap: pretty;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    @media (min-width: 768px) {
+      .tc-block {
+        font-size: 18px;
+        line-height: 32px;
+        padding: 24px;
+      }
+    }
+
+    .disclaimer {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      text-align: center;
+      max-width: var(--prose);
+      margin: 32px auto 0;
+      padding: 16px;
+      border: 2px solid var(--ink);
+      background: var(--surface);
+    }
+
+    .article-cta {
+      text-align: center;
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(245, 240, 230, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn { transition: none; }
+      .btn:hover, .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" aria-label="Article">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html">LedgerLex</a>
+      <a class="btn btn--cream" href="index.html#case-study">Back to home</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="article-hero">
+      <div class="wrap">
+        <div class="article-hero__inner">
+          <p class="eyebrow">From the Desk</p>
+          <h1>The Trade in Words</h1>
+          <p class="article-hero__sub">Lost in the literal: what the “Greenspan Put” teaches about etymology in financial translation</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="article-body">
+      <div class="wrap">
+        <article class="prose" id="trade-in-words">
+
+          <section class="prose-card" aria-labelledby="opening-title">
+            <h2 id="opening-title">Opening</h2>
+            <p>The mistake looks small: one word, “put.” The damage is larger. A market metaphor was translated as a product label, and the sentence lost its trade.</p>
+            <p>The Chinese-language edition of The Wall Street Journal rendered “Greenspan Put” as 「格林斯潘看跌期权」, and the surrounding explanation followed that literal track. That is where the trade went wrong. “Put” in “Greenspan Put” is not naming an option contract sitting on anyone’s book. It is doing what market language often does: borrowing a familiar payoff profile to describe a policy reflex. The Fed was seen as ready to put a floor under stocks. The market got insurance without a contract. Once that point is missed, the translation can look technically tidy and still misprice the meaning. The problem is not one awkward phrase. It is a bad read of the metaphor’s source.</p>
+            <p class="source">Source: Can the Market Still Bet on the ‘Greenspan Put’? — James Mackintosh · 23 June 2026 (WSJ)</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="s1">
+            <h2 id="s1">1. The metaphor, not the instrument</h2>
+            <p>“Greenspan Put” is a market nickname, not a term sheet. It splices Alan Greenspan’s name with “put” to suggest downside protection for investors when markets fall hard.</p>
+            <p>That protection is figurative. Greenspan did not write a put option for stockholders. The Fed did not promise to buy their portfolios at a strike price. What markets learned, or believed they learned, was that when a crash threatened broader policy objectives, the central bank would ease, inject liquidity, or otherwise help arrest the decline.</p>
+            <p>That is why a literal rendering such as 看跌期权 misses the first move. It turns a metaphor into an instrument. Once the metaphor is reified, the rest of the sentence is forced to defend a claim the English never made.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="s2">
+            <h2 id="s2">2. A put has a bearish root and a hedging use</h2>
+            <p>Even before the metaphor, “put” has to be read cleanly.</p>
+            <p>A put option gives its holder the right to sell the underlying at a specified price. Bought outright, it is a bearish position: the holder benefits when the underlying falls. That is the root.</p>
+            <p>But a put also has a second life. If an investor already owns the asset, buying a put can insure that holding against a drop. That is the hedge. That is also the sense the WSJ sentence is using when it says “derivatives that protect investors against price falls.”</p>
+            <p>“Greenspan Put” borrows the hedge, not the bearish bet. The image is not that the Fed is negative on stocks. It is that investors came to believe the Fed would help limit their downside. In market shorthand, the Fed was thought to be backstopping the trade.</p>
+            <p>This distinction matters in Chinese. 看跌 foregrounds the bearish act. 托市 or 包底托市 foregrounds the market support. For this metaphor, support is the point.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="s3">
+            <h2 id="s3">3. “Fed Put” exposes the directional problem</h2>
+            <p>The weakness becomes clearer in 「美联储看跌期权」, the literal rendering of “Fed Put.”</p>
+            <p>In English, “put” is a noun. “Fed” modifies it. The metaphor says that the Fed is the implied writer of downside protection for the market. Investors are the ones who behave as if they hold the protection.</p>
+            <p>In Chinese, 看跌 is not inert. It is a verbal idea: to expect a fall. It naturally asks for a subject and an object. Who is bearish? Bearish on what?</p>
+            <p>That leaves 「美联储看跌期权」 open to several wrong readings: the Fed is bearish on something; someone is bearish on the Fed; the Fed owns, writes, or is otherwise tied to a put option. All three are grammatically available. None gives the reader the intended market logic.</p>
+            <p>The real direction is simple: investors get the perceived protection; the Fed supplies the perceived floor. A good rendering must make that direction visible. And 看跌 tilts the wrong way: the phrase reads as an active bearish bet, whereas the Greenspan Put is felt as reassurance, a floor under prices. 托市 carries that supportive sense; 看跌期权 works against it.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="s4">
+            <h2 id="s4">4. Where the sentence breaks</h2>
+            <p>Four breaks in the published Chinese chain: circular “named after the derivative”; “recognition” turned into “market consensus”; invented “market” shifts the source of the logic; conclusion pulled under the wrong heading. Rationale and expectation are related, but they are not the same asset.</p>
+          </section>
+
+          <section class="prose-card prose-card--yellow" aria-labelledby="s5">
+            <h2 id="s5">5. A cleaner rendering</h2>
+            <div class="tc-block">享年一百歲的格林斯潘，在任時開創了一項先例，為日後的股市投資者留下深遠影響：人稱「格林斯潘托市」（Greenspan Put），後來演變為「聯儲局托市」（Fed Put）。這個說法借用衍生工具認沽期權的對沖效果，即投資者因預期下跌而買入認沽期權以抵銷損失；外界遂以此借喻：當股市崩盤的後果危及貨幣政策目標時，聯儲局理應介入包底托市。</div>
+            <p>Our rendering does four things: It treats “Put” as a metaphor, not a literal product. It preserves the option logic: bearish position at root, hedge in use. It replaces directional confusion with 托市 and 包底托市, where the agent and object are clear. It restores “recognition” as policy reasoning, not an invented market consensus.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="sum">
+            <h2 id="sum">In sum</h2>
+            <p>The flaw in 「格林斯潘看跌期权」 is not that the translator failed to find a dictionary equivalent. The flaw is that the dictionary equivalent was the wrong trade.</p>
+            <p>“Greenspan Put” is shorthand for perceived central-bank downside protection. Its force lies in the market floor, not in the bearish verb. Translate it as 看跌期权, then “Fed Put” starts asking who is bearish on whom. Translate it as 托市 or 包底托市, and the market logic becomes legible at once.</p>
+            <p>That is the larger lesson for financial translation. A literal term can look precise and still be mispriced. The task is not to match words tick for tick. It is to recover the position, the payoff, and the direction of the trade.</p>
+          </section>
+
+          <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+
+          <div class="article-cta">
+            <a class="btn" href="index.html#case-study">Back to Case study</a>
+            <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+          </div>
+
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand">LedgerLex</p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <div class="site-footer__legal">
+        <a href="index.html#privacy">Privacy</a>
+        <a href="index.html#terms">Terms</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
