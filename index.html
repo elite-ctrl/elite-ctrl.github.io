@@ -27,7 +27,7 @@
       --shadow-sm: 4px 4px 0 #000;
       --shadow-lg: 8px 8px 0 #000;
       --nav-h: 72px;
-      --max: 1080px;
+      --max: 1160px;
       --prose: 680px;
     }
 
@@ -298,12 +298,12 @@
     main { padding-bottom: 0; }
 
     .section {
-      padding: 64px 0;
+      padding: 48px 0;
       text-align: center;
     }
 
     @media (min-width: 768px) {
-      .section { padding: 96px 0; }
+      .section { padding: 64px 0; }
     }
 
     .section--tight { padding-top: 48px; }
@@ -355,8 +355,8 @@
       font-size: 16px;
       line-height: 24px;
       font-weight: 600;
-      max-width: 520px;
-      margin: 0 auto 40px;
+      max-width: 560px;
+      margin: 0 auto 32px;
       text-wrap: pretty;
       color: var(--muted);
     }
@@ -365,7 +365,7 @@
       .section-lede {
         font-size: 18px;
         line-height: 28px;
-        margin-bottom: 48px;
+        margin-bottom: 40px;
       }
     }
 
@@ -384,12 +384,12 @@
 
     /* —— Hero —— */
     .hero {
-      padding: 48px 0 64px;
+      padding: 40px 0 48px;
       text-align: center;
     }
 
     @media (min-width: 768px) {
-      .hero { padding: 80px 0 96px; }
+      .hero { padding: 48px 0 64px; }
     }
 
     .hero__inner {
@@ -422,8 +422,28 @@
       .hero__title { font-size: 60px; }
     }
 
-    .hero__proof {
+    .hero__sub {
       margin-top: 24px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero__sub {
+        font-size: 18px;
+        line-height: 28px;
+        margin-top: 24px;
+      }
+    }
+
+    .hero__proof {
+      margin-top: 16px;
       font-size: 16px;
       line-height: 24px;
       font-weight: 700;
@@ -431,19 +451,19 @@
     }
 
     @media (min-width: 768px) {
-      .hero__proof { font-size: 18px; line-height: 28px; margin-top: 32px; }
+      .hero__proof { font-size: 18px; line-height: 28px; margin-top: 16px; }
     }
 
     .hero__cta {
-      margin-top: 32px;
+      margin-top: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
 
     @media (min-width: 768px) {
-      .hero__cta { margin-top: 40px; }
+      .hero__cta { margin-top: 32px; }
     }
 
     .hero__risk {
@@ -457,9 +477,38 @@
 
     .hero__risk p + p { margin-top: 4px; }
 
+    .proof-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .proof-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 640px) {
+      .proof-chip { font-size: 16px; line-height: 24px; padding: 12px 16px; }
+    }
+
     /* —— Tagline reveal (B11) —— */
     .tagline-section {
-      padding: 80px 0;
+      padding: 48px 0;
       text-align: center;
       background: var(--yellow);
       border-top: 3px solid var(--ink);
@@ -467,7 +516,7 @@
     }
 
     @media (min-width: 768px) {
-      .tagline-section { padding: 96px 0; }
+      .tagline-section { padding: 64px 0; }
     }
 
     .tagline {
@@ -504,7 +553,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      max-width: 640px;
+      max-width: 720px;
       margin: 0 auto;
       text-align: left;
     }
@@ -522,7 +571,34 @@
 
     .benefit .dot { margin-top: 6px; }
 
-    .benefit p {
+    .benefit__lead {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 800;
+      text-wrap: pretty;
+      margin-bottom: 4px;
+    }
+
+    .benefit__body {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .benefit__lead { font-size: 18px; line-height: 28px; }
+      .benefit__body { font-size: 16px; line-height: 24px; }
+    }
+
+    .desk-note {
+      max-width: 720px;
+      margin: 32px auto 0;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 16px 24px;
       font-size: 16px;
       line-height: 24px;
       font-weight: 700;
@@ -530,7 +606,7 @@
     }
 
     @media (min-width: 768px) {
-      .benefit p { font-size: 18px; line-height: 28px; }
+      .desk-note { font-size: 18px; line-height: 28px; padding: 24px 32px; }
     }
 
     /* —— Coverage —— */
@@ -538,7 +614,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      max-width: 720px;
+      max-width: 960px;
       margin: 0 auto;
     }
 
@@ -550,11 +626,8 @@
       background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
-      padding: 32px 16px;
-      font-size: 16px;
-      font-weight: 800;
-      line-height: 24px;
-      text-wrap: balance;
+      padding: 24px 16px;
+      text-align: center;
       transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
     }
 
@@ -563,12 +636,26 @@
       box-shadow: 8px 8px 0 #000;
     }
 
+    .cov-card__title {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-wrap: balance;
+      margin-bottom: 8px;
+    }
+
+    .cov-card__body {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
     @media (min-width: 640px) {
-      .cov-card {
-        font-size: 18px;
-        line-height: 28px;
-        padding: 40px 24px;
-      }
+      .cov-card { padding: 32px 24px; }
+      .cov-card__title { font-size: 18px; line-height: 28px; }
+      .cov-card__body { font-size: 16px; line-height: 24px; }
     }
 
     /* —— How it works —— */
@@ -590,15 +677,16 @@
       background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
-      padding: 32px 16px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      text-align: center;
     }
 
     .step__n {
-      font-size: 48px;
+      font-size: 40px;
       font-weight: 800;
       line-height: 1;
       color: var(--accent);
@@ -611,8 +699,20 @@
       text-wrap: balance;
     }
 
+    .step__body {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+      max-width: 280px;
+    }
+
     @media (min-width: 720px) {
+      .step { padding: 32px 16px; }
+      .step__n { font-size: 48px; }
       .step__label { font-size: 18px; line-height: 28px; }
+      .step__body { font-size: 16px; line-height: 24px; }
     }
 
     /* —— Pricing / difference —— */
@@ -620,7 +720,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 24px;
-      max-width: 880px;
+      max-width: 960px;
       margin: 0 auto;
       text-align: left;
     }
@@ -653,10 +753,15 @@
       text-wrap: pretty;
     }
 
+    .card > p {
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
     .card ul {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
 
     .card li {
@@ -735,14 +840,14 @@
 
     /* —— Final CTA —— */
     .final-cta {
-      padding: 80px 0;
+      padding: 48px 0;
       text-align: center;
       background: var(--yellow);
       border-top: 3px solid var(--ink);
     }
 
     @media (min-width: 768px) {
-      .final-cta { padding: 96px 0; }
+      .final-cta { padding: 64px 0; }
     }
 
     .final-cta__title {
@@ -945,6 +1050,8 @@
             <span>a language</span>
           </h1>
 
+          <p class="hero__sub">A specialist financial language studio for EN↔TC storytelling across funds, listed reporting, IPO, and IR. Boutique desk judgment for copy that has to hold under market pressure.</p>
+
           <p class="hero__proof">Ten years on the desk. Specialist, not generalist.</p>
 
           <div class="hero__cta">
@@ -953,6 +1060,12 @@
               <p>One business day quote.</p>
               <p>Short pilot, no fee on a live job.</p>
             </div>
+          </div>
+
+          <div class="proof-strip" role="list" aria-label="Desk proof points">
+            <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
+            <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>1 business day quote</span>
+            <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Short pilot, no fee</span>
           </div>
         </div>
       </div>
@@ -986,17 +1099,27 @@
           <div class="benefit-list">
             <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
-              <p>House voice that survives the cycle</p>
+              <div>
+                <p class="benefit__lead">House voice that survives the cycle</p>
+                <p class="benefit__body">Tone, register, and market metaphors stay consistent from draft through delivery so the story reads as one house, not a patchwork.</p>
+              </div>
             </div>
             <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
-              <p>Regulatory fluency as the baseline, not the upsell</p>
+              <div>
+                <p class="benefit__lead">Regulatory fluency as the baseline, not the upsell</p>
+                <p class="benefit__body">Listed reporting and capital markets language is the day job. Precision is built into the desk, not bolted on after the fact.</p>
+              </div>
             </div>
             <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
-              <p>Speed without the agency fog. Indicative quote within one business day.</p>
+              <div>
+                <p class="benefit__lead">Speed without the agency fog</p>
+                <p class="benefit__body">Indicative quote within one business day. Clear scope, clear timing, no layers between you and the desk that does the work.</p>
+              </div>
             </div>
           </div>
+          <p class="desk-note">Where the ledger meets the lexicon. A specialist desk for financial storytelling that never drops a language.</p>
         </div>
       </div>
     </section>
@@ -1009,10 +1132,22 @@
           <h2 class="section-title" id="coverage-title">Where the desk works</h2>
           <p class="section-lede" style="color:var(--ink);">Four lanes. Same voice standards on every one.</p>
           <div class="cov-grid">
-            <div class="cov-card">Funds and ETFs</div>
-            <div class="cov-card">Listed Reporting</div>
-            <div class="cov-card">IPO</div>
-            <div class="cov-card">IR</div>
+            <div class="cov-card">
+              <p class="cov-card__title">Funds and ETFs</p>
+              <p class="cov-card__body">Fund factsheets, product key facts, marketing packs, and periodic reports that keep product voice intact across EN and TC.</p>
+            </div>
+            <div class="cov-card">
+              <p class="cov-card__title">Listed Reporting</p>
+              <p class="cov-card__body">Results announcements, annual and interim narratives, and board facing copy where numbers and language have to track.</p>
+            </div>
+            <div class="cov-card">
+              <p class="cov-card__title">IPO</p>
+              <p class="cov-card__body">Prospectus narrative, offering materials, and roadshow language under tight timelines and tight review chains.</p>
+            </div>
+            <div class="cov-card">
+              <p class="cov-card__title">IR</p>
+              <p class="cov-card__body">Investor decks, press releases, and ongoing IR storytelling that stays on brand across markets and cycles.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1029,14 +1164,17 @@
             <li class="step">
               <span class="step__n" aria-hidden="true">1</span>
               <span class="step__label">Send the Brief</span>
+              <p class="step__body">Share the file, language pair, deadline, and any house style or glossary. A live job sample works for the short pilot.</p>
             </li>
             <li class="step">
               <span class="step__n" aria-hidden="true">2</span>
               <span class="step__label">Get the Quote</span>
+              <p class="step__body">Indicative quote within one business day. Scope, unit, volume, and timing locked before work starts.</p>
             </li>
             <li class="step">
               <span class="step__n" aria-hidden="true">3</span>
               <span class="step__label">Desk Delivers</span>
+              <p class="step__body">MTPE tier translation with boutique judgment on market metaphors. One house voice through to final files.</p>
             </li>
           </ol>
         </div>
@@ -1052,10 +1190,17 @@
           <div class="split">
             <article class="card">
               <h3>The difference</h3>
-              <p>MTPE tier translation. Boutique judgment on market metaphors.</p>
+              <p>Specialist desk, not a generalist agency queue.</p>
+              <ul>
+                <li>MTPE tier translation as the working standard</li>
+                <li>Boutique judgment on market metaphors</li>
+                <li>House voice that holds across the cycle</li>
+                <li>Specialist financial desk, not generalist coverage</li>
+              </ul>
             </article>
             <article class="card">
               <h3>Pricing</h3>
+              <p>Units and volume bands stay transparent. No public rate table; the card follows the brief.</p>
               <ul>
                 <li>Word / Character / Page / Slide</li>
                 <li>Volume from 3,000 source words</li>
