@@ -1,0 +1,27 @@
+name: Decode OG share card
+on:
+  push:
+    paths:
+      - "og-share.png.b64"
+      - ".github/workflows/decode-og.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode PNG from base64
+        run: base64 -d og-share.png.b64 > og-share.png
+      - name: Commit PNG if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add og-share.png
+          if git diff --staged --quiet; then
+            echo "No PNG change"
+          else
+            git commit -m "Add decoded og-share.png for Open Graph"
+            git push
+          fi
