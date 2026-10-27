@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — LedgerLex</title>
+  <meta name="description" content="Privacy Policy for LedgerLex Language Studio. How we handle enquiry email and client work in Hong Kong.">
+  <meta name="theme-color" content="#F5F0E6">
+  <meta property="og:title" content="Privacy Policy — LedgerLex">
+  <meta property="og:description" content="How LedgerLex Language Studio handles personal data and client files.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE566' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Consolas,monospace' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --ink: #000000;
+      --surface: #FAF7F0;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+      --prose: 700px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(250, 247, 240, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 28px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 900px) {
+      .topnav__brand { font-size: 20px; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn--cream { background: var(--surface); }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    .article-hero {
+      padding: 40px 0 32px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero { padding: 48px 0 40px; }
+    }
+
+    .article-hero__inner {
+      max-width: var(--prose);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .article-hero h1 {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #000 0%, #666 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero h1 {
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .article-hero__sub {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero__sub {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .article-body {
+      padding: 0 0 64px;
+    }
+
+    @media (min-width: 768px) {
+      .article-body { padding-bottom: 80px; }
+    }
+
+    .prose {
+      max-width: var(--prose);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .prose-card {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .prose-card { padding: 32px 40px; }
+    }
+
+    .prose-card h2 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .prose-card h2 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+    }
+
+    .prose-card p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      margin-bottom: 16px;
+    }
+
+    .prose-card p:last-child { margin-bottom: 0; }
+
+    .prose-card a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .prose-card a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .article-cta {
+      text-align: center;
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(245, 240, 230, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn { transition: none; }
+      .btn:hover, .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" aria-label="Site">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html">LedgerLex</a>
+      <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="article-hero">
+      <div class="wrap">
+        <div class="article-hero__inner">
+          <p class="eyebrow">Legal</p>
+          <h1>Privacy Policy</h1>
+          <p class="article-hero__sub">Effective 27 October 2026. Plain English for a boutique Hong Kong desk.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="article-body">
+      <div class="wrap">
+        <article class="prose">
+
+          <section class="prose-card" aria-labelledby="who">
+            <h2 id="who">Who we are</h2>
+            <p>LedgerLex Language Studio is a Hong Kong boutique financial language desk. We work by email and deliver translation and related desk work for funds, listed reporting, IPO, and investor relations. This site is ledgerlexlanguagestudio.net.</p>
+            <p>For privacy questions, write to <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="collect">
+            <h2 id="collect">What we collect</h2>
+            <p>We do not run an account product on this site. There is no login, no user dashboard, and no marketing cookie wall.</p>
+            <p>When you email us, we receive the address you use, the message content, and any files or details you attach for a quote or a job. That is the personal data we hold from contact.</p>
+            <p>This site is a static site hosted on GitHub Pages. We do not set tracking cookies for advertising or analytics of our own. Your browser and the host may still generate ordinary server logs (for example IP address and page requested). We do not use those logs to build marketing profiles.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="use">
+            <h2 id="use">How we use it</h2>
+            <p>We use enquiry email and job materials to reply, scope work, deliver translations and desk output, invoice, and keep a record of the engagement. We do not sell personal data.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="share">
+            <h2 id="share">Sharing</h2>
+            <p>We share data only with processors we need for the work: for example email hosting, invoicing tools, or a linguist under our desk workflow. They see only what the job requires.</p>
+            <p>We do not sell personal data. We do not share it for unrelated marketing.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="retain">
+            <h2 id="retain">Retention</h2>
+            <p>Enquiry mail and job files stay as long as the engagement and ordinary business records require, including follow up and accounting. When a record is no longer needed, we delete or anonymise it in the ordinary course of desk housekeeping.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="rights">
+            <h2 id="rights">Your rights</h2>
+            <p>Under the Hong Kong Personal Data (Privacy) Ordinance, you may ask to access or correct personal data we hold about you. Write to <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a> and we will handle the request in line with that Ordinance.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="security">
+            <h2 id="security">Security and client files</h2>
+            <p>Client materials stay inside the desk workflow. We treat files as confidential. NDAs are available on request before files move. Ask when you engage.</p>
+            <p>No method of transmission or storage is perfect. We take care that is reasonable for a small studio handling financial language work.</p>
+          </section>
+
+          <section class="prose-card" aria-labelledby="contact">
+            <h2 id="contact">Contact</h2>
+            <p>LedgerLex Language Studio · Hong Kong</p>
+            <p><a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a></p>
+            <p>Site: ledgerlexlanguagestudio.net</p>
+          </section>
+
+          <div class="article-cta">
+            <a class="btn" href="index.html">Home</a>
+            <a class="btn btn--cream" href="terms.html">Terms of Use</a>
+          </div>
+
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand">LedgerLex</p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="index.html">Home</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
