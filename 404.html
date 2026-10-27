@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found — LedgerLex</title>
+  <meta name="description" content="This path is not on the LedgerLex site. Head home or email the desk.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F5F0E6">
+  <meta property="og:title" content="Page not found — LedgerLex">
+  <meta property="og:description" content="This path is not on the LedgerLex site.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE566' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Consolas,monospace' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --ink: #000000;
+      --surface: #FAF7F0;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --max: 1160px;
+      --prose: 680px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    a { color: inherit; text-decoration: none; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(250, 247, 240, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 28px;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 900px) {
+      .topnav__brand { font-size: 20px; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn--lg {
+      font-size: 18px;
+      line-height: 28px;
+      padding: 12px 16px;
+    }
+
+    .btn--cream { background: var(--surface); }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0 64px;
+      text-align: center;
+    }
+
+    .miss {
+      max-width: var(--prose);
+      margin: 0 auto;
+    }
+
+    .miss__code {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .miss__title {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #000 0%, #666 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .miss__title {
+        font-size: 72px;
+      }
+    }
+
+    .miss__lead {
+      font-size: 18px;
+      line-height: 28px;
+      color: var(--muted);
+      text-wrap: pretty;
+      margin: 0 auto 32px;
+      max-width: 520px;
+    }
+
+    .miss__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .site-footer {
+      background: #181818;
+      color: #FAF7F0;
+      padding: 40px 0;
+      text-align: center;
+      border-top: 3px solid var(--ink);
+    }
+
+    .site-footer .brand {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      color: #9B9B9B;
+      margin-bottom: 16px;
+    }
+
+    .site-footer a {
+      color: #FAF7F0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .site-footer a:hover { color: var(--yellow); }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      justify-content: center;
+      margin: 16px 0;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .site-footer__legal span { color: #9B9B9B; }
+
+    .site-footer__copy {
+      font-size: 12px;
+      line-height: 16px;
+      color: #9B9B9B;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+      .btn:hover, .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html">LedgerLex</a>
+      <a class="btn" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="wrap">
+      <div class="miss">
+        <p class="miss__code">Error 404</p>
+        <h1 class="miss__title">Page not found</h1>
+        <p class="miss__lead">This path is not on the LedgerLex site. The page may have moved, or the link may be wrong.</p>
+        <div class="miss__actions">
+          <a class="btn btn--lg" href="index.html">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand">LedgerLex</p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="index.html">Home</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
