@@ -1,8 +1,8 @@
-name: Decode OG share card
+name: Decode binary assets
 on:
   push:
     paths:
-      - "og-share.png.b64"
+      - "**/*.b64"
       - ".github/workflows/decode-og.yml"
   workflow_dispatch:
 permissions:
@@ -12,16 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Decode PNG from base64
-        run: base64 -d og-share.png.b64 > og-share.png
-      - name: Commit PNG if changed
+      - name: Decode all base64 assets
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find . -name '*.b64' -type f | sort)
+          for f in "${files[@]}"; do
+            out="${f%.b64}"
+            mkdir -p "$(dirname "$out")"
+            base64 -d "$f" > "$out"
+            echo "decoded $out ($(wc -c < "$out") bytes)"
+          done
+      - name: Commit decoded binaries
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add og-share.png
+          git add -A '*.png' 'brand/*.png' og-share.png || true
+          # add any decoded png paths
+          find . -name '*.png' -not -path './.git/*' -print0 | xargs -0 git add -f
           if git diff --staged --quiet; then
-            echo "No PNG change"
+            echo "No binary change"
           else
-            git commit -m "Add decoded og-share.png for Open Graph"
+            git commit -m "Decode brand and share-card binaries"
             git push
           fi
