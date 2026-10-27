@@ -227,6 +227,7 @@
     .topnav.is-open .topnav__panel a:nth-child(4) { transition-delay: 180ms; }
     .topnav.is-open .topnav__panel a:nth-child(5) { transition-delay: 240ms; }
     .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
+    .topnav.is-open .topnav__panel a:nth-child(7) { transition-delay: 360ms; }
 
     .topnav__panel a:hover { background: var(--yellow); }
 
@@ -781,6 +782,131 @@
       flex-shrink: 0;
     }
 
+
+    /* —— Case study / From the Desk —— */
+    .case-card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-lg);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .case-card { padding: 48px 40px; }
+    }
+
+    .case-card__title {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .case-card__title {
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .case-card__lede {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      max-width: 560px;
+      margin: 0 auto 24px;
+    }
+
+    @media (min-width: 768px) {
+      .case-card__lede {
+        font-size: 18px;
+        line-height: 28px;
+        margin-bottom: 32px;
+      }
+    }
+
+    .case-card__hook {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      max-width: 560px;
+      margin: 0 auto 24px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .case-card__hook {
+        font-size: 18px;
+        line-height: 28px;
+        margin-bottom: 32px;
+      }
+    }
+
+    .case-compare {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      max-width: 560px;
+      margin: 0 auto 32px;
+      text-align: left;
+    }
+
+    @media (min-width: 640px) {
+      .case-compare {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+    }
+
+    .case-compare__item {
+      border: 3px solid var(--ink);
+      padding: 16px;
+      background: var(--bg);
+    }
+
+    .case-compare__item--wrong {
+      background: #fff;
+    }
+
+    .case-compare__item--prefer {
+      background: var(--yellow);
+    }
+
+    .case-compare__label {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .case-compare__zh {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      margin-bottom: 4px;
+      text-wrap: pretty;
+    }
+
+    .case-compare__en {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
     /* —— FAQ —— */
     .faq-list {
       max-width: 720px;
@@ -1010,6 +1136,7 @@
         <a href="#benefits" role="listitem">Benefits</a>
         <a href="#coverage" role="listitem">Coverage</a>
         <a href="#how" role="listitem">How it works</a>
+        <a href="#case-study" role="listitem">Case study</a>
         <a href="#pricing" role="listitem">Pricing</a>
         <a href="#faq" role="listitem">FAQ</a>
       </div>
@@ -1032,6 +1159,7 @@
       <a href="#benefits">Benefits</a>
       <a href="#coverage">Coverage</a>
       <a href="#how">How it works</a>
+      <a href="#case-study">Case study</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
       <a href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
@@ -1177,6 +1305,34 @@
               <p class="step__body">MTPE tier translation with boutique judgment on market metaphors. One house voice through to final files.</p>
             </li>
           </ol>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 5b. Case study / From the Desk -->
+    <section class="section" id="case-study" aria-labelledby="case-study-title">
+      <div class="wrap">
+        <div class="reveal">
+          <article class="case-card">
+            <p class="eyebrow">From the Desk</p>
+            <h2 class="case-card__title" id="case-study-title">The Trade in Words</h2>
+            <p class="case-card__lede">Notes on financial translation that expose how big-agency “experts” often get market metaphors and terminology wrong. A boutique perspective on the small choices that actually move meaning.</p>
+            <p class="case-card__hook">The mistake looks small: one word, “put.” The damage is larger. A market metaphor was translated as a product label, and the sentence lost its trade. Once that point is missed, the translation can look technically tidy and still misprice the meaning.</p>
+            <div class="case-compare" role="group" aria-label="Rendering contrast">
+              <div class="case-compare__item case-compare__item--wrong">
+                <p class="case-compare__label">Wrong track</p>
+                <p class="case-compare__zh">「格林斯潘看跌期权」</p>
+                <p class="case-compare__en">Literal product label. Bearish verb tilts the wrong way.</p>
+              </div>
+              <div class="case-compare__item case-compare__item--prefer">
+                <p class="case-compare__label">Preferred</p>
+                <p class="case-compare__zh">托市 / 包底托市</p>
+                <p class="case-compare__en">Market support. Agent and floor stay clear.</p>
+              </div>
+            </div>
+            <a class="btn btn--lg" href="trade-in-words.html">Explore Now</a>
+          </article>
         </div>
       </div>
     </section>
