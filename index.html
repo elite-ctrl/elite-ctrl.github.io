@@ -507,6 +507,49 @@
       .proof-chip { font-size: 16px; line-height: 24px; padding: 12px 16px; }
     }
 
+
+    .hero__motion {
+      margin-top: 40px;
+      max-width: 920px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (min-width: 768px) {
+      .hero__motion { margin-top: 48px; }
+    }
+
+    .hero__motion-frame {
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-lg);
+      background: var(--bg);
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .hero__motion video,
+    .hero__motion img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero__motion-cap {
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__motion video { display: none; }
+      .hero__motion .hero__motion-still { display: block; }
+    }
+
+    .hero__motion-still { display: none; }
+
     /* —— Tagline reveal (B11) —— */
     .tagline-section {
       padding: 48px 0;
@@ -1195,6 +1238,23 @@
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>1 business day quote</span>
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Short pilot, no fee</span>
           </div>
+
+          <figure class="hero__motion reveal" id="hero-motion">
+            <div class="hero__motion-frame">
+              <video
+                id="hero-loop"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-label="LedgerLex homepage motion loop"
+                data-b64-manifest="media/hero-loop.mp4.b64.manifest"
+                data-poster-b64="media/hero-loop-poster.jpg.b64"
+              ></video>
+              <img class="hero__motion-still" id="hero-loop-still" width="1280" height="742" alt="LedgerLex homepage still: Financial storytelling that never drops a language" data-b64="media/hero-loop-poster.jpg.b64">
+            </div>
+            <figcaption class="hero__motion-cap">Studio motion loop of the homepage.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -1513,6 +1573,86 @@
       } else {
         words.forEach(function (w) { w.classList.add("is-on"); });
       }
+
+      // Hero motion: decode text b64 assets (GitHub text push), play in view
+      (function () {
+        var video = document.getElementById("hero-loop");
+        var still = document.getElementById("hero-loop-still");
+        if (!video) return;
+
+        function b64ToBlobUrl(b64, mime) {
+          var bin = atob(b64);
+          var len = bin.length;
+          var arr = new Uint8Array(len);
+          for (var i = 0; i < len; i++) arr[i] = bin.charCodeAt(i);
+          return URL.createObjectURL(new Blob([arr], { type: mime }));
+        }
+
+        function fetchB64(url) {
+          return fetch(url).then(function (r) {
+            if (!r.ok) throw new Error("b64 fetch failed");
+            return r.text();
+          }).then(function (t) { return t.replace(/\s+/g, ""); });
+        }
+
+        var posterP = video.getAttribute("data-poster-b64")
+          ? fetchB64(video.getAttribute("data-poster-b64")).then(function (b64) {
+              var url = b64ToBlobUrl(b64, "image/jpeg");
+              video.setAttribute("poster", url);
+              if (still) still.src = url;
+              return url;
+            })
+          : Promise.resolve(null);
+
+        function fetchB64Manifest(url) {
+          return fetch(url).then(function (r) {
+            if (!r.ok) throw new Error("manifest fetch failed");
+            return r.text();
+          }).then(function (txt) {
+            var parts = txt.split(/\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+            return Promise.all(parts.map(fetchB64)).then(function (chunks) {
+              return chunks.join("");
+            });
+          });
+        }
+
+        var videoP = reduce
+          ? posterP
+          : posterP.then(function () {
+              var man = video.getAttribute("data-b64-manifest");
+              var single = video.getAttribute("data-b64");
+              var load = man ? fetchB64Manifest(man) : fetchB64(single);
+              return load.then(function (b64) {
+                video.src = b64ToBlobUrl(b64, "video/mp4");
+              });
+            });
+
+        videoP.then(function () {
+          if (reduce) {
+            try { video.pause(); } catch (e) {}
+            return;
+          }
+          if ("IntersectionObserver" in window) {
+            var vio = new IntersectionObserver(function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+                  var p = video.play();
+                  if (p && p.catch) p.catch(function () {});
+                } else {
+                  video.pause();
+                }
+              });
+            }, { threshold: [0, 0.3, 0.6] });
+            vio.observe(video);
+          } else {
+            var p = video.play();
+            if (p && p.catch) p.catch(function () {});
+          }
+        }).catch(function () {
+          /* keep poster/empty if assets fail */
+        });
+      })();
+
     })();
   </script>
 </body>
