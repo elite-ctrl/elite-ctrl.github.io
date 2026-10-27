@@ -3,30 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LedgerLex — Financial Storytelling That Never Drops a Language</title>
+  <title>LedgerLex — Financial storytelling that never drops a language</title>
   <meta name="description" content="LedgerLex Language Studio. Specialist financial translation desk. Ten years on the desk. Indicative quote within one business day.">
   <meta name="theme-color" content="#F5F0E6">
+  <meta property="og:title" content="LedgerLex — Financial storytelling that never drops a language">
+  <meta property="og:description" content="Where the ledger meets the lexicon. Specialist desk. One business day quote.">
+  <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE500' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Manrope,sans-serif' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFE566' stroke='%23000' stroke-width='3'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='Manrope,sans-serif' font-weight='800' font-size='14' fill='%23000'%3EL%3C/text%3E%3C/svg%3E">
   <style>
     :root {
       --bg: #F5F0E6;
       --ink: #000000;
-      --cream: #FAF7F0;
-      --yellow: #FFE500;
+      --surface: #FAF7F0;
+      --yellow: #FFE566;
       --accent: #FF4D1A;
-      --muted: rgba(0, 0, 0, 0.3);
-      --frame: 4px;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "Manrope", system-ui, sans-serif;
       --shadow: 6px 6px 0 #000;
       --shadow-sm: 4px 4px 0 #000;
       --shadow-lg: 8px 8px 0 #000;
-      --radius: 0;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --font: "Manrope", system-ui, sans-serif;
-      --max: 720px;
-      --page: 1100px;
+      --nav-h: 72px;
+      --max: 1080px;
+      --prose: 680px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,25 +45,30 @@
       background: var(--bg);
       color: var(--ink);
       line-height: 1.5;
-      text-align: center;
       -webkit-font-smoothing: antialiased;
     }
 
     em, i, cite, address { font-style: normal; }
-
     img, svg { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
-    ul { list-style: none; }
-    button { font: inherit; cursor: pointer; border: none; background: none; }
+    ul, ol { list-style: none; }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
 
+    /* —— Skip link —— */
     .skip {
       position: absolute;
       left: 16px;
       top: -100px;
-      z-index: 100;
+      z-index: 200;
       background: var(--yellow);
       color: var(--ink);
-      border: var(--frame) solid var(--ink);
+      border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
       padding: 8px 12px;
       font-size: 14px;
@@ -69,152 +76,169 @@
     }
     .skip:focus { top: 16px; }
 
-    /* —— Layout shell —— */
-    .page {
-      max-width: var(--page);
-      margin: 0 auto;
-      padding: 24px 16px 64px;
+    /* —— Sticky floating nav —— */
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
     }
 
-    @media (min-width: 768px) {
-      .page { padding: 32px 40px 96px; }
-    }
-
-    .block {
-      min-height: min(100vh, 920px);
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 48px 0;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(250, 247, 240, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
     }
 
-    .frame {
-      width: 100%;
-      background: var(--cream);
-      border: var(--frame) solid var(--ink);
-      box-shadow: var(--shadow-lg);
-      padding: 48px 24px;
-      position: relative;
-    }
-
-    @media (min-width: 768px) {
-      .frame { padding: 64px 48px; }
-    }
-
-    .frame--yellow {
-      background: var(--yellow);
-    }
-
-    /* —— Typography —— */
-    .brand {
-      font-size: 20px;
+    .topnav__brand {
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 28px;
-      text-wrap: balance;
+      white-space: nowrap;
     }
 
-    @media (min-width: 768px) {
-      .brand { font-size: 24px; line-height: 32px; }
+    .topnav__links {
+      display: none;
+      align-items: center;
+      gap: 4px;
     }
 
-    .hero-title {
-      font-size: 36px;
+    .topnav__links a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 12px;
+      border: 2px solid transparent;
+      transition:
+        background-color 300ms var(--ease),
+        border-color 300ms var(--ease),
+        transform 300ms var(--ease);
+    }
+
+    .topnav__links a:hover {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .topnav__links a:active { transform: scale(0.98); }
+
+    .topnav__cta {
+      display: none !important;
+    }
+
+    .topnav__toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      flex-shrink: 0;
+    }
+
+    .topnav__toggle:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    .topnav__toggle:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .topnav__toggle span {
+      display: block;
+      height: 3px;
+      background: var(--ink);
+      transition: transform 300ms var(--ease), opacity 300ms var(--ease);
+      transform-origin: center;
+    }
+
+    .topnav.is-open .topnav__toggle span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .topnav.is-open .topnav__toggle span:nth-child(2) { opacity: 0; }
+    .topnav.is-open .topnav__toggle span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .topnav__panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(245, 240, 230, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 96px 24px 48px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .topnav.is-open .topnav__panel {
+      display: flex;
+    }
+
+    .topnav__panel a {
+      font-size: 24px;
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      max-width: 680px;
-      margin: 0 auto;
-      color: var(--ink);
-      text-wrap: balance;
+      line-height: 32px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 400ms var(--ease),
+        transform 400ms var(--ease),
+        background-color 300ms var(--ease);
     }
 
-    @media (min-width: 640px) {
-      .hero-title { font-size: 48px; }
+    .topnav.is-open .topnav__panel a {
+      opacity: 1;
+      transform: translateY(0);
     }
+
+    .topnav.is-open .topnav__panel a:nth-child(1) { transition-delay: 0ms; }
+    .topnav.is-open .topnav__panel a:nth-child(2) { transition-delay: 60ms; }
+    .topnav.is-open .topnav__panel a:nth-child(3) { transition-delay: 120ms; }
+    .topnav.is-open .topnav__panel a:nth-child(4) { transition-delay: 180ms; }
+    .topnav.is-open .topnav__panel a:nth-child(5) { transition-delay: 240ms; }
+    .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
+
+    .topnav__panel a:hover { background: var(--yellow); }
 
     @media (min-width: 900px) {
-      .hero-title { font-size: 60px; }
+      .topnav__links { display: flex; }
+      .topnav__cta { display: inline-flex !important; }
+      .topnav__toggle { display: none; }
+      .topnav__panel { display: none !important; }
+      .topnav__brand { font-size: 20px; }
     }
 
-    .hero-title span { display: block; }
-
-    .section-title {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 36px;
-      letter-spacing: -0.02em;
-      text-transform: lowercase;
-      margin-bottom: 32px;
-      text-wrap: balance;
-    }
-
-    .section-title--caps {
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    @media (min-width: 768px) {
-      .section-title { font-size: 36px; line-height: 40px; margin-bottom: 40px; }
-    }
-
-    .lede {
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: 600;
-      max-width: 480px;
-      margin: 0 auto;
-      text-wrap: pretty;
-    }
-
-    @media (min-width: 768px) {
-      .lede { font-size: 18px; line-height: 28px; }
-    }
-
-    .small {
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 600;
-      text-wrap: pretty;
-    }
-
-    .tiny {
-      font-size: 12px;
-      line-height: 16px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    /* —— Nav —— */
-    .nav {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 48px;
-      width: 100%;
-      max-width: 680px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    @media (min-width: 768px) {
-      .nav { margin-bottom: 64px; }
-    }
-
-    .nav__brand {
-      grid-column: 2;
-      justify-self: center;
-    }
-
-    .nav__engage {
-      grid-column: 3;
-      justify-self: end;
-    }
-
-    /* —— Chips / buttons —— */
-    .chip,
+    /* —— Buttons —— */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -224,86 +248,124 @@
       color: var(--ink);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
       transition:
         transform 300ms var(--ease),
         box-shadow 300ms var(--ease),
         background-color 300ms var(--ease);
-      border-radius: var(--radius);
-    }
-
-    .chip {
-      font-size: 11px;
-      line-height: 16px;
-      padding: 6px 10px;
-      white-space: nowrap;
-    }
-
-    @media (min-width: 640px) {
-      .chip { font-size: 12px; padding: 8px 12px; }
-    }
-
-    .btn {
-      font-size: 16px;
-      line-height: 24px;
-      padding: 12px 24px;
     }
 
     .btn--lg {
-      font-size: 18px;
-      line-height: 28px;
-      padding: 16px 32px;
+      font-size: 16px;
+      padding: 12px 24px;
     }
 
-    .btn--cream {
-      background: var(--cream);
-    }
+    .btn--cream { background: var(--surface); }
 
-    .chip:hover,
     .btn:hover {
       transform: translate(-2px, -2px);
       box-shadow: 6px 6px 0 #000;
     }
 
-    .chip:active,
     .btn:active {
-      transform: translate(2px, 2px);
+      transform: translate(2px, 2px) scale(0.98);
       box-shadow: 2px 2px 0 #000;
     }
 
-    .chip:focus-visible,
     .btn:focus-visible,
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible,
+    summary:focus-visible {
       outline: 3px solid var(--accent);
       outline-offset: 3px;
     }
 
-    /* —— Yellow bar —— */
-    .yellow-bar {
-      display: inline-block;
-      background: var(--yellow);
-      border: 3px solid var(--ink);
-      box-shadow: var(--shadow);
-      padding: 12px 24px;
-      margin: 32px auto 24px;
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      position: relative;
-      text-wrap: balance;
-      max-width: 100%;
+    /* —— Layout —— */
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
     }
 
     @media (min-width: 768px) {
-      .yellow-bar {
-        font-size: 16px;
-        line-height: 24px;
-        padding: 16px 32px;
-        margin: 40px auto 24px;
+      .wrap { padding: 0 40px; }
+    }
+
+    main { padding-bottom: 0; }
+
+    .section {
+      padding: 64px 0;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .section { padding: 96px 0; }
+    }
+
+    .section--tight { padding-top: 48px; }
+
+    .section--yellow {
+      background: var(--yellow);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .section--surface {
+      background: var(--surface);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .section-title {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .section-title {
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .section-lede {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      text-wrap: pretty;
+      color: var(--muted);
+    }
+
+    @media (min-width: 768px) {
+      .section-lede {
+        font-size: 18px;
+        line-height: 28px;
+        margin-bottom: 48px;
       }
     }
 
@@ -315,40 +377,104 @@
       background: var(--accent);
       border: 2px solid var(--ink);
       border-radius: 50%;
-      vertical-align: middle;
       flex-shrink: 0;
     }
 
     .dot--sm { width: 8px; height: 8px; border-width: 1.5px; }
 
-    .dot--abs {
-      position: absolute;
+    /* —— Hero —— */
+    .hero {
+      padding: 48px 0 64px;
+      text-align: center;
     }
 
-    /* —— Hero stack —— */
-    .hero-stack {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 680px;
+    @media (min-width: 768px) {
+      .hero { padding: 80px 0 96px; }
+    }
+
+    .hero__inner {
+      max-width: var(--prose);
       margin: 0 auto;
     }
 
-    .hero-cta { margin-top: 32px; }
-    .hero-risk {
-      margin-top: 40px;
-      max-width: 360px;
+    .hero__title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 680px;
+      margin: 0 auto;
+      text-wrap: balance;
+      background: linear-gradient(90deg, #000000 0%, #666666 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
     }
-    .hero-risk p + p { margin-top: 4px; }
 
-    /* —— Tagline reveal —— */
+    .hero__title span { display: block; }
+
+    @media (min-width: 640px) {
+      .hero__title { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .hero__title { font-size: 60px; }
+    }
+
+    .hero__proof {
+      margin-top: 24px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero__proof { font-size: 18px; line-height: 28px; margin-top: 32px; }
+    }
+
+    .hero__cta {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .hero__cta { margin-top: 40px; }
+    }
+
+    .hero__risk {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--muted);
+      max-width: 320px;
+      text-wrap: pretty;
+    }
+
+    .hero__risk p + p { margin-top: 4px; }
+
+    /* —— Tagline reveal (B11) —— */
+    .tagline-section {
+      padding: 80px 0;
+      text-align: center;
+      background: var(--yellow);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    @media (min-width: 768px) {
+      .tagline-section { padding: 96px 0; }
+    }
+
     .tagline {
       font-size: 36px;
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -0.03em;
-      text-transform: uppercase;
       max-width: 680px;
       margin: 0 auto;
       text-wrap: balance;
@@ -364,82 +490,39 @@
 
     .tagline .word {
       display: inline-block;
-      opacity: 0.3;
-      transition: opacity 700ms var(--ease);
-      margin: 0 0.12em;
+      color: rgba(0, 0, 0, 0.28);
+      transition: color 700ms var(--ease);
+      margin: 0 0.1em;
     }
 
-    .tagline .word.is-on { opacity: 1; }
+    .tagline .word.is-on { color: #000000; }
 
     .tagline .line { display: block; }
 
-    /* —— Cards / lists —— */
-    .card-list {
+    /* —— Benefits —— */
+    .benefit-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      max-width: 560px;
+      max-width: 640px;
       margin: 0 auto;
       text-align: left;
     }
 
-    .card {
-      background: var(--cream);
-      border: 3px solid var(--ink);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      border-radius: var(--radius);
-      position: relative;
-    }
-
-    .frame--yellow .card {
-      background: var(--cream);
-    }
-
-    .card--center {
-      text-align: center;
-    }
-
-    .card__num {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 36px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .card__title {
-      font-size: 18px;
-      font-weight: 800;
-      line-height: 28px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      text-wrap: balance;
-    }
-
-    .card__body {
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: 600;
-      margin-top: 8px;
-      text-wrap: pretty;
-    }
-
-    .benefit-item {
+    .benefit {
       display: grid;
       grid-template-columns: 12px 1fr;
       gap: 16px;
       align-items: start;
-      background: var(--cream);
+      background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
       padding: 24px;
-      text-align: left;
     }
 
-    .benefit-item .dot { margin-top: 6px; }
+    .benefit .dot { margin-top: 6px; }
 
-    .benefit-item p {
+    .benefit p {
       font-size: 16px;
       line-height: 24px;
       font-weight: 700;
@@ -447,15 +530,15 @@
     }
 
     @media (min-width: 768px) {
-      .benefit-item p { font-size: 18px; line-height: 28px; }
+      .benefit p { font-size: 18px; line-height: 28px; }
     }
 
-    /* —— Coverage grid —— */
+    /* —— Coverage —— */
     .cov-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      max-width: 560px;
+      max-width: 720px;
       margin: 0 auto;
     }
 
@@ -463,21 +546,25 @@
       .cov-grid { gap: 24px; }
     }
 
-    .cov-item {
-      background: var(--cream);
+    .cov-card {
+      background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
       padding: 32px 16px;
       font-size: 16px;
       font-weight: 800;
       line-height: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
       text-wrap: balance;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    .cov-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 #000;
     }
 
     @media (min-width: 640px) {
-      .cov-item {
+      .cov-card {
         font-size: 18px;
         line-height: 28px;
         padding: 40px 24px;
@@ -489,20 +576,18 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 24px;
-      max-width: 800px;
+      max-width: 960px;
       margin: 0 auto;
     }
 
     @media (min-width: 720px) {
       .steps {
         grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        align-items: stretch;
       }
     }
 
     .step {
-      background: var(--cream);
+      background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
       padding: 32px 16px;
@@ -523,8 +608,6 @@
       font-size: 16px;
       font-weight: 800;
       line-height: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
       text-wrap: balance;
     }
 
@@ -532,52 +615,57 @@
       .step__label { font-size: 18px; line-height: 28px; }
     }
 
-    /* —— Diff + pricing —— */
+    /* —— Pricing / difference —— */
     .split {
       display: grid;
       grid-template-columns: 1fr;
       gap: 24px;
-      max-width: 800px;
+      max-width: 880px;
       margin: 0 auto;
       text-align: left;
     }
 
     @media (min-width: 720px) {
-      .split { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .split { grid-template-columns: 1fr 1fr; }
     }
 
-    .split .card { height: 100%; }
+    .card {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      height: 100%;
+    }
 
-    .split h3 {
+    .card h3 {
       font-size: 20px;
       font-weight: 800;
       line-height: 28px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
       margin-bottom: 16px;
+      text-wrap: balance;
     }
 
-    .split p,
-    .split li {
+    .card p,
+    .card li {
       font-size: 16px;
       line-height: 24px;
       font-weight: 600;
       text-wrap: pretty;
     }
 
-    .split ul {
+    .card ul {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .split li {
+    .card li {
       display: flex;
       align-items: flex-start;
       gap: 12px;
     }
 
-    .split li::before {
+    .card li::before {
       content: "";
       width: 8px;
       height: 8px;
@@ -588,26 +676,93 @@
       flex-shrink: 0;
     }
 
-    /* —— Engage —— */
-    .engage-title {
+    /* —— FAQ —— */
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-item summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-wrap: pretty;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background-color 300ms var(--ease);
+    }
+
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-item summary::after {
+      content: "+";
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 300ms var(--ease);
+    }
+
+    .faq-item[open] summary::after {
+      content: "−";
+    }
+
+    .faq-item summary:hover { background: var(--yellow); }
+
+    .faq-item .faq-a {
+      padding: 0 24px 16px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      color: var(--muted);
+    }
+
+    /* —— Final CTA —— */
+    .final-cta {
+      padding: 80px 0;
+      text-align: center;
+      background: var(--yellow);
+      border-top: 3px solid var(--ink);
+    }
+
+    @media (min-width: 768px) {
+      .final-cta { padding: 96px 0; }
+    }
+
+    .final-cta__title {
       font-size: 36px;
       font-weight: 800;
       line-height: 1.05;
       letter-spacing: -0.02em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
       text-wrap: balance;
+      margin-bottom: 24px;
     }
 
     @media (min-width: 640px) {
-      .engage-title { font-size: 48px; }
+      .final-cta__title { font-size: 48px; }
     }
 
     @media (min-width: 900px) {
-      .engage-title { font-size: 60px; }
+      .final-cta__title { font-size: 60px; }
     }
 
-    .engage-links {
+    .final-cta__actions {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -615,7 +770,7 @@
       margin: 32px 0;
     }
 
-    .engage-mail {
+    .final-cta__mail {
       font-size: 16px;
       font-weight: 700;
       line-height: 24px;
@@ -625,43 +780,76 @@
     }
 
     @media (min-width: 640px) {
-      .engage-mail { font-size: 18px; line-height: 28px; }
+      .final-cta__mail { font-size: 18px; line-height: 28px; }
     }
 
-    .engage-mail:hover {
-      background: var(--yellow);
+    .final-cta__mail:hover {
+      background: var(--surface);
       box-shadow: 4px 4px 0 #000;
     }
 
-    .engage-note {
-      margin-top: 24px;
+    .final-cta__note {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
       max-width: 400px;
-    }
-
-    .engage-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-      margin-top: 32px;
+      margin: 0 auto 32px;
+      text-wrap: pretty;
     }
 
     /* —— Footer —— */
     .site-footer {
-      margin-top: 48px;
-      padding: 32px 16px;
-      border-top: 3px solid var(--ink);
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
       text-align: center;
+    }
+
+    .site-footer .brand {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      margin-bottom: 8px;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
     }
 
     .site-footer a {
       font-weight: 700;
-      border-bottom: 2px solid var(--ink);
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
     }
 
-    .site-footer a:hover { background: var(--yellow); }
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
 
-    .site-footer p + p { margin-top: 8px; }
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(245, 240, 230, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
 
     /* —— Scroll reveals —— */
     .reveal {
@@ -686,15 +874,22 @@
         transition: none;
       }
       .tagline .word {
-        opacity: 1;
+        color: #000;
         transition: none;
       }
-      .chip, .btn, .engage-mail {
+      .btn, .cov-card, .topnav__toggle, .topnav__links a,
+      .final-cta__mail, .faq-item summary {
         transition: none;
       }
-      .chip:hover, .btn:hover,
-      .chip:active, .btn:active {
+      .btn:hover, .btn:active,
+      .cov-card:hover,
+      .topnav__toggle:hover, .topnav__toggle:active {
         transform: none;
+      }
+      .topnav__panel a {
+        opacity: 1;
+        transform: none;
+        transition: none;
       }
     }
   </style>
@@ -702,108 +897,134 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <div class="page">
-    <main id="main">
+  <nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="#hero">LedgerLex</a>
 
-      <!-- 1. HERO -->
-      <section class="block" id="hero" aria-label="Hero">
-        <div class="frame reveal">
-          <header class="nav">
-            <div class="nav__brand">
-              <p class="brand">LedgerLex</p>
-            </div>
-            <a class="chip nav__engage" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
-          </header>
+      <div class="topnav__links" role="list">
+        <a href="#benefits" role="listitem">Benefits</a>
+        <a href="#coverage" role="listitem">Coverage</a>
+        <a href="#how" role="listitem">How it works</a>
+        <a href="#pricing" role="listitem">Pricing</a>
+        <a href="#faq" role="listitem">FAQ</a>
+      </div>
 
-          <div class="hero-stack">
-            <h1 class="hero-title">
-              <span>Financial</span>
-              <span>Storytelling</span>
-              <span>That Never</span>
-              <span>Drops a Language</span>
-            </h1>
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
 
-            <p class="yellow-bar">
-              Where the ledger meets the lexicon.
-              <span class="dot dot--sm dot--abs" style="right:-18px; top:50%; transform:translateY(-50%);" aria-hidden="true"></span>
-            </p>
+      <button
+        class="topnav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+        id="nav-toggle"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
 
-            <p class="lede">Ten years on the desk. Specialist, not generalist.</p>
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <a href="#benefits">Benefits</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+    </div>
+  </nav>
 
-            <div class="hero-cta">
-              <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
-            </div>
+  <main id="main">
 
-            <div class="hero-risk tiny">
+    <!-- 1. Hero -->
+    <section class="hero" id="hero" aria-label="Hero">
+      <div class="wrap">
+        <div class="hero__inner reveal">
+          <h1 class="hero__title">
+            <span>Financial storytelling</span>
+            <span>that never drops</span>
+            <span>a language</span>
+          </h1>
+
+          <p class="hero__proof">Ten years on the desk. Specialist, not generalist.</p>
+
+          <div class="hero__cta">
+            <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+            <div class="hero__risk">
               <p>One business day quote.</p>
               <p>Short pilot, no fee on a live job.</p>
             </div>
           </div>
-
-          <span class="dot dot--abs" style="left:24px; bottom:24px;" aria-hidden="true"></span>
-          <span class="dot dot--sm dot--abs" style="right:32px; bottom:40px;" aria-hidden="true"></span>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 2. TAGLINE REVEAL -->
-      <section class="block" id="tagline" aria-label="Tagline">
-        <div class="frame frame--yellow reveal">
-          <h2 class="tagline" id="tagline-words">
-            <span class="line">
-              <span class="word">Where</span>
-            </span>
-            <span class="line">
-              <span class="word">the</span>
-              <span class="word">Ledger</span>
-            </span>
-            <span class="line">
-              <span class="word">meets</span>
-              <span class="word">the</span>
-              <span class="word">Lexicon</span>
-            </span>
-          </h2>
-          <span class="dot dot--abs" style="right:32px; bottom:32px;" aria-hidden="true"></span>
-        </div>
-      </section>
+    <!-- 2. Tagline reveal -->
+    <section class="tagline-section" id="tagline" aria-label="Tagline">
+      <div class="wrap">
+        <h2 class="tagline" id="tagline-words">
+          <span class="line">
+            <span class="word">Where</span>
+            <span class="word">the</span>
+            <span class="word">ledger</span>
+          </span>
+          <span class="line">
+            <span class="word">meets</span>
+            <span class="word">the</span>
+            <span class="word">lexicon.</span>
+          </span>
+        </h2>
+      </div>
+    </section>
 
-      <!-- 3. BENEFITS -->
-      <section class="block" id="benefits" aria-labelledby="benefits-title">
-        <div class="frame reveal">
-          <h2 class="section-title" id="benefits-title">benefits</h2>
-          <div class="card-list">
-            <div class="benefit-item">
+    <!-- 3. Benefits -->
+    <section class="section" id="benefits" aria-labelledby="benefits-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Why the desk</p>
+          <h2 class="section-title" id="benefits-title">What you get on every brief</h2>
+          <p class="section-lede">Boutique judgment for financial storytelling that has to hold under market pressure.</p>
+          <div class="benefit-list">
+            <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
               <p>House voice that survives the cycle</p>
             </div>
-            <div class="benefit-item">
+            <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
               <p>Regulatory fluency as the baseline, not the upsell</p>
             </div>
-            <div class="benefit-item">
+            <div class="benefit">
               <span class="dot" aria-hidden="true"></span>
               <p>Speed without the agency fog. Indicative quote within one business day.</p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 4. COVERAGE -->
-      <section class="block" id="coverage" aria-labelledby="coverage-title">
-        <div class="frame frame--yellow reveal">
-          <h2 class="section-title section-title--caps" id="coverage-title">coverage</h2>
+    <!-- 4. Coverage -->
+    <section class="section section--yellow" id="coverage" aria-labelledby="coverage-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow" style="background:var(--surface);">Coverage</p>
+          <h2 class="section-title" id="coverage-title">Where the desk works</h2>
+          <p class="section-lede" style="color:var(--ink);">Four lanes. Same voice standards on every one.</p>
           <div class="cov-grid">
-            <div class="cov-item">Funds and ETFs</div>
-            <div class="cov-item">Listed Reporting</div>
-            <div class="cov-item">IPO</div>
-            <div class="cov-item">IR</div>
+            <div class="cov-card">Funds and ETFs</div>
+            <div class="cov-card">Listed Reporting</div>
+            <div class="cov-card">IPO</div>
+            <div class="cov-card">IR</div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 5. HOW IT WORKS -->
-      <section class="block" id="how" aria-labelledby="how-title">
-        <div class="frame frame--yellow reveal">
-          <h2 class="section-title section-title--caps" id="how-title">How It Works</h2>
+    <!-- 5. How it works -->
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Process</p>
+          <h2 class="section-title" id="how-title">How it works</h2>
+          <p class="section-lede">Three steps from brief to delivery. No agency fog in between.</p>
           <ol class="steps">
             <li class="step">
               <span class="step__n" aria-hidden="true">1</span>
@@ -819,60 +1040,140 @@
             </li>
           </ol>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 6. DIFFERENCE + PRICING -->
-      <section class="block" id="difference" aria-labelledby="diff-title">
-        <div class="frame reveal">
-          <h2 class="section-title" id="diff-title">The Difference + Pricing</h2>
+    <!-- 6. Pricing / difference -->
+    <section class="section section--surface" id="pricing" aria-labelledby="pricing-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Difference and pricing</p>
+          <h2 class="section-title" id="pricing-title">Judgment first. Rate card on request.</h2>
           <div class="split">
             <article class="card">
-              <h3>The Difference</h3>
+              <h3>The difference</h3>
               <p>MTPE tier translation. Boutique judgment on market metaphors.</p>
             </article>
             <article class="card">
               <h3>Pricing</h3>
               <ul>
                 <li>Word / Character / Page / Slide</li>
-                <li>volume from 3,000 source words</li>
-                <li>rate card on request</li>
+                <li>Volume from 3,000 source words</li>
+                <li>Rate card on request</li>
               </ul>
             </article>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 7. ENGAGE -->
-      <section class="block" id="engage" aria-labelledby="engage-title">
-        <div class="frame frame--yellow reveal">
-          <h2 class="engage-title" id="engage-title">Engage the Studio</h2>
-          <div class="engage-links">
-            <a class="btn" href="mailto:elite@ledgerlexlanguagestudio.com">Contact Us</a>
-            <a class="engage-mail" href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+    <!-- 7. FAQ -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">FAQ</p>
+          <h2 class="section-title" id="faq-title">Questions before you send a brief</h2>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>What kind of desk is LedgerLex?</summary>
+              <p class="faq-a">A specialist financial language studio, not a generalist agency. Ten years on the desk. Boutique judgment for market storytelling that has to hold under scrutiny.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Which languages does the desk cover?</summary>
+              <p class="faq-a">Financial storytelling that never drops a language. Share the language pair in your brief and we confirm coverage with the quote.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How fast is turnaround?</summary>
+              <p class="faq-a">Indicative quote within one business day. Delivery timing depends on volume and complexity and is locked in the quote before work starts.</p>
+            </details>
+            <details class="faq-item">
+              <summary>What is the short pilot?</summary>
+              <p class="faq-a">A short pilot on a live job, with no fee for that pilot slice, so you can feel the house voice before a larger engagement.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How is confidentiality handled?</summary>
+              <p class="faq-a">Material stays inside the desk workflow. NDAs and client confidentiality terms are available before files move. Ask when you engage.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How does pricing work?</summary>
+              <p class="faq-a">Word, character, page, or slide. Volume from 3,000 source words. Rate card on request. One business day quote after you send the brief.</p>
+            </details>
           </div>
-          <p class="lede engage-note">Short pilots, no fee, on live jobs.</p>
-          <div class="engage-actions">
-            <a class="btn btn--lg btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Let’s Talk</a>
-          </div>
-          <span class="dot dot--abs" style="left:24px; top:24px;" aria-hidden="true"></span>
-          <span class="dot dot--sm dot--abs" style="right:28px; bottom:28px;" aria-hidden="true"></span>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
+    <!-- 8. Final CTA -->
+    <section class="final-cta" id="engage" aria-labelledby="engage-title">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="final-cta__title" id="engage-title">Engage the Studio</h2>
+          <div class="final-cta__actions">
+            <a class="btn btn--lg btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Contact Us</a>
+            <a class="final-cta__mail" href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+          </div>
+          <p class="final-cta__note">Short pilots, no fee, on live jobs.</p>
+          <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com">Let’s Talk</a>
+        </div>
+      </div>
+    </section>
 
-    <footer class="site-footer">
-      <p class="brand" style="margin-bottom:12px;">LedgerLex</p>
-      <p class="small">Language studio for financial storytelling.</p>
-      <p class="small" style="margin-top:16px;">
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand">LedgerLex</p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
         <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
       </p>
-    </footer>
-  </div>
+      <div class="site-footer__legal">
+        <a href="#privacy">Privacy</a>
+        <a href="#terms">Terms</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
 
   <script>
     (function () {
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var nav = document.getElementById("topnav");
+      var toggle = document.getElementById("nav-toggle");
+      var panel = document.getElementById("mobile-panel");
+
+      function closeNav() {
+        if (!nav || !toggle || !panel) return;
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
+        panel.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function openNav() {
+        nav.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "Close menu");
+        panel.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      if (toggle && panel && nav) {
+        toggle.addEventListener("click", function () {
+          if (nav.classList.contains("is-open")) closeNav();
+          else openNav();
+        });
+
+        panel.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", closeNav);
+        });
+
+        window.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeNav();
+        });
+      }
 
       /* Section rise + fade once */
       var reveals = document.querySelectorAll(".reveal");
@@ -886,13 +1187,13 @@
               io.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.18, rootMargin: "0px 0px -8% 0px" });
+        }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
         reveals.forEach(function (el) { io.observe(el); });
       } else {
         reveals.forEach(function (el) { el.classList.add("is-in"); });
       }
 
-      /* Tagline word activation in reading order */
+      /* Tagline word activation in reading order (B11) */
       var words = document.querySelectorAll("#tagline-words .word");
       if (reduce) {
         words.forEach(function (w) { w.classList.add("is-on"); });
@@ -900,15 +1201,14 @@
         var wordIo = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            var list = Array.prototype.slice.call(words);
-            list.forEach(function (w, i) {
+            Array.prototype.forEach.call(words, function (w, i) {
               window.setTimeout(function () {
                 w.classList.add("is-on");
-              }, i * 140);
+              }, i * 120);
             });
             wordIo.disconnect();
           });
-        }, { threshold: 0.45 });
+        }, { threshold: 0.4 });
         var tagSection = document.getElementById("tagline");
         if (tagSection) wordIo.observe(tagSection);
       } else {
