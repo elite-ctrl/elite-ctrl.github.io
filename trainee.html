@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trainee Program — LedgerLex</title>
+  <meta name="description" content="Language Services Trainee at LedgerLex Language Studio. Part time, remote practice on a Hong Kong financial language desk. Paid hourly. Apply by 31 October 2026.">
+  <meta name="theme-color" content="#F5F0E6">
+  <link rel="canonical" href="https://ledgerlexlanguagestudio.net/trainee.html">
+  <meta property="og:title" content="Trainee Program — LedgerLex Language Studio">
+  <meta property="og:description" content="Language Services Trainee. Part time, remote practice on a Hong Kong financial language desk. Paid hourly. Apply by 31 October 2026.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ledgerlexlanguagestudio.net/trainee.html">
+  <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Trainee Program — LedgerLex Language Studio">
+  <meta name="twitter:description" content="Language Services Trainee. Part time, remote practice on a Hong Kong financial language desk. Paid hourly. Apply by 31 October 2026.">
+  <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --ink: #000000;
+      --surface: #FAF7F0;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+      --prose: 680px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(250, 247, 240, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .topnav__brand img {
+      display: block;
+      height: 36px;
+      width: auto;
+    }
+
+    @media (min-width: 900px) {
+      .topnav__brand img { height: 32px; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn--lg {
+      font-size: 16px;
+      padding: 12px 24px;
+    }
+
+    .btn--cream { background: var(--surface); }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .hero {
+      padding: 40px 0 48px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .hero { padding: 48px 0 64px; }
+    }
+
+    .hero__inner {
+      max-width: var(--prose);
+      margin: 0 auto;
+    }
+
+    .hero__title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 680px;
+      margin: 0 auto;
+      text-wrap: balance;
+      background: linear-gradient(90deg, #000000 0%, #666666 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (min-width: 640px) {
+      .hero__title { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .hero__title { font-size: 60px; }
+    }
+
+    .hero__sub {
+      margin-top: 24px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero__sub {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .hero__cta {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .hero__cta { margin-top: 32px; }
+    }
+
+    .hero__proof {
+      margin-top: 16px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero__proof { font-size: 18px; line-height: 28px; }
+    }
+
+    .section {
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .section { padding: 64px 0; }
+    }
+
+    .section--surface {
+      background: var(--surface);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .section-title {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .section-title {
+        font-size: 36px;
+        line-height: 40px;
+        margin-bottom: 24px;
+      }
+    }
+
+    .section-lede {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      max-width: 560px;
+      margin: 0 auto 32px;
+      text-wrap: pretty;
+      color: var(--muted);
+    }
+
+    @media (min-width: 768px) {
+      .section-lede {
+        font-size: 18px;
+        line-height: 28px;
+        margin-bottom: 40px;
+      }
+    }
+
+    .facts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .facts-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+    }
+
+    .fact-card {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      text-align: center;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    .fact-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 #000;
+    }
+
+    .fact-card__label {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .fact-card__body {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 640px) {
+      .fact-card { padding: 32px 24px; }
+      .fact-card__body { font-size: 16px; line-height: 24px; }
+    }
+
+    .tagline-section {
+      padding: 48px 0;
+      text-align: center;
+      background: var(--yellow);
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    @media (min-width: 768px) {
+      .tagline-section { padding: 64px 0; }
+    }
+
+    .tagline {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      max-width: 680px;
+      margin: 0 auto;
+      text-wrap: balance;
+    }
+
+    @media (min-width: 640px) {
+      .tagline { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .tagline { font-size: 60px; }
+    }
+
+    .tagline .word {
+      display: inline-block;
+      color: rgba(0, 0, 0, 0.28);
+      transition: color 700ms var(--ease);
+      margin: 0 0.1em;
+    }
+
+    .tagline .word.is-on { color: #000000; }
+
+    .tagline .line { display: block; }
+
+    .prose-block {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .prose-block p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .prose-block p:last-child { margin-bottom: 0; }
+
+    @media (min-width: 768px) {
+      .prose-block p {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .desk-note {
+      max-width: 720px;
+      margin: 24px auto 0;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 16px 24px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      text-wrap: pretty;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .desk-note {
+        font-size: 16px;
+        line-height: 24px;
+        padding: 24px 32px;
+      }
+    }
+
+    .bullet-list {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bullet-item {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 16px;
+      align-items: start;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 16px 24px;
+    }
+
+    .bullet-item .dot { margin-top: 6px; }
+
+    .bullet-item p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-item summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-wrap: pretty;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background-color 300ms var(--ease);
+    }
+
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-item summary::after {
+      content: "+";
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 300ms var(--ease);
+    }
+
+    .faq-item[open] summary::after {
+      content: "−";
+    }
+
+    .faq-item summary:hover { background: var(--yellow); }
+
+    .faq-item .faq-a {
+      padding: 0 24px 16px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      color: var(--muted);
+    }
+
+    .final-cta {
+      padding: 48px 0;
+      text-align: center;
+      background: var(--yellow);
+      border-top: 3px solid var(--ink);
+    }
+
+    @media (min-width: 768px) {
+      .final-cta { padding: 64px 0; }
+    }
+
+    .final-cta__title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 640px) {
+      .final-cta__title { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .final-cta__title { font-size: 60px; }
+    }
+
+    .final-cta__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin: 32px 0;
+    }
+
+    .final-cta__note {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      max-width: 400px;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    .apply-card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .apply-card { padding: 32px 40px; }
+    }
+
+    .apply-card p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .apply-card p:last-child { margin-bottom: 0; }
+
+    .apply-card a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .apply-card a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      margin-bottom: 12px;
+      line-height: 0;
+    }
+
+    .site-footer .brand img {
+      display: block;
+      height: 44px;
+      width: auto;
+      margin: 0 auto;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(245, 240, 230, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        opacity 700ms var(--ease),
+        transform 700ms var(--ease);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .tagline .word {
+        color: #000;
+        transition: none;
+      }
+      .btn, .fact-card, .faq-item summary {
+        transition: none;
+      }
+      .btn:hover, .btn:active,
+      .fact-card:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" aria-label="Site">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
+      <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply</a>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <section class="hero" id="hero" aria-label="Hero">
+      <div class="wrap">
+        <div class="hero__inner reveal">
+          <p class="eyebrow">Trainee program</p>
+          <h1 class="hero__title">Language Services Trainee</h1>
+          <p class="hero__sub">Part time, remote practice on a Hong Kong financial language desk. Paid hourly. Apply by 31 October 2026.</p>
+          <div class="hero__cta">
+            <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply by email</a>
+          </div>
+          <p class="hero__proof">Funds, listed reporting, IPO, IR — language that has to hold.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="facts" aria-labelledby="facts-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Key facts</p>
+          <h2 class="section-title" id="facts-title">What to know up front</h2>
+          <div class="facts-grid">
+            <div class="fact-card">
+              <p class="fact-card__label">Hours</p>
+              <p class="fact-card__body">Part time and remote; as needed. Generally up to 10 hours per month. Some weeks may have no assignments. Hours are not guaranteed. Notice usually at the start of the week when work is available.</p>
+            </div>
+            <div class="fact-card">
+              <p class="fact-card__label">Pay</p>
+              <p class="fact-card__body">Paid hourly. State your expected hourly rate in HKD. The studio has budgeted around HKD 120–150 per hour; that is a planning range, not a fixed take it or leave it rate.</p>
+            </div>
+            <div class="fact-card">
+              <p class="fact-card__label">Duration</p>
+              <p class="fact-card__body">3–6 months, subject to performance. Renewed every three months.</p>
+            </div>
+            <div class="fact-card">
+              <p class="fact-card__label">Deadline</p>
+              <p class="fact-card__body">Apply by 31 October 2026.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">The desk</p>
+          <h2 class="section-title" id="about-title">About the role</h2>
+          <div class="prose-block">
+            <p>LedgerLex Language Studio is a Hong Kong language services boutique serving fund houses, listed companies and investor relations teams. Work includes fund materials, listed company reports and corporate communications in English, Traditional Chinese and Simplified Chinese.</p>
+            <p>We are looking for a careful, curious trainee who wants practical experience in financial language work. You will support translation and proofreading under supervision, with attention to terminology, figures, formatting and client style.</p>
+          </div>
+          <p class="desk-note">This role focuses on financial language work; the Studio’s wider desk goes beyond translation alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tagline-section" id="tagline" aria-label="Tagline">
+      <div class="wrap">
+        <h2 class="tagline" id="tagline-words">
+          <span class="line">
+            <span class="word">Learn</span>
+            <span class="word">the</span>
+            <span class="word">desk</span>
+            <span class="word">standard.</span>
+          </span>
+          <span class="line">
+            <span class="word">Language</span>
+            <span class="word">that</span>
+            <span class="word">holds</span>
+            <span class="word">under</span>
+            <span class="word">pressure.</span>
+          </span>
+        </h2>
+      </div>
+    </section>
+
+    <section class="section" id="do" aria-labelledby="do-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Day to day</p>
+          <h2 class="section-title" id="do-title">What you will do</h2>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Assist with English–Chinese assignments: translation, proofreading, bilingual checks</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Compare source and translated documents for meaning, terminology, figures, dates, names and formatting</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Terminology research and clear notes on questions or inconsistencies</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Support document preparation and other language production tasks</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="look-for" aria-labelledby="look-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Fit</p>
+          <h2 class="section-title" id="look-title">What we look for</h2>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Strong written English and Chinese; careful Traditional Chinese; Simplified Chinese an advantage</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Attention to detail; methodical checking</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Interest in finance, business writing or translation; prior experience helpful, not essential</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Organisation, reliability, and the habit of asking when something is unclear</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Discretion with confidential material</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Current university students welcome</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Right to undertake this work in Hong Kong</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="gain" aria-labelledby="gain-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Return</p>
+          <h2 class="section-title" id="gain-title">What you gain</h2>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Foundations for specialist financial language work</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Subject to performance and project needs: possible assist on assignments using advanced AI tools</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Close feedback; see how language work is checked and prepared for publication</p>
+            </div>
+            <div class="bullet-item">
+              <span class="dot" aria-hidden="true"></span>
+              <p>Written feedback or a reference report on request</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--surface" id="apply" aria-labelledby="apply-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Next step</p>
+          <h2 class="section-title" id="apply-title">How to apply</h2>
+          <div class="apply-card">
+            <p>Email your CV and a short note covering language background, availability, expected hourly rate and interest to <a href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">elite@ledgerlexlanguagestudio.com</a> by 31 October 2026.</p>
+            <p>An optional brief writing sample is welcome. Do not send confidential or client owned material.</p>
+            <p>Shortlisted candidates receive a short written exercise; the text is provided.</p>
+            <p>Personal data is used only for recruitment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Questions</p>
+          <h2 class="section-title" id="faq-title">FAQ</h2>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>Are hours guaranteed?</summary>
+              <p class="faq-a">No. Work is as needed. You should generally expect up to about 10 hours per month, and some weeks may have no assignments. Notice usually comes at the start of the week when work is available.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Is the role remote?</summary>
+              <p class="faq-a">Yes. The trainee practice is part time and remote, supporting a Hong Kong financial language desk.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Can current university students apply?</summary>
+              <p class="faq-a">Yes. Current university students are welcome, provided you have the right to undertake this work in Hong Kong.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Is there a written test?</summary>
+              <p class="faq-a">Shortlisted candidates get a short written exercise. The text is provided; you do not need to bring client material.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How should I state pay expectations?</summary>
+              <p class="faq-a">Include your expected hourly rate in HKD in your note. The studio has budgeted around HKD 120–150 per hour as a planning range, not a fixed take it or leave it figure.</p>
+            </details>
+            <details class="faq-item">
+              <summary>Which languages matter most?</summary>
+              <p class="faq-a">Strong written English and Chinese. Careful Traditional Chinese is important. Simplified Chinese is an advantage. Work spans fund materials, listed reporting and corporate communications.</p>
+            </details>
+            <details class="faq-item">
+              <summary>How is confidentiality handled?</summary>
+              <p class="faq-a">Discretion with confidential material is required. Do not send confidential or client owned samples with your application. Desk materials stay inside the supervised workflow.</p>
+            </details>
+            <details class="faq-item">
+              <summary>When is the deadline?</summary>
+              <p class="faq-a">Apply by 31 October 2026. Email CV and short note to elite@ledgerlexlanguagestudio.com.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="engage" aria-labelledby="engage-title">
+      <div class="wrap">
+        <div class="reveal">
+          <h2 class="final-cta__title" id="engage-title">Apply by 31 October 2026</h2>
+          <div class="final-cta__actions">
+            <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply by email</a>
+            <a class="btn btn--cream" href="index.html">Home</a>
+          </div>
+          <p class="final-cta__note">CV and short note. Optional writing sample. No confidential material.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="trainee.html">Trainee</a>
+        <a href="index.html">Home</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var reveals = document.querySelectorAll(".reveal");
+      if (reduce) {
+        reveals.forEach(function (el) { el.classList.add("is-in"); });
+      } else if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+        reveals.forEach(function (el) { io.observe(el); });
+      } else {
+        reveals.forEach(function (el) { el.classList.add("is-in"); });
+      }
+
+      var words = document.querySelectorAll("#tagline-words .word");
+      if (reduce) {
+        words.forEach(function (w) { w.classList.add("is-on"); });
+      } else if ("IntersectionObserver" in window && words.length) {
+        var wordIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            Array.prototype.forEach.call(words, function (w, i) {
+              window.setTimeout(function () {
+                w.classList.add("is-on");
+              }, i * 120);
+            });
+            wordIo.disconnect();
+          });
+        }, { threshold: 0.4 });
+        var tagSection = document.getElementById("tagline");
+        if (tagSection) wordIo.observe(tagSection);
+      } else {
+        words.forEach(function (w) { w.classList.add("is-on"); });
+      }
+    })();
+  </script>
+</body>
+</html>
