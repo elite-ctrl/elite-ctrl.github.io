@@ -1180,6 +1180,12 @@
       }
     }
 
+
+    .topnav__links a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
     .quiet-link {
       margin-top: 32px;
       font-size: 14px;
@@ -1204,6 +1210,7 @@
       <a class="topnav__brand" href="#hero"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
 
       <div class="topnav__links" role="list">
+        <a href="#hero" role="listitem" aria-current="page">Home</a>
         <a href="#benefits" role="listitem">Benefits</a>
         <a href="#coverage" role="listitem">Coverage</a>
         <a href="#how" role="listitem">How it works</a>
@@ -1228,6 +1235,7 @@
     </div>
 
     <div class="topnav__panel" id="mobile-panel" hidden>
+      <a href="#hero" aria-current="page">Home</a>
       <a href="#benefits">Benefits</a>
       <a href="#coverage">Coverage</a>
       <a href="#how">How it works</a>
