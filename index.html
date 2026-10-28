@@ -580,15 +580,21 @@
 
     .hero__risk p + p { margin-top: 4px; }
 
+    /* Proof chips: column stack below fit width; single nowrap row above (no 2+1 wrap).
+       Breaks out of .hero__inner (--prose 680px) so strip can use up to 720/820. */
     .proof-strip {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 8px;
       margin-top: 32px;
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      width: min(720px, calc(100vw - 32px));
+      max-width: none;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .proof-chip {
@@ -598,15 +604,30 @@
       background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
-      padding: 8px 16px;
+      padding: 8px 12px;
       font-size: 14px;
       font-weight: 700;
       line-height: 20px;
       white-space: nowrap;
     }
 
-    @media (min-width: 640px) {
-      .proof-chip { font-size: 16px; line-height: 24px; padding: 12px 16px; }
+    /* Three chips @14px + pad 12 + gap 12 ≈ 691px; strip breakout to 720 needs ~800px viewport (wrap pad 40) */
+    @media (min-width: 800px) {
+      .proof-strip {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 12px;
+        width: min(720px, calc(100vw - 80px));
+      }
+      .proof-chip {
+        padding: 12px 12px;
+      }
+    }
+
+    /* 16px mono row ≈ 767px with pad 12; raise strip to 820 */
+    @media (min-width: 900px) {
+      .proof-strip { width: min(820px, calc(100vw - 80px)); }
+      .proof-chip { font-size: 16px; line-height: 24px; padding: 12px 12px; }
     }
 
 
