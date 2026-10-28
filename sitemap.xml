@@ -27,8 +27,14 @@
   <url>
     <loc>https://ledgerlexlanguagestudio.net/language-watchdog.html</loc>
     <lastmod>2026-10-28</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ledgerlexlanguagestudio.net/language-watchdog-cpic-2026-q3.html</loc>
+    <lastmod>2026-10-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ledgerlexlanguagestudio.net/privacy.html</loc>

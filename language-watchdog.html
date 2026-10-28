@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Language Watchdog | Hong Kong Financial Translation</title>
-  <meta name="description" content="China Pacific Insurance’s 2026 Q3 A+H filing: three spots where the English parts company with the Chinese — including person-times turned into policies.">
+  <meta name="description" content="LedgerLex Language Watchdog — a desk journal on EN≠TC and filing parallel misses for financial storytelling that has to hold under pressure.">
   <meta name="theme-color" content="#F5F0E6">
   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog.html">
   <meta property="og:title" content="Language Watchdog | Hong Kong Financial Translation">
-  <meta property="og:description" content="China Pacific Insurance’s 2026 Q3 A+H filing: three spots where the English parts company with the Chinese — including person-times turned into policies.">
-  <meta property="og:type" content="article">
+  <meta property="og:description" content="LedgerLex Language Watchdog — a desk journal on EN≠TC and filing parallel misses for financial storytelling that has to hold under pressure.">
+  <meta property="og:type" content="website">
   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/language-watchdog.html">
   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
   <meta property="og:image:width" content="1200">
@@ -17,7 +17,7 @@
   <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Language Watchdog | Hong Kong Financial Translation">
-  <meta name="twitter:description" content="China Pacific Insurance’s 2026 Q3 A+H filing: three spots where the English parts company with the Chinese — including person-times turned into policies.">
+  <meta name="twitter:description" content="LedgerLex Language Watchdog — a desk journal on EN≠TC and filing parallel misses for financial storytelling that has to hold under pressure.">
   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,17 +28,14 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Article",
+  "@type": "CollectionPage",
+  "name": "Language Watchdog",
   "headline": "Language Watchdog",
-  "alternativeHeadline": "Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese",
-  "description": "China Pacific Insurance’s 2026 Q3 A+H filing: three spots where the English parts company with the Chinese — including person-times turned into policies.",
+  "description": "LedgerLex Language Watchdog — a desk journal on EN≠TC and filing parallel misses for financial storytelling that has to hold under pressure.",
   "url": "https://ledgerlexlanguagestudio.net/language-watchdog.html",
   "mainEntityOfPage": "https://ledgerlexlanguagestudio.net/language-watchdog.html",
-  "image": "https://ledgerlexlanguagestudio.net/og-share.png",
-  "datePublished": "2026-10-28",
-  "dateModified": "2026-10-28",
-  "author": {
-    "@type": "Organization",
+  "isPartOf": {
+    "@type": "WebSite",
     "name": "LedgerLex Language Studio",
     "url": "https://ledgerlexlanguagestudio.net/"
   },
@@ -50,12 +47,20 @@
       "url": "https://ledgerlexlanguagestudio.net/brand/logo-nav.png"
     }
   },
-  "about": [
-    "CPIC",
-    "A+H quarterly report",
-    "financial translation",
-    "EN≠TC"
-  ]
+  "mainEntity": {
+    "@type": "Blog",
+    "name": "Language Watchdog",
+    "url": "https://ledgerlexlanguagestudio.net/language-watchdog.html",
+    "blogPost": [
+      {
+        "@type": "BlogPosting",
+        "headline": "Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese",
+        "url": "https://ledgerlexlanguagestudio.net/language-watchdog-cpic-2026-q3.html",
+        "datePublished": "2026-10-28",
+        "description": "The English invents a policy figure that is not in the Chinese and drops the coverage figure that is."
+      }
+    ]
+  }
 }
   </script>
   <style>
@@ -633,6 +638,98 @@
       }
     }
 
+
+    .journal-intro {
+      max-width: var(--prose);
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .journal-intro p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .journal-intro p {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .journal-list {
+      max-width: var(--prose);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding-bottom: 64px;
+    }
+
+    @media (min-width: 768px) {
+      .journal-list { padding-bottom: 80px; gap: 32px; }
+    }
+
+    .journal-card {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .journal-card { padding: 32px 40px; }
+    }
+
+    .journal-card__date {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .journal-card__title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .journal-card__title {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 16px;
+      }
+    }
+
+    .journal-card__lede {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      margin: 0 auto 24px;
+      max-width: 560px;
+    }
+
+    .journal-card .btn {
+      margin-top: 0;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .btn, .topnav__toggle, .topnav__links a {
@@ -695,88 +792,31 @@
     <header class="article-hero">
       <div class="wrap">
         <div class="article-hero__inner">
-          <p class="eyebrow">From the Desk</p>
+          <p class="eyebrow">Journal</p>
           <h1>Language Watchdog</h1>
-          <p class="article-hero__sub">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</p>
+          <p class="article-hero__sub">Desk notes on EN≠TC and filing parallel misses — for suppliers and clients who need language that holds under pressure.</p>
         </div>
       </div>
     </header>
 
     <div class="article-body">
       <div class="wrap">
-        <article class="prose" id="language-watchdog">
+        <div class="journal-intro">
+          <p>Side-by-side reads of Chinese originals and English parallels. When the metric, the diligence step, or the collocation slips, the English-only reader gets a different document.</p>
+        </div>
 
-          <section class="prose-card" aria-labelledby="framing-title">
-            <h2 id="framing-title">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</h2>
-            <p>China Pacific Insurance’s 2026 third-quarter report was filed in both Chinese and English on 28 October. For A+H insurers the Chinese text is usually the original, written to the Shanghai Stock Exchange template; the English is the parallel version. Looking at the two side by side turns up three spots where the English says something different from the Chinese.</p>
-            <p>The English filing is available here: <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1028/2026102800288.pdf" target="_blank" rel="noopener">HKEX filing (CPIC 2026 Q3)</a></p>
-          </section>
+        <div class="journal-list" role="list">
+          <article class="journal-card" role="listitem" aria-labelledby="entry-cpic-q3">
+            <p class="journal-card__date"><time datetime="2026-10-28">28 Oct 2026</time></p>
+            <h2 class="journal-card__title" id="entry-cpic-q3">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</h2>
+            <p class="journal-card__lede">Person-times of inclusive coverage become “policies issued” — a substitution that invents a policy figure the Chinese does not contain.</p>
+            <a class="btn" href="language-watchdog-cpic-2026-q3.html">Read</a>
+          </article>
+        </div>
 
-          <section class="prose-card" aria-labelledby="s1">
-            <h2 id="s1">Coverage counted as policies instead of person-times</h2>
-            <div class="pair" role="group" aria-label="Source and target">
-              <div class="pair__row">
-                <p class="pair__label">Source (TC)</p>
-                <p class="pair__text">普惠覆蓋人群超2.8億人次</p>
-              </div>
-              <div class="pair__row">
-                <p class="pair__label">Target (EN)</p>
-                <p class="pair__text">a total of over 280 million inclusive insurance policies were issued</p>
-              </div>
-            </div>
-            <p>The Chinese counts person-times of inclusive-insurance coverage. The English turns this into a statement about policies issued. Person-times and policies issued are not the same thing. One counts how many times people were covered; the other counts contracts. The English invents a policy figure that is not in the Chinese and drops the coverage figure that is.</p>
-            <p>This is not a close rephrasing. The distance between source and target is too wide to be described as “smoothing for English readers.” Smoothing would keep the same fact while adjusting the phrasing. Here the English replaces the disclosed metric (coverage in person-times) with a different metric (policies issued) that the Chinese does not contain. It is a substitution, not an adaptation.</p>
-            <p>HKEX English filings by other PRC insurers treat 人次 as a distinct metric and commonly render it as “person-times.” PICC sustainability and annual reports, for example, use “served 1.68 billion person-times” and “providing coverage for over 1.5 billion person-times.” China Life English versions likewise retain “person-times” for coverage and claims-service counts. The term is established in this disclosure genre. A source-locked rendering would be:</p>
-            <div class="tc-block">inclusive insurance coverage exceeded 280 million person-times</div>
-            <p>or</p>
-            <div class="tc-block">inclusive insurance programmes covered more than 280 million person-times</div>
-            <p>“Policies were issued” should not be used unless the Chinese text itself states 保單 or 承保保單.</p>
-            <p>This is the strongest of the three differences: an English-only reader is given a different metric. If the inclusive-finance volume figure is material to how the company presents its activity, this is the one that most clearly warrants a clarification.</p>
-          </section>
-
-          <section class="prose-card" aria-labelledby="s2">
-            <h2 id="s2">“Confirming to” instead of “conforming to”</h2>
-            <div class="pair" role="group" aria-label="Source and target">
-              <div class="pair__row">
-                <p class="pair__label">Source (TC)</p>
-                <p class="pair__text">其他符合非經常性損益定義的損益項目</p>
-              </div>
-              <div class="pair__row">
-                <p class="pair__label">Target (EN)</p>
-                <p class="pair__text">Other items confirming to the definition of non-recurring profit or loss</p>
-              </div>
-            </div>
-            <p>The Chinese has items that 符合 (meet / conform to) the definition of non-recurring profit or loss. The English says “items confirming to the definition.” “Confirming to” is not the right English here. The normal phrase is “conforming to” or “that meet the definition of.” It is a small word, but it sits on a line people use to strip out one-offs and look at recurring earnings. Getting the verb wrong makes the label less precise than the Chinese. The meaning is still recoverable, however, so this collocation error is unlikely to justify a formal clarification on its own.</p>
-          </section>
-
-          <section class="prose-card" aria-labelledby="s3">
-            <h2 id="s3">The enquiry-and-confirmation step disappears</h2>
-            <div class="pair" role="group" aria-label="Source and target">
-              <div class="pair__row">
-                <p class="pair__label">Source (TC)</p>
-                <p class="pair__text">經本公司詢問並經相關股東確認，除此之外，本公司未獲知上述股東存在其他關聯關係或一致行動關係。</p>
-              </div>
-              <div class="pair__row">
-                <p class="pair__label">Target (EN)</p>
-                <p class="pair__text">Other than this, the Company is not aware of any related relations or concerted actions among the above-mentioned shareholders.</p>
-              </div>
-            </div>
-            <p>The Chinese says the Company asked the relevant shareholders and they confirmed there were no other related-party or concert-party relationships, and only then states that the Company is not aware of any others. The English keeps only the second half. The diligence step—enquiry by the Company and confirmation by the shareholders—is gone. That sentence is a standard piece of quarterly disclosure. Leaving it out makes the English version a weaker statement than the Chinese one. The core negative representation remains, so the omission is a legitimate proofreading flag and a borderline candidate for clarification, but it is weaker than the metric substitution.</p>
-          </section>
-
-          <section class="prose-card prose-card--yellow" aria-labelledby="closing">
-            <h2 id="closing">Closing</h2>
-            <p>None of these is just a style choice. Each one changes what an English-only reader can take from the document relative to the Chinese original. When the English is a translation of a template-driven Chinese report, the practical test is whether the same facts, the same metrics and the same representations survive. In these three places they do not. Of the three, only the person-times / policies substitution rises to the level of a clarification in ordinary practice. The other two are real source–target asymmetries that should be corrected in the English text, but they do not, on their own, warrant a clarifying announcement. The person-times case is the clearest illustration: the gap is not a matter of English readability; it is a change of the fact disclosed.</p>
-          </section>
-
-          <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
-
-          <div class="article-cta">
-            <a class="btn" href="index.html#language-watchdog">Back to home</a>
-            <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
-          </div>
-
-        </article>
+        <div class="article-cta" style="margin-top:0;padding-bottom:48px;">
+          <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+        </div>
       </div>
     </div>
   </main>
