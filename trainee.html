@@ -119,6 +119,15 @@
     a { color: inherit; text-decoration: none; }
     ul, ol { list-style: none; }
 
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+
     .skip {
       position: absolute;
       left: 16px;
@@ -133,6 +142,7 @@
       font-weight: 700;
     }
     .skip:focus { top: 16px; }
+
 
     .topnav {
       position: sticky;
@@ -172,9 +182,140 @@
       width: auto;
     }
 
+    .topnav__links {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .topnav__links a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 12px;
+      border: 2px solid transparent;
+      transition:
+        background-color 300ms var(--ease),
+        border-color 300ms var(--ease),
+        transform 300ms var(--ease);
+    }
+
+    .topnav__links a:hover {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .topnav__links a:active { transform: scale(0.98); }
+
+    .topnav__cta {
+      display: none !important;
+    }
+
+    .topnav__toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      flex-shrink: 0;
+    }
+
+    .topnav__toggle:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    .topnav__toggle:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .topnav__toggle span {
+      display: block;
+      height: 3px;
+      background: var(--ink);
+      transition: transform 300ms var(--ease), opacity 300ms var(--ease);
+      transform-origin: center;
+    }
+
+    .topnav.is-open .topnav__toggle span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .topnav.is-open .topnav__toggle span:nth-child(2) { opacity: 0; }
+    .topnav.is-open .topnav__toggle span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .topnav__panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(245, 240, 230, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 96px 24px 48px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .topnav.is-open .topnav__panel {
+      display: flex;
+    }
+
+    .topnav__panel a {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 32px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 400ms var(--ease),
+        transform 400ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .topnav.is-open .topnav__panel a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .topnav.is-open .topnav__panel a:nth-child(1) { transition-delay: 0ms; }
+    .topnav.is-open .topnav__panel a:nth-child(2) { transition-delay: 60ms; }
+    .topnav.is-open .topnav__panel a:nth-child(3) { transition-delay: 120ms; }
+    .topnav.is-open .topnav__panel a:nth-child(4) { transition-delay: 180ms; }
+    .topnav.is-open .topnav__panel a:nth-child(5) { transition-delay: 240ms; }
+    .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
+    .topnav.is-open .topnav__panel a:nth-child(7) { transition-delay: 360ms; }
+    .topnav.is-open .topnav__panel a:nth-child(8) { transition-delay: 400ms; }
+
+    .topnav__panel a:hover { background: var(--yellow); }
+
     @media (min-width: 900px) {
+      .topnav__links { display: flex; }
+      .topnav__cta { display: inline-flex !important; }
+      .topnav__toggle { display: none; }
+      .topnav__panel { display: none !important; }
       .topnav__brand img { height: 32px; }
     }
+
+    .topnav__links a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
 
     .btn {
       display: inline-flex;
@@ -213,6 +354,7 @@
     }
 
     .btn:focus-visible,
+    button:focus-visible,
     a:focus-visible,
     summary:focus-visible {
       outline: 3px solid var(--accent);
@@ -772,12 +914,18 @@
         color: #000;
         transition: none;
       }
-      .btn, .fact-card, .faq-item summary {
+      .btn, .fact-card, .faq-item summary, .topnav__toggle, .topnav__links a {
         transition: none;
       }
       .btn:hover, .btn:active,
-      .fact-card:hover {
+      .fact-card:hover,
+      .topnav__toggle:hover, .topnav__toggle:active {
         transform: none;
+      }
+      .topnav__panel a {
+        opacity: 1;
+        transform: none;
+        transition: none;
       }
     }
   </style>
@@ -785,10 +933,39 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" id="topnav" aria-label="Primary">
     <div class="topnav__bar">
       <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
-      <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply</a>
+
+      <div class="topnav__links" role="list">
+        <a href="index.html" role="listitem">Home</a>
+        <a href="financial-translation.html" role="listitem">Finance</a>
+        <a href="trainee.html" role="listitem" aria-current="page">Trainee</a>
+        <a href="trade-in-words.html" role="listitem">Trade in Words</a>
+        <a href="#faq" role="listitem">FAQ</a>
+      </div>
+
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply</a>
+
+      <button
+        class="topnav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+        id="nav-toggle"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <a href="index.html">Home</a>
+      <a href="financial-translation.html">Finance</a>
+      <a href="trainee.html" aria-current="page">Trainee</a>
+      <a href="trade-in-words.html">Trade in Words</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:elite@ledgerlexlanguagestudio.com?subject=Language%20Services%20Trainee">Apply</a>
     </div>
   </nav>
 
@@ -1047,6 +1224,42 @@
   <script>
     (function () {
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var nav = document.getElementById("topnav");
+      var toggle = document.getElementById("nav-toggle");
+      var panel = document.getElementById("mobile-panel");
+
+      function closeNav() {
+        if (!nav || !toggle || !panel) return;
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
+        panel.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function openNav() {
+        nav.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", "Close menu");
+        panel.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      if (toggle && panel && nav) {
+        toggle.addEventListener("click", function () {
+          if (nav.classList.contains("is-open")) closeNav();
+          else openNav();
+        });
+
+        panel.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", closeNav);
+        });
+
+        window.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeNav();
+        });
+      }
 
       var reveals = document.querySelectorAll(".reveal");
       if (reduce) {
