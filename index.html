@@ -611,6 +611,192 @@
 
 
 
+
+    /* —— Hero visual panel (audit item 7) —— */
+    .hero-visual {
+      margin: 32px auto 0;
+      max-width: 640px;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 550ms var(--ease),
+        transform 550ms var(--ease);
+      transition-delay: 100ms;
+      will-change: opacity, transform;
+    }
+
+    .hero__inner.is-in .hero-visual {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 768px) {
+      .hero-visual { margin-top: 40px; max-width: 680px; }
+    }
+
+    .hero-visual__frame {
+      position: relative;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      .hero-visual__frame { padding: 24px; }
+    }
+
+    .hero-visual__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hero-visual__bar {
+      flex: 1;
+      height: 12px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .hero-visual__stamp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 56px;
+      height: 32px;
+      padding: 0 10px;
+      background: var(--accent);
+      color: #fff;
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .hero-visual__slabs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-visual__slab {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: center;
+      background: var(--bg);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .hero-visual__slab {
+        grid-template-columns: 64px 1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+    }
+
+    .hero-visual__lang {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      background: var(--ink);
+      color: var(--yellow);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.04em;
+      border: 2px solid var(--ink);
+    }
+
+    .hero-visual__slab--tc .hero-visual__lang {
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .hero-visual__lines {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .hero-visual__lines span {
+      display: block;
+      height: 8px;
+      background: var(--ink);
+      border: 2px solid var(--ink);
+      opacity: 0.18;
+    }
+
+    .hero-visual__lines span:nth-child(1) { width: 92%; opacity: 0.28; }
+    .hero-visual__lines span:nth-child(2) { width: 74%; }
+    .hero-visual__lines span:nth-child(3) { width: 58%; opacity: 0.12; }
+
+    .hero-visual__slab--tc .hero-visual__lines span:nth-child(1) { width: 84%; }
+    .hero-visual__slab--tc .hero-visual__lines span:nth-child(2) { width: 96%; opacity: 0.28; }
+    .hero-visual__slab--tc .hero-visual__lines span:nth-child(3) { width: 66%; }
+
+    .hero-visual__bridge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 2px 0;
+    }
+
+    .hero-visual__bridge-line {
+      flex: 1;
+      max-width: 48px;
+      height: 3px;
+      background: var(--ink);
+    }
+
+    .hero-visual__bridge-dot {
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .hero-visual__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      justify-content: flex-start;
+    }
+
+    .hero-visual__chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      box-shadow: 2px 2px 0 #000;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
     /* —— Tagline reveal (B11) —— */
     .tagline-section {
       padding: 48px 0;
@@ -1213,6 +1399,11 @@
         transform: none;
         transition: none;
       }
+      .hero-visual {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
       .tagline .word {
         color: #000;
         transition: none;
@@ -1328,6 +1519,38 @@
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Priced before you commit</span>
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Short pilot, no fee</span>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-visual__frame">
+              <div class="hero-visual__top">
+                <div class="hero-visual__bar"></div>
+                <span class="hero-visual__stamp">DESK</span>
+              </div>
+              <div class="hero-visual__slabs">
+                <div class="hero-visual__slab hero-visual__slab--en">
+                  <span class="hero-visual__lang">EN</span>
+                  <div class="hero-visual__lines">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="hero-visual__bridge">
+                  <span class="hero-visual__bridge-line"></span>
+                  <span class="hero-visual__bridge-dot"></span>
+                  <span class="hero-visual__bridge-line"></span>
+                </div>
+                <div class="hero-visual__slab hero-visual__slab--tc">
+                  <span class="hero-visual__lang">TC</span>
+                  <div class="hero-visual__lines">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="hero-visual__chips">
+                <span class="hero-visual__chip">FUNDS</span>
+                <span class="hero-visual__chip">IPO</span>
+                <span class="hero-visual__chip">IR</span>
+              </div>
+            </div>
           </div>
 
         </div>
