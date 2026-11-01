@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T15:10:00Z",
+  "title": "Design System: LedgerLex Language Studio",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Cream Paper" },
+      "surface": { "role": "neutral", "displayName": "Raised Surface" },
+      "ink": { "role": "neutral", "displayName": "Ink" },
+      "yellow": { "role": "primary", "displayName": "Desk Yellow" },
+      "accent": { "role": "secondary", "displayName": "Stamp Accent" },
+      "muted": { "role": "neutral", "displayName": "Muted Ink" },
+      "white": { "role": "neutral", "displayName": "White" },
+      "nav-bar": { "role": "neutral", "displayName": "Nav Scrim" },
+      "footer-ink": { "role": "neutral", "displayName": "Footer Ink" },
+      "footer-meta": { "role": "neutral", "displayName": "Footer Meta" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Homepage and marketing heroes at 900px and up." },
+      "display-md": { "displayName": "Display, mid", "purpose": "The same display role from 640px." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles from 768px." },
+      "headline-sm": { "displayName": "Headline, small", "purpose": "Section titles below 768px." },
+      "title": { "displayName": "Title", "purpose": "Panel titles and article subheads." },
+      "article-title": { "displayName": "Article title", "purpose": "20px article titles." },
+      "body-lg": { "displayName": "Body, large", "purpose": "Ledes from 768px." },
+      "body": { "displayName": "Body", "purpose": "Default 16px reading size." },
+      "label": { "displayName": "Label", "purpose": "Nav, compact buttons, chips." },
+      "eyebrow": { "displayName": "Eyebrow", "purpose": "12px uppercase eyebrows." },
+      "numeral": { "displayName": "Numeral", "purpose": "Step numbers." },
+      "display-404": { "displayName": "404 display", "purpose": "404 title from 768px." }
+    },
+    "shadows": [
+      { "name": "small-stamp", "value": "4px 4px 0 #000000", "purpose": "Buttons, chips, and compact controls." },
+      { "name": "default-stamp", "value": "6px 6px 0 #000000", "purpose": "Nav bar and the main button hover." },
+      { "name": "large-stamp", "value": "8px 8px 0 #000000", "purpose": "Large cards." },
+      { "name": "press-2", "value": "2px 2px 0 #000000", "purpose": "Active button press." },
+      { "name": "press-3", "value": "3px 3px 0 #000000", "purpose": "Eyebrows and the hero stamp." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default easing for state transitions." },
+      { "name": "duration-state", "value": "300ms", "purpose": "Hover, focus, and press." },
+      { "name": "duration-hero", "value": "550ms", "purpose": "Homepage hero panel fade and rise." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "proof", "value": "800px" },
+      { "name": "lg", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Yellow action with a hard ink stamp.",
+      "html": "<button class=\"ds-btn-primary\">Send the brief</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: #FFE566; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 16px; font-weight: 700; line-height: 24px; padding: 12px 24px; transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000000; } .ds-btn-primary:focus-visible { outline: 3px solid #FF4D1A; outline-offset: 3px; } .ds-btn-primary:active { transform: translate(2px, 2px) scale(0.98); box-shadow: 2px 2px 0 #000000; }"
+    },
+    {
+      "name": "Cream Button",
+      "kind": "button",
+      "refersTo": "button-cream",
+      "description": "Secondary action on the raised surface.",
+      "html": "<button class=\"ds-btn-cream\">Read the note</button>",
+      "css": ".ds-btn-cream { display: inline-flex; align-items: center; justify-content: center; background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 16px; font-weight: 700; line-height: 24px; padding: 12px 24px; } .ds-btn-cream:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000000; } .ds-btn-cream:focus-visible { outline: 3px solid #FF4D1A; outline-offset: 3px; }"
+    },
+    {
+      "name": "Proof Chip",
+      "kind": "chip",
+      "refersTo": "proof-chip",
+      "description": "Short proof label under the hero.",
+      "html": "<span class=\"ds-chip\">Funds, IPO, IR</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 14px; font-weight: 700; line-height: 20px; padding: 8px 12px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Square surface card with a large stamp.",
+      "html": "<article class=\"ds-card\"><h2>Language Watchdog</h2><p>Open Language Watchdog</p></article>",
+      "css": ".ds-card { background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 8px 8px 0 #000000; padding: 32px 24px; font-family: \"JetBrains Mono\", Consolas, monospace; text-align: center; } .ds-card h2 { font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.02em; margin: 0 0 16px; } .ds-card p { font-size: 16px; font-weight: 600; line-height: 24px; margin: 0; }"
+    },
+    {
+      "name": "Top Nav",
+      "kind": "nav",
+      "refersTo": "button-cream",
+      "description": "Sticky bar. The only blurred surface.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-brand\">LedgerLex</span><a href=\"#offer\">Trainee</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1160px; padding: 8px 8px 8px 16px; background: rgba(250, 247, 240, 0.88); border: 3px solid #000000; border-radius: 0; box-shadow: 6px 6px 0 #000000; backdrop-filter: blur(12px); font-family: \"JetBrains Mono\", Consolas, monospace; } .ds-nav-brand, .ds-nav a { color: #000000; font-size: 14px; font-weight: 700; text-decoration: none; padding: 8px 12px; } .ds-nav a:hover { background: #FFE566; border: 2px solid #000000; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Neo-brutalist marketing HTML",
+    "overview": "The public site is sharp type on cream paper. Blocks are rectangles with thick black borders and hard offset shadows that do not blur. Yellow carries the main button, eyebrows, and proof chips. A hot accent is reserved for small stamps, dots, and the focus ring. One monospace face does every job on the public pages.\n\nThis file records the CSS the live HTML already ships. It does not restyle those pages. Brand locks override Impeccable skill defaults. Carbon and Hex, recorded under Colors, are house palettes. They are not a license to recolor this site.\n\nHomepage sections are centre-aligned. Journal pages keep a left-aligned reading column under a centred header. The homepage hero is offer-first and creative. It does not open as an HKEX, listings, or filings frame.",
+    "keyCharacteristics": [
+      "Sharp rectangles with a 3px black border",
+      "Hard offset shadows, zero blur",
+      "Cream field, yellow action, hot accent, black ink",
+      "One public face: JetBrains Mono",
+      "Centre-aligned homepage",
+      "Brand locks beat skill defaults"
+    ],
+    "rules": [
+      { "name": "The Public CSS Rule", "body": "Frontmatter colors are the live public site. Carbon and Hex stay house tracks until Louis asks for a recolor.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Public pages use the JetBrains Mono stack already in the HTML. Nunito Sans stays on the Chrome extension.", "section": "typography" },
+      { "name": "The Centre Homepage Rule", "body": "Homepage sections stay centre-aligned.", "section": "layout" },
+      { "name": "The Stamp Shadow Rule", "body": "Depth is a hard offset with zero blur. Do not replace it with a soft or glowing shadow.", "section": "elevation" },
+      { "name": "The Sharp Block Rule", "body": "Cards, buttons, and the nav stay square-cornered. Circles are the accent dots only.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do use the live tokens in the frontmatter for public pages.",
+      "Do keep hard offset, zero-blur shadows.",
+      "Do keep homepage sections centre-aligned.",
+      "Do keep 3px ink borders on blocks and 2px ink borders on eyebrows and dots.",
+      "Do leave MotionSites ads, links, and branding out of client deliverable files."
+    ],
+    "donts": [
+      "Don't recolor the public pages with Carbon or Hex unless Louis asks.",
+      "Don't swap the public face to Nunito Sans or to an Impeccable default face.",
+      "Don't introduce pill buttons, blur-glow shadows, or purple gradients.",
+      "Don't copy the homepage hero’s ink-to-muted text gradient onto other headings.",
+      "Don't treat white-on-accent or muted-on-yellow as the contrast target. Those pairings are in the live CSS; this pass does not restyle them.",
+      "Don't put MotionSites branding in deliverables."
+    ]
+  }
+}
