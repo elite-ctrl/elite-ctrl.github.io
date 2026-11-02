@@ -29,7 +29,7 @@ Ready, send, price, and client mail stay with the principal alone.
 - English only for now. No Traditional Chinese or Simplified Chinese mirrors, and no hreflang.
 - The trainee program exists. It welcomes career-path changers and undergraduates who pass the tests. Do not publish dates or rates on the Trainee page.
 - Required home document title: “Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex”. The live `index.html` title already matches.
-- Required Trainee document title: “Financial Language Trainee | Hong Kong Desk — LedgerLex”. The live `trainee.html` title is still “Alternative Career Pathway to Take Off | LedgerLex”. That live string is not the lock. Leave the HTML unchanged until a later task updates titles.
+- Required Trainee document title: “Financial Language Trainee | Hong Kong Desk — LedgerLex”. The live `trainee.html` title now matches the lock.
 - Public journal name: Language Watchdog.
 - This pass does not redesign pages, rewrite copy, or change the Carbon Desk Chrome extension.
 
