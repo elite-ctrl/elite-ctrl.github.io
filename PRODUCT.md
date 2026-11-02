@@ -45,7 +45,7 @@ Never put MotionSites ads, links, or branding into client deliverable files.
 
 ## Evidence on Hand
 
-- Live pages in this repo: `index.html`, `financial-translation.html`, `trainee.html`, `language-watchdog.html`, `language-watchdog-everest-medicines-01952.html`, `language-watchdog-cpic-2026-q3.html`, `trade-in-words.html`, `privacy.html`, `terms.html`, `404.html`.
+- Live pages in this repo: `index.html`, `financial-translation.html`, `trainee.html`, `language-watchdog.html`, `language-watchdog-schroders-monthly-markets-2026-01.html`, `language-watchdog-everest-medicines-01952.html`, `language-watchdog-cpic-2026-q3.html`, `trade-in-words.html`, `privacy.html`, `terms.html`, `404.html`.
 - Every page is `lang="en"`. No hreflang links are present.
 - Marks and icons live under `brand/`.
 - Published page copy is already on those HTML files. Do not add testimonials, client names, rates, dates, or other claims that Louis has not locked.
