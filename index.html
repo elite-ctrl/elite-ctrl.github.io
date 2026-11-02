@@ -746,7 +746,7 @@
       border: 2px solid var(--ink);
     }
 
-    .hero-visual__slab--tc .hero-visual__lang {
+    .hero-visual__slab--pair .hero-visual__lang {
       background: var(--yellow);
       color: var(--ink);
     }
@@ -770,9 +770,9 @@
     .hero-visual__lines span:nth-child(2) { width: 74%; }
     .hero-visual__lines span:nth-child(3) { width: 58%; opacity: 0.12; }
 
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(1) { width: 84%; }
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(2) { width: 96%; opacity: 0.28; }
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(3) { width: 66%; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(1) { width: 84%; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(2) { width: 96%; opacity: 0.28; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(3) { width: 66%; }
 
     .hero-visual__bridge {
       display: flex;
@@ -820,7 +820,7 @@
       text-transform: uppercase;
     }
 
-    /* Desk story: EN slab, its rules, bridge EN→dot→TC, TC slab, chips.
+    /* Desk story: EN slab, its rules, bridge toward the open pair, pair slab, chips.
        Then a slow loop while .is-live and not .is-paused.
        Transform and opacity only, on the site ease.
        Reduced motion never enters this block — the panel stays on its final still state. */
@@ -871,7 +871,7 @@
         animation-fill-mode: both;
       }
 
-      .hero-visual.is-live .hero-visual__slab--tc {
+      .hero-visual.is-live .hero-visual__slab--pair {
         animation-name: hero-slab-in;
         animation-duration: 360ms;
         animation-delay: 640ms;
@@ -887,9 +887,9 @@
       .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(1) { animation-delay: 400ms; }
       .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(2) { animation-delay: 490ms; }
       .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(3) { animation-delay: 580ms; }
-      .hero-visual.is-live .hero-visual__slab--tc .hero-visual__lines span:nth-child(1) { animation-delay: 900ms; }
-      .hero-visual.is-live .hero-visual__slab--tc .hero-visual__lines span:nth-child(2) { animation-delay: 990ms; }
-      .hero-visual.is-live .hero-visual__slab--tc .hero-visual__lines span:nth-child(3) { animation-delay: 1080ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(1) { animation-delay: 900ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(2) { animation-delay: 990ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(3) { animation-delay: 1080ms; }
 
       .hero-visual.is-live .hero-visual__bridge-line {
         animation-name: hero-bridge-in;
@@ -915,7 +915,7 @@
       }
 
       .hero-visual.is-live .hero-visual__slab--en .hero-visual__lang { animation-name: hero-lang-en; }
-      .hero-visual.is-live .hero-visual__slab--tc .hero-visual__lang { animation-name: hero-lang-tc; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lang { animation-name: hero-lang-pair; }
 
       .hero-visual.is-live .hero-visual__chip {
         animation-name: hero-chip-in, hero-chip-beat;
@@ -959,14 +959,14 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Loop: dot leans EN, crosses, leans TC, rests (chips tick), then returns. */
+    /* Loop: dot leans EN, crosses, leans to the pair, rests (chips tick), then returns. */
     @keyframes hero-lang-en {
       0%, 8%, 18%, 78%, 90%, 100% { transform: translateY(0); }
       10%, 16% { transform: translateY(6px); }
       82%, 86% { transform: translateY(6px); }
     }
 
-    @keyframes hero-lang-tc {
+    @keyframes hero-lang-pair {
       0%, 24%, 38%, 62%, 78%, 100% { transform: translateY(0); }
       28%, 34% { transform: translateY(6px); }
       66%, 72% { transform: translateY(6px); }
@@ -1741,8 +1741,8 @@
                   <span class="hero-visual__bridge-dot"></span>
                   <span class="hero-visual__bridge-line"></span>
                 </div>
-                <div class="hero-visual__slab hero-visual__slab--tc">
-                  <span class="hero-visual__lang">TC</span>
+                <div class="hero-visual__slab hero-visual__slab--pair">
+                  <span class="hero-visual__lang">PAIR</span>
                   <div class="hero-visual__lines">
                     <span></span><span></span><span></span>
                   </div>
