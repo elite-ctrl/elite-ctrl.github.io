@@ -732,7 +732,7 @@
       border: 2px solid var(--ink);
     }
 
-    .hero-visual__slab--tc .hero-visual__lang {
+    .hero-visual__slab--pair .hero-visual__lang {
       background: var(--yellow);
       color: var(--ink);
     }
@@ -756,9 +756,9 @@
     .hero-visual__lines span:nth-child(2) { width: 74%; }
     .hero-visual__lines span:nth-child(3) { width: 58%; opacity: 0.12; }
 
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(1) { width: 84%; }
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(2) { width: 96%; opacity: 0.28; }
-    .hero-visual__slab--tc .hero-visual__lines span:nth-child(3) { width: 66%; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(1) { width: 84%; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(2) { width: 96%; opacity: 0.28; }
+    .hero-visual__slab--pair .hero-visual__lines span:nth-child(3) { width: 66%; }
 
     .hero-visual__bridge {
       display: flex;
@@ -804,6 +804,175 @@
       line-height: 16px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+    }
+
+    /* Desk story: EN slab, its rules, bridge toward the open pair, pair slab, chips.
+       Then a slow loop while .is-live and not .is-paused.
+       Transform and opacity only, on the site ease.
+       Reduced motion never enters this block — the panel stays on its final still state. */
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-visual__lines span,
+      .hero-visual__bridge-line {
+        transform-origin: left center;
+      }
+
+      .hero-visual__bridge-dot,
+      .hero-visual__lang {
+        transform-origin: center;
+      }
+
+      .hero-visual:not(.is-live) .hero-visual__slab {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      .hero-visual:not(.is-live) .hero-visual__lines span,
+      .hero-visual:not(.is-live) .hero-visual__bridge-line {
+        transform: scaleX(0);
+      }
+
+      .hero-visual:not(.is-live) .hero-visual__bridge-dot {
+        opacity: 0;
+        transform: scale(0.6);
+      }
+
+      .hero-visual:not(.is-live) .hero-visual__chip {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      .hero-visual.is-live .hero-visual__slab,
+      .hero-visual.is-live .hero-visual__lines span,
+      .hero-visual.is-live .hero-visual__bridge-line,
+      .hero-visual.is-live .hero-visual__bridge-dot,
+      .hero-visual.is-live .hero-visual__chip,
+      .hero-visual.is-live .hero-visual__lang {
+        animation-timing-function: var(--ease);
+      }
+
+      .hero-visual.is-live .hero-visual__slab--en {
+        animation-name: hero-slab-in;
+        animation-duration: 360ms;
+        animation-delay: 160ms;
+        animation-fill-mode: both;
+      }
+
+      .hero-visual.is-live .hero-visual__slab--pair {
+        animation-name: hero-slab-in;
+        animation-duration: 360ms;
+        animation-delay: 640ms;
+        animation-fill-mode: both;
+      }
+
+      .hero-visual.is-live .hero-visual__lines span {
+        animation-name: hero-line-in;
+        animation-duration: 240ms;
+        animation-fill-mode: both;
+      }
+
+      .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(1) { animation-delay: 400ms; }
+      .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(2) { animation-delay: 490ms; }
+      .hero-visual.is-live .hero-visual__slab--en .hero-visual__lines span:nth-child(3) { animation-delay: 580ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(1) { animation-delay: 900ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(2) { animation-delay: 990ms; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lines span:nth-child(3) { animation-delay: 1080ms; }
+
+      .hero-visual.is-live .hero-visual__bridge-line {
+        animation-name: hero-bridge-in;
+        animation-duration: 240ms;
+        animation-fill-mode: both;
+      }
+
+      .hero-visual.is-live .hero-visual__bridge-line:first-child { animation-delay: 680ms; }
+      .hero-visual.is-live .hero-visual__bridge-line:last-child { animation-delay: 900ms; }
+
+      .hero-visual.is-live .hero-visual__bridge-dot {
+        animation-name: hero-dot-in, hero-dot-beat;
+        animation-duration: 200ms, 8s;
+        animation-delay: 800ms, 1900ms;
+        animation-iteration-count: 1, infinite;
+        animation-fill-mode: both, none;
+      }
+
+      .hero-visual.is-live .hero-visual__lang {
+        animation-duration: 8s;
+        animation-delay: 1900ms;
+        animation-iteration-count: infinite;
+      }
+
+      .hero-visual.is-live .hero-visual__slab--en .hero-visual__lang { animation-name: hero-lang-en; }
+      .hero-visual.is-live .hero-visual__slab--pair .hero-visual__lang { animation-name: hero-lang-pair; }
+
+      .hero-visual.is-live .hero-visual__chip {
+        animation-name: hero-chip-in, hero-chip-beat;
+        animation-duration: 280ms, 8s;
+        animation-iteration-count: 1, infinite;
+        animation-fill-mode: both, none;
+      }
+
+      .hero-visual.is-live .hero-visual__chip:nth-child(1) { animation-delay: 1240ms, 1900ms; }
+      .hero-visual.is-live .hero-visual__chip:nth-child(2) { animation-delay: 1360ms, 2040ms; }
+      .hero-visual.is-live .hero-visual__chip:nth-child(3) { animation-delay: 1480ms, 2180ms; }
+
+      .hero-visual.is-paused,
+      .hero-visual.is-paused * {
+        animation-play-state: paused;
+      }
+    }
+
+    @keyframes hero-slab-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes hero-line-in {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes hero-bridge-in {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes hero-dot-in {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes hero-chip-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Loop: dot leans EN, crosses, leans to the pair, rests (chips tick), then returns. */
+    @keyframes hero-lang-en {
+      0%, 8%, 18%, 78%, 90%, 100% { transform: translateY(0); }
+      10%, 16% { transform: translateY(6px); }
+      82%, 86% { transform: translateY(6px); }
+    }
+
+    @keyframes hero-lang-pair {
+      0%, 24%, 38%, 62%, 78%, 100% { transform: translateY(0); }
+      28%, 34% { transform: translateY(6px); }
+      66%, 72% { transform: translateY(6px); }
+    }
+
+    @keyframes hero-dot-beat {
+      0%, 6% { transform: translateY(0) scale(1); }
+      10%, 16% { transform: translateY(-8px) scale(1.2); }
+      20%, 24% { transform: translateY(0) scale(1.55); }
+      28%, 34% { transform: translateY(8px) scale(1.2); }
+      40%, 60% { transform: translateY(0) scale(1); }
+      66%, 72% { transform: translateY(8px) scale(1.2); }
+      76%, 80% { transform: translateY(0) scale(1.55); }
+      82%, 86% { transform: translateY(-8px) scale(1.2); }
+      92%, 100% { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes hero-chip-beat {
+      0%, 40%, 54%, 100% { transform: translateY(0); }
+      46% { transform: translateY(-4px); }
     }
 
     /* —— Tagline reveal (B11) —— */
@@ -1430,6 +1599,17 @@
         transform: none;
         transition: none;
       }
+      .hero-visual__slab,
+      .hero-visual__lang,
+      .hero-visual__lines span,
+      .hero-visual__bridge-line,
+      .hero-visual__bridge-dot,
+      .hero-visual__chip {
+        animation: none;
+        transform: none;
+        filter: none;
+        clip-path: none;
+      }
       .tagline .word {
         color: #000;
         transition: none;
@@ -1558,8 +1738,8 @@
                   <span class="hero-visual__bridge-dot"></span>
                   <span class="hero-visual__bridge-line"></span>
                 </div>
-                <div class="hero-visual__slab hero-visual__slab--tc">
-                  <span class="hero-visual__lang">TC</span>
+                <div class="hero-visual__slab hero-visual__slab--pair">
+                  <span class="hero-visual__lang">PAIR</span>
                   <div class="hero-visual__lines">
                     <span></span><span></span><span></span>
                   </div>
@@ -1924,6 +2104,30 @@
         if (tagSection) wordIo.observe(tagSection);
       } else {
         words.forEach(function (w) { w.classList.add("is-on"); });
+      }
+
+      /* Hero desk panel: one in-view story, then a calm loop. Pause off-screen. */
+      var desk = document.querySelector(".hero-visual");
+      if (desk && !reduce) {
+        var setDeskPlaying = function (playing) {
+          if (playing) {
+            desk.classList.add("is-live");
+            desk.classList.remove("is-paused");
+          } else if (desk.classList.contains("is-live")) {
+            desk.classList.add("is-paused");
+          }
+        };
+
+        if ("IntersectionObserver" in window) {
+          var deskIo = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              setDeskPlaying(entry.isIntersecting);
+            });
+          }, { threshold: 0.2 });
+          deskIo.observe(desk);
+        } else {
+          setDeskPlaying(true);
+        }
       }
 
 
