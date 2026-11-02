@@ -49,6 +49,7 @@ Never put MotionSites ads, links, or branding into client deliverable files.
 - Every page is `lang="en"`. No hreflang links are present.
 - Marks and icons live under `brand/`.
 - Published page copy is already on those HTML files. Do not add testimonials, client names, rates, dates, or other claims that Louis has not locked.
+- Homepage hero states each desk claim once, in the proof strip: “10 years on the desk”, “Priced before you commit”, “Short pilot, no fee”.
 
 ## Product Principles
 

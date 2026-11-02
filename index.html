@@ -425,6 +425,15 @@
       border-bottom: 3px solid var(--ink);
     }
 
+    /* Proof pair: desk note, then journal. Facing edges pull in so the cards sit together. */
+    .section--desk { padding-bottom: 24px; }
+    .section--journal { padding-top: 24px; }
+
+    @media (min-width: 768px) {
+      .section--desk { padding-bottom: 32px; }
+      .section--journal { padding-top: 32px; }
+    }
+
     .eyebrow {
       display: inline-block;
       font-size: 12px;
@@ -547,18 +556,6 @@
       }
     }
 
-    .hero__proof {
-      margin-top: 16px;
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: 700;
-      text-wrap: pretty;
-    }
-
-    @media (min-width: 768px) {
-      .hero__proof { font-size: 18px; line-height: 28px; margin-top: 16px; }
-    }
-
     .hero__cta {
       margin-top: 24px;
       display: flex;
@@ -571,18 +568,7 @@
       .hero__cta { margin-top: 32px; }
     }
 
-    .hero__risk {
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 600;
-      color: var(--muted);
-      max-width: 320px;
-      text-wrap: pretty;
-    }
-
-    .hero__risk p + p { margin-top: 4px; }
-
-    /* Proof chips: column stack below fit width; single nowrap row above (no 2+1 wrap).
+    /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
        Breaks out of .hero__inner (--prose 680px) so strip can use up to 720/820. */
     .proof-strip {
       display: flex;
@@ -591,7 +577,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 32px;
+      margin-top: 16px;
       width: min(720px, calc(100vw - 32px));
       max-width: none;
       position: relative;
@@ -1280,6 +1266,23 @@
       .case-card { padding: 48px 40px; }
     }
 
+    /* Journal is the lighter column beside the desk note: paper ground, smaller stamp. */
+    .case-card--journal {
+      background: var(--bg);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow--journal { background: var(--surface); }
+
+    .case-card__more {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .case-card__more a { border-bottom: 2px solid currentColor; }
+
     .case-card__title {
       font-size: 30px;
       font-weight: 800;
@@ -1708,14 +1711,8 @@
 
           <p class="hero__sub">A specialist financial language studio for storytelling across funds, listed reporting, IPO, and IR. Boutique desk judgment for copy that has to hold under market pressure.</p>
 
-          <p class="hero__proof">Ten years on the desk. Specialist, not generalist.</p>
-
           <div class="hero__cta">
             <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
-            <div class="hero__risk">
-              <p>Priced before you commit.</p>
-              <p>Short pilot, no fee on a live job.</p>
-            </div>
           </div>
 
           <div class="proof-strip" role="list" aria-label="Desk proof points">
@@ -1873,10 +1870,10 @@
 
 
     <!-- 5b. Case study / From the Desk -->
-    <section class="section" id="case-study" aria-labelledby="case-study-title">
+    <section class="section section--desk" id="case-study" aria-labelledby="case-study-title">
       <div class="wrap">
         <div class="reveal">
-          <article class="case-card">
+          <article class="case-card case-card--desk">
             <p class="eyebrow">From the Desk</p>
             <h2 class="case-card__title" id="case-study-title">The Trade in Words</h2>
             <p class="case-card__lede">Notes on financial translation that expose how big-agency “experts” often get market metaphors and terminology wrong. A boutique perspective on the small choices that actually move meaning.</p>
@@ -1893,7 +1890,7 @@
                 <p class="case-compare__en">Market support. Agent and floor stay clear.</p>
               </div>
             </div>
-            <a class="btn btn--lg" href="trade-in-words.html">Explore Now</a>
+            <a class="btn btn--lg" href="trade-in-words.html">Read Trade in Words</a>
           </article>
         </div>
       </div>
@@ -1901,11 +1898,11 @@
 
 
     <!-- 5c. Language Watchdog -->
-    <section class="section" id="language-watchdog" aria-labelledby="language-watchdog-title">
+    <section class="section section--journal" id="language-watchdog" aria-labelledby="language-watchdog-title">
       <div class="wrap">
         <div class="reveal">
-          <article class="case-card">
-            <p class="eyebrow">Journal</p>
+          <article class="case-card case-card--journal">
+            <p class="eyebrow eyebrow--journal">Journal</p>
             <h2 class="case-card__title" id="language-watchdog-title">Language Watchdog</h2>
             <p class="case-card__lede">Latest from the journal: desk notes on EN≠TC and filing parallel misses — language that has to hold under pressure.</p>
             <p class="case-card__hook">Newest entry — CPIC 2026 Q3: the Chinese counts person-times of inclusive coverage; the English invents a policy figure that is not in the Chinese. A substitution, not an adaptation.</p>
@@ -1922,7 +1919,7 @@
               </div>
             </div>
             <a class="btn btn--lg" href="language-watchdog.html">Open Language Watchdog</a>
-            <p style="margin-top:16px;font-size:14px;line-height:20px;font-weight:600;"><a href="language-watchdog-cpic-2026-q3.html" style="border-bottom:2px solid currentColor;">Read the CPIC Q3 note</a></p>
+            <p class="case-card__more"><a href="language-watchdog-cpic-2026-q3.html">Read the CPIC Q3 note</a></p>
           </article>
         </div>
       </div>
