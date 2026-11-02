@@ -663,9 +663,111 @@
       }
     }
 
+    .journal {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    .hit {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .plates {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .plates__kicker {
+      align-self: flex-start;
+      margin-bottom: 0;
+    }
+
+    .plate {
+      margin: 0;
+      min-width: 0;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .plate { padding: 16px; }
+    }
+
+    .plate .pair__label {
+      display: block;
+      margin: 0 0 10px;
+    }
+
+    .plate__pane {
+      max-width: 100%;
+      border: 3px solid var(--ink);
+      background: #fff;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-color: var(--ink) var(--bg);
+      line-height: 0;
+    }
+
+    .plate__zoom {
+      display: block;
+      cursor: zoom-in;
+    }
+
+    .plate__zoom:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .plate__pane img {
+      width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 1079px) {
+      .plate__pane img {
+        width: 1200px;
+        max-width: none;
+      }
+    }
+
+    .plate__caption {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .plate__swipe { display: none; }
+
+    @media (max-width: 1079px) {
+      .plate__swipe { display: inline; }
+    }
+
+    .plate__caption a {
+      font-weight: 700;
+      border-bottom: 2px solid var(--ink);
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .plate__caption a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .btn, .topnav__toggle, .topnav__links a {
+      .btn, .topnav__toggle, .topnav__links a, .plate__caption a {
         transition: none;
       }
       .btn:hover, .btn:active,
@@ -734,7 +836,8 @@
 
     <div class="article-body">
       <div class="wrap">
-        <article class="prose" id="schroders-monthly-markets-2026-01">
+        <article class="journal" id="schroders-monthly-markets-2026-01">
+          <div class="prose">
 
           <section class="prose-card" aria-labelledby="framing-title">
             <h2 id="framing-title">Framing</h2>
@@ -742,8 +845,11 @@
             <p>Two lines under Digital assets / <span lang="zh-Hant">數碼資產</span> did not. One swaps a legislative chamber. One swaps an entire market activity for a trading strategy. Both are the kind of miss you only get to publish when someone is already paying for “professional” bilingual copy.</p>
             <p>Public pages — <a href="https://www.schroders.com/en-hk/hk/individual/insights/monthly-markets-review-2026-01/" target="_blank" rel="noopener">EN</a> (07/02/2026) · <a href="https://www.schroders.com/zh-hk/hk/individual/insights/monthly-markets-review-2026-01/" target="_blank" rel="noopener">TC</a> (2026年2月7日). Direction: <strong>E2C</strong>. English prevails. The Chinese side still treated House and Senate as interchangeable, and treated profit-taking as arbitrage.</p>
           </section>
+          </div>
 
-          <section class="prose-card" aria-labelledby="s1">
+          <section class="hit" aria-labelledby="s1">
+          <div class="prose">
+          <div class="prose-card">
             <h2 id="s1">1. House-passed → <span lang="zh-Hant">參議院</span>: when Congress has one chamber too many</h2>
             <p>English, regulatory bright spot. Chinese, also with a straight face:</p>
             <div class="pair" role="group" aria-label="Source and target">
@@ -762,9 +868,34 @@
             <p><strong>Fix, for people who still care which building the bill left:</strong></p>
             <div class="tc-block" lang="zh-Hant">…直接借鑒<strong>眾議院</strong>已通過的《CLARITY法案》框架…</div>
             <p><strong>Why bother:</strong> the paragraph is selling regulatory clarity as the month’s bright spot. Misname the chamber that already passed the framework and Chinese readers get the wrong institutional story — on a page they (or their firm) paid to have bilingual.</p>
+          </div>
+          </div>
+          <div class="plates">
+            <p class="eyebrow plates__kicker">Page evidence</p>
+            <figure class="plate">
+              <p class="pair__label">Source (EN)</p>
+              <div class="plate__pane">
+                <a class="plate__zoom" href="/assets/watchdog/schroders-2026-01/en-header.png">
+                  <img src="/assets/watchdog/schroders-2026-01/en-header.png" width="1920" height="1113" alt="Schroders English Hong Kong page header for Monthly markets review – January 2026, dated 07/02/2026, with the Schroders logo." loading="lazy" decoding="async">
+                </a>
+              </div>
+              <figcaption class="plate__caption">English page header. Schroders logo and the date 07/02/2026. <span class="plate__swipe">Drag sideways to read the type.</span> <a href="/assets/watchdog/schroders-2026-01/en-header.png">Full size</a></figcaption>
+            </figure>
+            <figure class="plate">
+              <p class="pair__label">Source (EN)</p>
+              <div class="plate__pane">
+                <a class="plate__zoom" href="/assets/watchdog/schroders-2026-01/en-digital-assets.png">
+                  <img src="/assets/watchdog/schroders-2026-01/en-digital-assets.png" width="1920" height="1113" alt="Schroders English Digital assets section. The regulatory paragraph says the Senate Agriculture Committee built on the House-passed CLARITY Act." loading="lazy" decoding="async">
+                </a>
+              </div>
+              <figcaption class="plate__caption">Digital assets on the English page. The regulatory paragraph says House-passed. <span class="plate__swipe">Drag sideways to read the type.</span> <a href="/assets/watchdog/schroders-2026-01/en-digital-assets.png">Full size</a></figcaption>
+            </figure>
+          </div>
           </section>
 
-          <section class="prose-card" aria-labelledby="s2">
+          <section class="hit" aria-labelledby="s2">
+          <div class="prose">
+          <div class="prose-card">
             <h2 id="s2">2. Profit-taking → <span lang="zh-Hant">套利</span>: when selling gains becomes a trading strategy</h2>
             <p>Same section, earlier bruise:</p>
             <div class="pair" role="group" aria-label="Source and target">
@@ -785,8 +916,32 @@
             <div class="tc-block" lang="zh-Hant"><strong>長期持有者沽出以鎖定利潤</strong>恰逢新需求放緩…</div>
             <p>(or <strong lang="zh-Hant">獲利減持</strong>, if the English is trimming a winning position rather than locking gains wholesale)</p>
             <p><strong>Why bother:</strong> the Bitcoin/Ethereum pullback paragraph names a selling motive. Call it <span lang="zh-Hant">套利</span> and Chinese readers inherit a trading-strategy claim EN never made — material, not cosmetic — on a paid bilingual page.</p>
+          </div>
+          </div>
+          <div class="plates">
+            <p class="eyebrow plates__kicker">Page evidence</p>
+            <figure class="plate">
+              <p class="pair__label">Target (TC)</p>
+              <div class="plate__pane">
+                <a class="plate__zoom" href="/assets/watchdog/schroders-2026-01/zh-header.png">
+                  <img src="/assets/watchdog/schroders-2026-01/zh-header.png" width="1920" height="1113" alt="施羅德香港繁體中文頁首：每月經濟回顧及展望 - 2026年1月，日期2026年2月7日，頁首有 Schroders 標誌。" loading="lazy" decoding="async">
+                </a>
+              </div>
+              <figcaption class="plate__caption">Traditional Chinese page header. Same insight, dated <span lang="zh-Hant">2026年2月7日</span>. <span class="plate__swipe">Drag sideways to read the type.</span> <a href="/assets/watchdog/schroders-2026-01/zh-header.png">Full size</a></figcaption>
+            </figure>
+            <figure class="plate">
+              <p class="pair__label">Target (TC)</p>
+              <div class="plate__pane">
+                <a class="plate__zoom" href="/assets/watchdog/schroders-2026-01/zh-digital-assets.png">
+                  <img src="/assets/watchdog/schroders-2026-01/zh-digital-assets.png" width="1920" height="1113" alt="施羅德繁體中文數碼資產一節。回落段落印有「長期持有者套利」。" loading="lazy" decoding="async">
+                </a>
+              </div>
+              <figcaption class="plate__caption"><span lang="zh-Hant">數碼資產</span> on the Chinese page. The pullback paragraph says <span lang="zh-Hant">長期持有者套利</span>. <span class="plate__swipe">Drag sideways to read the type.</span> <a href="/assets/watchdog/schroders-2026-01/zh-digital-assets.png">Full size</a></figcaption>
+            </figure>
+          </div>
           </section>
 
+          <div class="prose">
           <section class="prose-card prose-card--yellow" aria-labelledby="please-stop">
             <h2 id="please-stop">Please stop</h2>
             <ul>
@@ -803,6 +958,7 @@
           <div class="article-cta">
             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+          </div>
           </div>
 
         </article>
