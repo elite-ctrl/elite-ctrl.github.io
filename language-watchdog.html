@@ -323,6 +323,10 @@
 
     .btn--cream { background: var(--surface); }
 
+    .btn--lg {
+      padding: 12px 24px;
+    }
+
     .btn:hover {
       transform: translate(-2px, -2px);
       box-shadow: 6px 6px 0 #000;
@@ -352,12 +356,12 @@
     }
 
     .article-hero {
-      padding: 40px 0 32px;
+      padding: 40px 0 0;
       text-align: center;
     }
 
     @media (min-width: 768px) {
-      .article-hero { padding: 48px 0 40px; }
+      .article-hero { padding: 48px 0 0; }
     }
 
     .article-hero__inner {
@@ -380,24 +384,25 @@
     }
 
     .article-hero h1 {
-      font-size: 30px;
+      font-size: 36px;
       font-weight: 800;
-      line-height: 36px;
-      letter-spacing: -0.02em;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
       text-wrap: balance;
       margin-bottom: 16px;
       background: linear-gradient(90deg, #000 0%, #666 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      -webkit-text-fill-color: transparent;
     }
 
-    @media (min-width: 768px) {
-      .article-hero h1 {
-        font-size: 36px;
-        line-height: 40px;
-        margin-bottom: 24px;
-      }
+    @media (min-width: 640px) {
+      .article-hero h1 { font-size: 48px; }
+    }
+
+    @media (min-width: 900px) {
+      .article-hero h1 { font-size: 60px; }
     }
 
     .article-hero__sub {
@@ -406,8 +411,21 @@
       font-weight: 600;
       color: var(--muted);
       text-wrap: pretty;
-      max-width: 560px;
+      max-width: 640px;
       margin: 0 auto;
+    }
+
+    .article-hero__rule {
+      height: 0;
+      background: none;
+      border: 0;
+      border-top: 3px solid var(--ink);
+      max-width: var(--prose);
+      margin: 24px auto 0;
+    }
+
+    @media (min-width: 768px) {
+      .article-hero__rule { margin-top: 32px; }
     }
 
     @media (min-width: 768px) {
@@ -640,13 +658,73 @@
     }
 
 
-    .journal-intro {
-      max-width: var(--prose);
-      margin: 0 auto 40px;
-      text-align: center;
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    .journal-intro p {
+    .journal {
+      padding: 32px 0 64px;
+    }
+
+    @media (min-width: 768px) {
+      .journal { padding: 40px 0 80px; }
+    }
+
+    .journal__col {
+      max-width: var(--prose);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .journal__col { gap: 48px; }
+    }
+
+    .journal-block h2 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .journal-block h2 {
+        font-size: 24px;
+        line-height: 32px;
+      }
+    }
+
+    .journal-block > p {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .journal-block > p + p { margin-top: 16px; }
+
+    @media (min-width: 768px) {
+      .journal-block > p {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    .journal-block__head { margin-bottom: 16px; }
+
+    .journal-block__head h2 { margin-bottom: 8px; }
+
+    .journal-block__head p {
       font-size: 16px;
       line-height: 24px;
       font-weight: 600;
@@ -654,50 +732,61 @@
       text-wrap: pretty;
     }
 
+    .watch__item {
+      padding: 20px 0;
+      border-top: 3px solid var(--ink);
+    }
+
+    .watch__item:last-child { border-bottom: 3px solid var(--ink); }
+
+    .watch dt {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .watch dd {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
     @media (min-width: 768px) {
-      .journal-intro p {
-        font-size: 18px;
-        line-height: 28px;
+      .watch__item {
+        display: grid;
+        grid-template-columns: 232px minmax(0, 1fr);
+        column-gap: 24px;
+        align-items: start;
       }
-    }
 
-    .journal-list {
-      max-width: var(--prose);
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      padding-bottom: 64px;
-    }
-
-    @media (min-width: 768px) {
-      .journal-list { padding-bottom: 80px; gap: 32px; }
+      .watch dt { margin-bottom: 0; }
     }
 
     .journal-card {
       background: var(--surface);
       border: 3px solid var(--ink);
-      box-shadow: var(--shadow);
-      padding: 24px 16px;
-      text-align: center;
+      box-shadow: var(--shadow-lg);
+      padding: 32px 24px;
+      text-align: left;
     }
 
     @media (min-width: 768px) {
-      .journal-card { padding: 32px 40px; }
+      .journal-card { padding: 48px 40px; }
     }
 
     .journal-card__date {
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 12px;
       font-weight: 700;
       line-height: 16px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      background: var(--yellow);
-      border: 2px solid var(--ink);
-      padding: 4px 8px;
       margin-bottom: 16px;
-      box-shadow: 3px 3px 0 #000;
     }
 
     .journal-card__title {
@@ -706,16 +795,17 @@
       line-height: 28px;
       letter-spacing: -0.02em;
       text-wrap: balance;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     @media (min-width: 768px) {
       .journal-card__title {
         font-size: 24px;
         line-height: 32px;
-        margin-bottom: 16px;
       }
     }
+
+    .journal-card__title a:hover { color: var(--accent); }
 
     .journal-card__lede {
       font-size: 16px;
@@ -723,13 +813,114 @@
       font-weight: 600;
       color: var(--muted);
       text-wrap: pretty;
-      margin: 0 auto 24px;
-      max-width: 560px;
+      margin-bottom: 24px;
+      max-width: 62ch;
     }
 
-    .journal-card .btn {
-      margin-top: 0;
+    @media (min-width: 768px) {
+      .journal-card__lede {
+        font-size: 18px;
+        line-height: 28px;
+      }
     }
+
+    .file { border-top: 3px solid var(--ink); }
+
+    .file__legend {
+      display: none;
+    }
+
+    .file__list { display: flex; flex-direction: column; }
+
+    .file__row,
+    .file__slot {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: start;
+      border-bottom: 3px solid var(--ink);
+      padding: 20px 0;
+    }
+
+    .file__row {
+      transition: background-color 300ms var(--ease);
+    }
+
+    .file__row:hover { background: var(--yellow); }
+
+    .file__date {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+
+    .file__title,
+    .file__slot-label {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    .file__go {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      border-bottom: 2px solid var(--ink);
+      justify-self: start;
+      width: max-content;
+    }
+
+    .file__slot .file__date { color: var(--muted); }
+
+    .file__slot-label { margin-bottom: 8px; }
+
+    .file__slot-copy p:last-child {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .file__legend,
+      .file__row,
+      .file__slot {
+        grid-template-columns: 148px minmax(0, 1fr) 72px;
+        column-gap: 24px;
+      }
+
+      .file__legend {
+        display: grid;
+        padding: 8px 0;
+        border-bottom: 3px solid var(--ink);
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .file__row { align-items: center; }
+
+      .file__go { justify-self: end; }
+    }
+
+    .journal-sibling a {
+      font-weight: 700;
+      border-bottom: 2px solid var(--ink);
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .journal-sibling a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .journal__col .article-cta { margin-top: 0; }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -745,6 +936,7 @@
         transform: none;
         transition: none;
       }
+      .file__row { transition: none; }
     }
   </style>
 </head>
@@ -793,30 +985,87 @@
     <header class="article-hero">
       <div class="wrap">
         <div class="article-hero__inner">
-          <p class="eyebrow">Journal</p>
           <h1>Language Watchdog</h1>
-          <p class="article-hero__sub">Desk notes on EN≠TC and filing parallel misses — for suppliers and clients who need language that holds under pressure.</p>
+          <p class="article-hero__sub">An ongoing desk column on EN≠TC and filing parallel misses. Written for other translation suppliers, and for clients who need language that holds under pressure.</p>
         </div>
+        <hr class="article-hero__rule">
       </div>
     </header>
 
-    <div class="article-body">
+    <div class="journal">
       <div class="wrap">
-        <div class="journal-intro">
-          <p>Side-by-side reads of Chinese originals and English parallels. When the metric, the diligence step, or the collocation slips, the English-only reader gets a different document.</p>
-        </div>
+        <div class="journal__col">
+          <section class="journal-block" aria-labelledby="column-title">
+            <h2 id="column-title">What this column is</h2>
+            <p>Side-by-side reads of Chinese originals and English parallels. When the metric, the diligence step, or the collocation slips, the English-only reader gets a different document.</p>
+            <p>A note is filed with a date and the name of the source. This page is the index. It lists a note after that read is published. One note is on file.</p>
+          </section>
 
-        <div class="journal-list" role="list">
-          <article class="journal-card" role="listitem" aria-labelledby="entry-cpic-q3">
-            <p class="journal-card__date"><time datetime="2026-10-28">28 Oct 2026</time></p>
-            <h2 class="journal-card__title" id="entry-cpic-q3">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</h2>
-            <p class="journal-card__lede">Person-times of inclusive coverage become “policies issued” — a substitution that invents a policy figure the Chinese does not contain.</p>
-            <a class="btn" href="language-watchdog-cpic-2026-q3.html">Read</a>
-          </article>
-        </div>
+          <section class="journal-block" aria-labelledby="watch-title">
+            <h2 id="watch-title">What the column watches</h2>
+            <dl class="watch">
+              <div class="watch__item">
+                <dt>EN≠TC</dt>
+                <dd>English and Chinese part company on a metric, a collocation, or a figure. The note on file shows person-times of coverage rendered as policies issued.</dd>
+              </div>
+              <div class="watch__item">
+                <dt>Filing parallel misses</dt>
+                <dd>A diligence step or a representation in the Chinese does not survive in the English parallel. In the CPIC note, the enquiry-and-confirmation line is one of those misses.</dd>
+              </div>
+            </dl>
+          </section>
 
-        <div class="article-cta" style="margin-top:0;padding-bottom:48px;">
-          <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+          <section class="journal-block" id="latest" aria-labelledby="latest-title">
+            <div class="journal-block__head">
+              <h2 id="latest-title">Latest</h2>
+              <p>The newest note on file.</p>
+            </div>
+            <article class="journal-card" aria-labelledby="entry-cpic-q3">
+              <p class="journal-card__date"><span class="dot" aria-hidden="true"></span><time datetime="2026-10-28">28 Oct 2026</time></p>
+              <h3 class="journal-card__title" id="entry-cpic-q3"><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></h3>
+              <p class="journal-card__lede">Person-times of inclusive coverage become “policies issued” — a substitution that invents a policy figure the Chinese does not contain.</p>
+              <a class="btn btn--lg" href="language-watchdog-cpic-2026-q3.html">Read the note</a>
+            </article>
+          </section>
+
+          <section class="journal-block" id="file" aria-labelledby="file-title">
+            <div class="journal-block__head">
+              <h2 id="file-title">On file</h2>
+              <p>Newest first, including the latest. The last row stays empty until the desk files another note.</p>
+            </div>
+            <div class="file">
+              <div class="file__legend" aria-hidden="true">
+                <span>Date</span>
+                <span>Note</span>
+                <span>Read</span>
+              </div>
+              <ol class="file__list">
+                <li>
+                  <a class="file__row" href="language-watchdog-cpic-2026-q3.html">
+                    <time class="file__date" datetime="2026-10-28">28 Oct 2026</time>
+                    <span class="file__title">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</span>
+                    <span class="file__go">Read</span>
+                  </a>
+                </li>
+                <li class="file__slot">
+                  <p class="file__date">Not yet filed</p>
+                  <div class="file__slot-copy">
+                    <p class="file__slot-label">Next notes from the desk</p>
+                    <p>No further note is published. The next note is dated and added here when the desk writes it.</p>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </section>
+
+          <section class="journal-block journal-sibling" aria-labelledby="sibling-title">
+            <h2 id="sibling-title">Also from the desk</h2>
+            <p><a href="trade-in-words.html">Trade in Words</a> is sibling desk writing on the Greenspan Put: a literal rendering that turned a market metaphor into a product label.</p>
+          </section>
+
+          <div class="article-cta">
+            <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com">Engage the Studio</a>
+          </div>
         </div>
       </div>
     </div>
