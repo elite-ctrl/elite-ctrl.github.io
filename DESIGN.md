@@ -1,15 +1,15 @@
 ---
 name: LedgerLex Language Studio
-description: Cream-paper neo-brutalist marketing site for the Hong Kong financial translation desk.
+description: Near-white field (#FFFFFB) neo-brutalist marketing site for the Hong Kong financial translation desk.
 colors:
-  paper: "#F5F0E6"
-  surface: "#FAF7F0"
+  paper: "#FFFFFB"
+  surface: "#FFFFFF"
   ink: "#000000"
   yellow: "#FFE566"
   accent: "#FF4D1A"
   muted: "#666666"
   white: "#FFFFFF"
-  nav-bar: "rgba(250, 247, 240, 0.88)"
+  nav-bar: "rgba(255, 255, 251, 0.92)"
   footer-ink: "#181818"
   footer-meta: "#9B9B9B"
 typography:
@@ -134,7 +134,7 @@ components:
 
 **Creative North Star: "Neo-brutalist marketing HTML"**
 
-The public site is sharp type on cream paper. Blocks are rectangles with thick black borders and hard offset shadows that do not blur. Yellow carries the main button, eyebrows, and proof chips. A hot accent is reserved for small stamps, dots, and the focus ring. One monospace face does every job on the public pages.
+The public site is sharp type on a near-white field (#FFFFFB). Blocks are rectangles with thick black borders and hard offset shadows that do not blur. Yellow carries the main button, eyebrows, and proof chips. A hot accent is reserved for small stamps, dots, and the focus ring. One monospace face does every job on the public pages.
 
 This file records the CSS the live HTML already ships. It does not restyle those pages. Brand locks override Impeccable skill defaults. Carbon and Hex, recorded under Colors, are house palettes. They are not a license to recolor this site.
 
@@ -144,14 +144,14 @@ Homepage sections are centre-aligned. Journal pages keep a left-aligned reading 
 
 - Sharp rectangles with a 3px black border
 - Hard offset shadows, zero blur
-- Cream field, yellow action, hot accent, black ink
+- Near-white field (#FFFFFB), yellow action, hot accent, black ink
 - One public face: JetBrains Mono
 - Centre-aligned homepage
 - Brand locks beat skill defaults
 
 ## Colors
 
-The live public pages share one cream neo-brutalist set. `theme-color` on the home page is the same cream as the page field.
+The live public pages share one near-white neo-brutalist set. `theme-color` on the home page is the same #FFFFFB as the page field.
 
 ### Primary
 
@@ -163,12 +163,12 @@ The live public pages share one cream neo-brutalist set. `theme-color` on the ho
 
 ### Neutral
 
-- **Cream Paper** (`{colors.paper}`): Page field and `theme-color`. This is the public site’s cream. It is not Hex paper.
-- **Raised Surface** (`{colors.surface}`): Cards, chips, the cream button, and the nav fill.
+- **Page Field** (`{colors.paper}`): Page field and `theme-color`. This is #FFFFFB, a near-white. It is not Hex paper.
+- **Raised Surface** (`{colors.surface}`): Cards, chips, and the secondary button. #FFFFFF so they still lift a hair off the #FFFFFB field.
 - **Ink** (`{colors.ink}`): Text, borders, and shadow color.
 - **Muted Ink** (`{colors.muted}`): Ledes and secondary lines. Muted type sitting on Desk Yellow is in the live CSS and reads as gray on a colored ground. This record does not adopt that pairing as the target.
 - **White** (`{colors.white}`): The “wrong” comparison cell, and the hero stamp’s type.
-- **Nav Scrim** (`{colors.nav-bar}`): The sticky nav fill. It is Raised Surface at 88% opacity.
+- **Nav Scrim** (`{colors.nav-bar}`): The sticky nav fill. It is the page field at 92% opacity.
 - **Footer Ink** (`{colors.footer-ink}`) and **Footer Meta** (`{colors.footer-meta}`): The 404 footer bar only. Other pages do not use this dark footer.
 
 ### House palettes
@@ -224,7 +224,7 @@ Breakpoints in the live CSS: 640px, 768px, 800px (the proof-chip row), and 900px
 
 Depth is a stamped offset, not a blur. Shadows are solid ink, zero blur. The scale in the CSS variables is 4px (`--shadow-sm`), 6px (`--shadow`), and 8px (`--shadow-lg`). Smaller presses at 2px and 3px appear on active buttons, eyebrows, and the hero stamp. Buttons lift 2px up and left on hover and grow the shadow to 6px; the active press drops them 2px down and right onto a 2px shadow.
 
-The sticky nav is the one translucent surface: Raised Surface at 88% opacity with a 12px backdrop blur. That blur stays on the nav.
+The sticky nav is the one translucent surface: the page field (#FFFFFB) at 92% opacity with a 12px backdrop blur. That blur stays on the nav.
 
 Motion uses `cubic-bezier(0.22, 1, 0.36, 1)`. Most state changes run 300ms. The homepage hero panel fades and rises over 550ms.
 
@@ -254,7 +254,7 @@ Blocks, buttons, chips, cards, and the nav are square-cornered. The only radius 
 - **Shape:** Square corners, 3px ink border, small stamp shadow.
 - **Primary:** Desk Yellow fill, ink type. The large action (`.btn--lg`) uses 12px 24px padding at 16px / 700. The compact button uses 8px 12px.
 - **Hover / Focus:** Hover translates -2px, -2px and sets a 6px stamp. Active translates 2px, 2px, scales to 0.98, and sets a 2px stamp. Focus is a 3px accent outline, 3px outside the border.
-- **Cream:** Raised Surface fill, same border and shadow, for the secondary action.
+- **Secondary (`.btn--cream`):** Raised Surface fill, same border and shadow, for the secondary action.
 
 ### Chips
 
@@ -264,7 +264,7 @@ Blocks, buttons, chips, cards, and the nav are square-cornered. The only radius 
 ### Cards / Containers
 
 - **Corner Style:** Square.
-- **Background:** Raised Surface, or Cream Paper for the page and for the default comparison cell. The “wrong” comparison cell is white. The “preferred” cell is Desk Yellow.
+- **Background:** Raised Surface (#FFFFFF), or the page field (#FFFFFB) for the page and for the default comparison cell. The “wrong” comparison cell is white. The “preferred” cell is Desk Yellow.
 - **Shadow Strategy:** Default or large stamp. See Elevation.
 - **Border:** 3px solid ink.
 - **Internal Padding:** 32px 24px on the case card, 48px 40px from 768px.
