@@ -4,7 +4,7 @@
   "title": "Design System: LedgerLex Language Studio",
   "extensions": {
     "colorMeta": {
-      "paper": { "role": "neutral", "displayName": "Cream Paper" },
+      "paper": { "role": "neutral", "displayName": "Page Field" },
       "surface": { "role": "neutral", "displayName": "Raised Surface" },
       "ink": { "role": "neutral", "displayName": "Ink" },
       "yellow": { "role": "primary", "displayName": "Desk Yellow" },
@@ -63,7 +63,7 @@
       "refersTo": "button-cream",
       "description": "Secondary action on the raised surface.",
       "html": "<button class=\"ds-btn-cream\">Read the note</button>",
-      "css": ".ds-btn-cream { display: inline-flex; align-items: center; justify-content: center; background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 16px; font-weight: 700; line-height: 24px; padding: 12px 24px; } .ds-btn-cream:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000000; } .ds-btn-cream:focus-visible { outline: 3px solid #FF4D1A; outline-offset: 3px; }"
+      "css": ".ds-btn-cream { display: inline-flex; align-items: center; justify-content: center; background: #FFFFFF; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 16px; font-weight: 700; line-height: 24px; padding: 12px 24px; } .ds-btn-cream:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000000; } .ds-btn-cream:focus-visible { outline: 3px solid #FF4D1A; outline-offset: 3px; }"
     },
     {
       "name": "Proof Chip",
@@ -71,7 +71,7 @@
       "refersTo": "proof-chip",
       "description": "Short proof label under the hero.",
       "html": "<span class=\"ds-chip\">Funds, IPO, IR</span>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 14px; font-weight: 700; line-height: 20px; padding: 8px 12px; }"
+      "css": ".ds-chip { display: inline-flex; align-items: center; background: #FFFFFF; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 4px 4px 0 #000000; font-family: \"JetBrains Mono\", Consolas, monospace; font-size: 14px; font-weight: 700; line-height: 20px; padding: 8px 12px; }"
     },
     {
       "name": "Card",
@@ -79,7 +79,7 @@
       "refersTo": "card",
       "description": "Square surface card with a large stamp.",
       "html": "<article class=\"ds-card\"><h2>Language Watchdog</h2><p>Open Language Watchdog</p></article>",
-      "css": ".ds-card { background: #FAF7F0; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 8px 8px 0 #000000; padding: 32px 24px; font-family: \"JetBrains Mono\", Consolas, monospace; text-align: center; } .ds-card h2 { font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.02em; margin: 0 0 16px; } .ds-card p { font-size: 16px; font-weight: 600; line-height: 24px; margin: 0; }"
+      "css": ".ds-card { background: #FFFFFF; color: #000000; border: 3px solid #000000; border-radius: 0; box-shadow: 8px 8px 0 #000000; padding: 32px 24px; font-family: \"JetBrains Mono\", Consolas, monospace; text-align: center; } .ds-card h2 { font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.02em; margin: 0 0 16px; } .ds-card p { font-size: 16px; font-weight: 600; line-height: 24px; margin: 0; }"
     },
     {
       "name": "Top Nav",
@@ -87,16 +87,16 @@
       "refersTo": "button-cream",
       "description": "Sticky bar. The only blurred surface.",
       "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-brand\">LedgerLex</span><a href=\"#offer\">Trainee</a></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1160px; padding: 8px 8px 8px 16px; background: rgba(250, 247, 240, 0.88); border: 3px solid #000000; border-radius: 0; box-shadow: 6px 6px 0 #000000; backdrop-filter: blur(12px); font-family: \"JetBrains Mono\", Consolas, monospace; } .ds-nav-brand, .ds-nav a { color: #000000; font-size: 14px; font-weight: 700; text-decoration: none; padding: 8px 12px; } .ds-nav a:hover { background: #FFE566; border: 2px solid #000000; }"
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1160px; padding: 8px 8px 8px 16px; background: rgba(255, 255, 251, 0.92); border: 3px solid #000000; border-radius: 0; box-shadow: 6px 6px 0 #000000; backdrop-filter: blur(12px); font-family: \"JetBrains Mono\", Consolas, monospace; } .ds-nav-brand, .ds-nav a { color: #000000; font-size: 14px; font-weight: 700; text-decoration: none; padding: 8px 12px; } .ds-nav a:hover { background: #FFE566; border: 2px solid #000000; }"
     }
   ],
   "narrative": {
     "northStar": "Neo-brutalist marketing HTML",
-    "overview": "The public site is sharp type on cream paper. Blocks are rectangles with thick black borders and hard offset shadows that do not blur. Yellow carries the main button, eyebrows, and proof chips. A hot accent is reserved for small stamps, dots, and the focus ring. One monospace face does every job on the public pages.\n\nThis file records the CSS the live HTML already ships. It does not restyle those pages. Brand locks override Impeccable skill defaults. Carbon and Hex, recorded under Colors, are house palettes. They are not a license to recolor this site.\n\nHomepage sections are centre-aligned. Journal pages keep a left-aligned reading column under a centred header. The homepage hero is offer-first and creative. It does not open as an HKEX, listings, or filings frame.",
+    "overview": "The public site is sharp type on a near-white field (#FFFFFB). Blocks are rectangles with thick black borders and hard offset shadows that do not blur. Yellow carries the main button, eyebrows, and proof chips. A hot accent is reserved for small stamps, dots, and the focus ring. One monospace face does every job on the public pages.\n\nThis file records the CSS the live HTML already ships. It does not restyle those pages. Brand locks override Impeccable skill defaults. Carbon and Hex, recorded under Colors, are house palettes. They are not a license to recolor this site.\n\nHomepage sections are centre-aligned. Journal pages keep a left-aligned reading column under a centred header. The homepage hero is offer-first and creative. It does not open as an HKEX, listings, or filings frame.",
     "keyCharacteristics": [
       "Sharp rectangles with a 3px black border",
       "Hard offset shadows, zero blur",
-      "Cream field, yellow action, hot accent, black ink",
+      "Near-white field (#FFFFFB), yellow action, hot accent, black ink",
       "One public face: JetBrains Mono",
       "Centre-aligned homepage",
       "Brand locks beat skill defaults"
