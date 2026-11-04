@@ -65,7 +65,26 @@
   });
 
   panel.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
+    link.addEventListener("click", function (e) {
+      var href = link.getAttribute("href") || "";
+      var hashAt = href.indexOf("#");
+      var hash = hashAt >= 0 ? href.slice(hashAt + 1) : "";
+      var file = (hashAt >= 0 ? href.slice(0, hashAt) : href).split("/").pop();
+      var here = location.pathname.split("/").pop() || "index.html";
+      if (!here) here = "index.html";
+      var sameDoc = !file || file === here;
+      var target = hash ? document.getElementById(hash) : null;
+      /* Close the overlay first, then scroll. Hiding the panel during the
+         click used to update location.hash without moving the page, so an
+         in-page site-map jump from a lower section never landed. */
+      if (sameDoc && target) {
+        e.preventDefault();
+        closeNav(true);
+        if (history.replaceState) history.replaceState(null, "", "#" + hash);
+        else location.hash = hash;
+        target.scrollIntoView();
+        return;
+      }
       closeNav(true);
     });
   });
