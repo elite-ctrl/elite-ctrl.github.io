@@ -70,8 +70,26 @@ html.nav-scroll-lock body {
   text-transform: uppercase;
 }
 
-.topnav__panel .sitemap-group:first-child .sitemap-label {
-  margin-top: 0;
+.topnav__panel .sitemap-group:first-of-type .sitemap-label {
+  margin-top: 8px;
+}
+
+.topnav__panel .sitemap-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--muted, #666666);
+  text-wrap: pretty;
+}
+
+.topnav__panel .sitemap-cue .sitemap-label {
+  margin: 0;
 }
 
 .topnav__panel a {

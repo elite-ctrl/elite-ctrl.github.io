@@ -587,6 +587,16 @@
       .hero__cta { margin-top: 32px; }
     }
 
+    .hero__browse {
+      margin: 16px auto 0;
+      max-width: 42ch;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
     /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
        Breaks out of .hero__inner (--prose 680px) so strip can use up to 720/820. */
     .proof-strip {
@@ -1771,6 +1781,7 @@
     </div>
 
     <div class="topnav__panel" id="mobile-panel" hidden>
+      <p class="sitemap-cue"><span class="sitemap-label">Start here</span> This menu maps the whole site.</p>
       <div class="sitemap-group">
         <p class="sitemap-label">On this page</p>
         <a href="#hero" aria-current="page">Home</a>
@@ -1821,6 +1832,8 @@
             </div>
             <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
           </div>
+
+          <p class="hero__browse">The menu and the footer map the whole site. Open the menu, or scroll.</p>
 
           <div class="proof-strip" role="list" aria-label="Desk proof points">
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
