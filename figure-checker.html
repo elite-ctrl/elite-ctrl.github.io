@@ -1017,6 +1017,74 @@
       }
       return out;
     }
+
+    function collapseSpacedNumerals(text) {
+      var prev;
+      do {
+        prev = text;
+        text = text.replace(/(\d)\s+(?=\d)/g, "$1");
+        text = text.replace(/(\d)\s*\.\s*(\d)/g, "$1.$2");
+        text = text.replace(/(\d)\s*(%)/g, "$1$2");
+      } while (text !== prev);
+      return text;
+    }
+
+    function preprocessText(rawText) {
+      var t = rawText.replace(/^File:[^\n]*Proof[^\n]*$/gm, "");
+      t = t.replace(/^\d{1,2}\s*:\s*\d{2}\s+BL:\(\d+-\d+\)\/\(\d+\)[^\n]*$/gm, "");
+      t = t.replace(/(\d{4})\s+(\u5e74)/g, "$1$2");
+      t = t.replace(/(\u5e74)\s+(\d)/g, "$1$2");
+      t = t.replace(/(\u6708)\s+(\d)/g, "$1$2");
+      t = t.replace(/(\d)\s+(\u65e5)/g, "$1$2");
+      t = t.replace(/\[([^\]]*)\]/g, function (_, inner) {
+        return "[" + inner.replace(/\s+/g, " ").trim() + "]";
+      });
+      return collapseSpacedNumerals(t);
+    }
+
+    function isNoiseMatch(text, start, end, item) {
+      var s = Math.max(0, start - 48);
+      var e = Math.min(text.length, end + 48);
+      var ctx = text.slice(s, e);
+      if (/210\(W\)x280\(H\)/.test(ctx)) { return true; }
+      if (/\(\d{3}\)\s*\d+(?:st|nd|rd|th)\b/i.test(ctx)) { return true; }
+      if (/BL:\(\d+-\d+\)\/\(\d+\)/.test(ctx)) { return true; }
+      if (/\bP\.\d+\s*\(L\d+\)/.test(ctx)) { return true; }
+      if (/\bFile:\s*[^\n]*Proof\b/.test(ctx)) { return true; }
+      if (/(?:Chapter|\u7b2c)\s*\d+[A-Z]?(?:\s+of|\u7ae0)/i.test(ctx)) { return true; }
+      if (/\u7b2c\s*\d+W?\u7ae0/.test(ctx)) { return true; }
+      if (item.kind !== "date" && /\d{1,2}\s*:\s*\d{2}/.test(ctx)) {
+        if (/(?:BL:\(|P\.\d+\s*\(L\d+\)|\(L1\)\s*\(E>C\))/.test(ctx)) { return true; }
+        if (/(?:a\.m\.|p\.m\.|noon|midnight|\u6b63|\u5348|\u534a)/i.test(ctx)) { return true; }
+      }
+      if (item.kind === "number" && /[\u2013\-]\s*\d{1,3}\s*[\u2013\-]/.test(ctx)) {
+        var bDash = text.slice(Math.max(0, start - 4), start);
+        var aDash = text.slice(end, Math.min(text.length, end + 4));
+        if (/[\u2013\-]\s*$/.test(bDash) && /^\s*[\u2013\-]/.test(aDash) && item.value >= 1 && item.value <= 99) {
+          return true;
+        }
+      }
+      if (item.kind === "number") {
+        var bBr = text.charAt(start - 1);
+        var aBr = text.charAt(end);
+        if (bBr === "[" && aBr === "]" && /^0\d{4}$/.test(item.numText || "")) { return true; }
+      }
+      if (/(?:Act of|条例)\s*\d{4}/i.test(ctx)) { return true; }
+      if (/\+?\d{8,}/.test(ctx) && /(?:tel|phone|電話|熱線|致電)/i.test(ctx)) { return true; }
+      if (item.kind === "number" && item.value >= 1 && item.value <= 20) {
+        var after = text.slice(end, Math.min(text.length, end + 24));
+        if (/^\s*\)\s/.test(after) || /^\)\s/.test(after)) { return true; }
+      }
+      if (item.kind === "number" && item.value >= 1900 && item.value <= 2100) {
+        var before = text.slice(Math.max(0, start - 12), start);
+        if (/,\s*$/.test(before) || /,\s*\]\s*,?\s*$/.test(before) || /\]\s*,?\s*$/.test(before)) { return true; }
+        var tail = text.slice(end, Math.min(text.length, end + 6));
+        if (/^\s*\u5e74/.test(tail)) { return true; }
+      }
+      return false;
+    }
+
+    var WEEKDAY_EN = "(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)";
   
     // Each matcher: { prio, re, make(match) -> item or null }
     function buildMatchers() {
@@ -1025,13 +1093,25 @@
           make: function (m) {
             var y = zhYear(m[1]);
             if (y === null) { return null; }
-            if (!m[2]) { return { kind: "number", value: y, numText: String(y) }; }
+            if (!m[2]) { return null; }
             var mo = zhNum(m[2]);
             if (mo === null || mo < 1 || mo > 12) { return null; }
-            if (!m[3]) { return { kind: "date", y: y, m: mo }; }
+            if (!m[3]) { return null; }
             var d = zhNum(m[3]);
             if (d === null || d < 1 || d > 31) { return null; }
             return { kind: "date", y: y, m: mo, d: d };
+          } },
+        { prio: 1, re: new RegExp("\\[" + WEEKDAY_EN + ",?\\s+" + MONTH_EN + "\\s+(\\d{1,2})\\],?\\s+(\\d{4})\\b", "gi"),
+          make: function (m) {
+            return { kind: "date", y: parseInt(m[3], 10), m: MONTHS[m[1].toLowerCase()], d: parseInt(m[2], 10) };
+          } },
+        { prio: 1, re: new RegExp("\\[" + WEEKDAY_EN + ",?\\s+" + MONTH_EN + "\\s+(\\d{1,2}),?\\s+(\\d{4})\\]", "gi"),
+          make: function (m) {
+            return { kind: "date", y: parseInt(m[3], 10), m: MONTHS[m[1].toLowerCase()], d: parseInt(m[2], 10) };
+          } },
+        { prio: 1, re: new RegExp("\\b" + MONTH_EN + "\\s+(\\d{1,2})\\],\\s+(\\d{4})\\b", "gi"),
+          make: function (m) {
+            return { kind: "date", y: parseInt(m[3], 10), m: MONTHS[m[1].toLowerCase()], d: parseInt(m[2], 10) };
           } },
         { prio: 1, re: new RegExp("\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+" + MONTH_EN + ",?\\s+(\\d{4})\\b", "g"),
           make: function (m) { return { kind: "date", y: parseInt(m[3], 10), m: MONTHS[m[2].toLowerCase()], d: parseInt(m[1], 10) }; } },
@@ -1049,14 +1129,30 @@
           make: function (m) { return { kind: "bps", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") }; } },
         { prio: 3, re: new RegExp("(" + NUM + ")\\s*(?:percentage\\s+points?\\b|\u500b\u767e\u5206\u9ede|\u4e2a\u767e\u5206\u70b9|\u767e\u5206\u9ede|\u767e\u5206\u70b9)", "gi"),
           make: function (m) { return { kind: "pp", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") }; } },
+        { prio: 4, re: /\[(0\d{4})\]/g,
+          make: function (m) {
+            return { kind: "code", value: parseInt(m[1], 10), codeText: m[1] };
+          } },
         { prio: 4, re: new RegExp("(" + NUM + ")\\s*(?:%|per\\s?cent\\b|percent\\b)", "gi"),
-          make: function (m) { return { kind: "percent", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") }; } },
+          make: function (m, text, idx) {
+            var tail = text.slice(idx + m[0].length, idx + m[0].length + 8);
+            if (/^\.\d+\s*%/.test(tail)) { return null; }
+            return { kind: "percent", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") };
+          } },
         { prio: 4, re: new RegExp("\u767e\u5206\u4e4b(" + NUM + ")", "g"),
           make: function (m) { return { kind: "percent", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") }; } },
-        { prio: 5, re: new RegExp("(?:stock\\s+code|\u80a1\u4efd\u4ee3\u865f|\u80a1\u4efd\u4ee3\u53f7|\u80a1\u7968\u4ee3\u78bc|\u80a1\u7968\u4ee3\u7801)[^\\d]{0,4}(\\d{1,5})", "gi"),
-          make: function (m) { return { kind: "code", value: parseInt(m[1], 10) }; } },
+        { prio: 5, re: new RegExp("\\[(" + NUM + ")\\]", "g"),
+          make: function (m) {
+            var raw = m[1].replace(/,/g, "");
+            if (/^0\d{4}$/.test(raw)) { return null; }
+            return { kind: "number", value: parseNum(m[1]), numText: raw };
+          } },
+        { prio: 5, re: new RegExp("(?:stock\\s+code|\u80a1\u4efd\u4ee3\u865f|\u80a1\u4efd\u4ee3\u53f7|\u80a1\u7968\u4ee3\u78bc|\u80a1\u7968\u4ee3\u7801|\u80a1\u4efd\u4ee3\u865f)[^\\d\\[]{0,6}\\[?(\\d{1,5})\\]?", "gi"),
+          make: function (m) {
+            return { kind: "code", value: parseInt(m[1], 10), codeText: m[1] };
+          } },
         { prio: 5, re: /\b(\d{1,5})\.HK\b/g,
-          make: function (m) { return { kind: "code", value: parseInt(m[1], 10) }; } },
+          make: function (m) { return { kind: "code", value: parseInt(m[1], 10), codeText: m[1] }; } },
         { prio: 6, re: new RegExp("(" + CUR + ")?\\s{0,8}(" + NUM + ")\\s{0,8}(" + SCALE_RE + ")?(\u5143|\u5713)?", "g"),
           make: function (m) {
             if (!m[2]) { return null; }
@@ -1075,7 +1171,7 @@
     }
   
     function extract(rawText) {
-      var text = normalize(rawText);
+      var text = normalize(preprocessText(rawText));
       var candidates = [];
       var matchers = buildMatchers();
       for (var i = 0; i < matchers.length; i++) {
@@ -1084,13 +1180,15 @@
         var m;
         while ((m = mt.re.exec(text)) !== null) {
           if (m[0].length === 0) { mt.re.lastIndex++; continue; }
-          var item = mt.make(m);
+          var item = mt.make.length >= 3 ? mt.make(m, text, m.index) : mt.make(m);
           if (item) {
             item.start = m.index;
             item.end = m.index + m[0].length;
             item.text = m[0];
             item.prio = mt.prio;
-            candidates.push(item);
+            if (!isNoiseMatch(text, item.start, item.end, item)) {
+              candidates.push(item);
+            }
           }
         }
       }
@@ -1120,7 +1218,7 @@
         case "percent": return "pct|" + numKey(it.value);
         case "bps": return "bps|" + numKey(it.value);
         case "pp": return "pp|" + numKey(it.value);
-        case "code": return "code|" + it.value;
+        case "code": return "code|" + (it.codeText || String(it.value));
         default: return "num|" + numKey(it.value);
       }
     }
@@ -1156,6 +1254,14 @@
             return false;
           }
         }
+        return true;
+      });
+      countDiffs = countDiffs.filter(function (e) {
+        if (e.kind === "number") { return false; }
+        if (e.kind === "date") { return false; }
+        if (e.kind === "code") { return false; }
+        if (e.kind === "amount" && e.src[0] && Math.abs(e.src[0].value) === 1) { return false; }
+        if (e.kind === "percent" && e.src.length && e.tgt.length) { return false; }
         return true;
       });
       function byPos(a, b) { return (a.src[0] || a.tgt[0]).start - (b.src[0] || b.tgt[0]).start; }
@@ -1481,7 +1587,7 @@
     });
   
     if (typeof window !== "undefined") {
-      window.FigureChecker = { extract: extract, compare: compare, keyOf: keyOf };
+      window.FigureChecker = { extract: extract, compare: compare, keyOf: keyOf, preprocessText: preprocessText };
     }
     run();
   })();
