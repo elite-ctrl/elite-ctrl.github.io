@@ -59,6 +59,16 @@ const codeEn = "The stock code of the H Shares will be [01337].";
 const codeTc = "H股的股份代號將為[01337]。";
 assertNoIssues("stock code placeholder", codeEn, codeTc);
 
+assertNoIssues(
+  "stock code zero pad EN bracket vs TC bare",
+  "The stock code will be [01337].",
+  "H股的股份代號為1337。"
+);
+
+const yearEn = "Revenue was HK$28.10 million in 2025.";
+const yearTc = "2025年收入為港幣28.10百萬元。";
+assertNoIssues("bare EN calendar year vs TC 2025年", yearEn, yearTc);
+
 const scaleEn = "HK$85 million total.";
 const scaleTc = "合共港幣85.0億元。";
 const sr = compare(scaleEn, scaleTc);
@@ -67,6 +77,19 @@ if (sr.scaleIssues.length !== 1) {
   process.exitCode = 1;
 } else {
   console.log("ok: scale verify pairing");
+}
+
+const scaleFalseEn = "HK$85 million brokerage.";
+const scaleFalseTc = "經紀佣金85%。";
+const sfr = compare(scaleFalseEn, scaleFalseTc);
+if (sfr.scaleIssues.length !== 0) {
+  console.error("FAIL: scale must not pair amount with percent", sfr.scaleIssues.length);
+  process.exitCode = 1;
+} else if (sfr.missing.length + sfr.extra.length === 0) {
+  console.error("FAIL: amount vs percent should surface issues");
+  process.exitCode = 1;
+} else {
+  console.log("ok: scale verify skips percent digit collision");
 }
 
 const bracketAmtEn = "then up to [1,029,000] Offer Shares may be reallocated.";
