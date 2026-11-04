@@ -285,6 +285,7 @@
     .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
     .topnav.is-open .topnav__panel a:nth-child(7) { transition-delay: 360ms; }
     .topnav.is-open .topnav__panel a:nth-child(8) { transition-delay: 400ms; }
+    .topnav.is-open .topnav__panel a:nth-child(9) { transition-delay: 440ms; }
 
     .topnav__panel a:hover { background: var(--yellow); }
 
@@ -294,6 +295,15 @@
       .topnav__toggle { display: none; }
       .topnav__panel { display: none !important; }
       .topnav__brand img { height: 32px; }
+    }
+
+    /* The shared secondary bar is full at 900–1100px. Keep Call the Ledger
+       and Call the Gaps in the row only once the 1160px bar can hold them
+       without covering the CTA. Hidden from .topnav__links only — the
+       hamburger #mobile-panel always keeps both links. */
+    @media (max-width: 1199.98px) {
+      .topnav__links a[href="figure-checker.html"],
+      .topnav__links a[href="call-the-gaps.html"] { display: none; }
     }
 
     .topnav__links a[aria-current="page"] {
@@ -615,6 +625,8 @@
         <a href="trainee.html" role="listitem">Trainee</a>
         <a href="trade-in-words.html" role="listitem" aria-current="page">Trade in Words</a>
         <a href="language-watchdog.html" role="listitem">Language Watchdog</a>
+        <a href="figure-checker.html" role="listitem">Call the Ledger</a>
+        <a href="call-the-gaps.html" role="listitem">Call the Gaps</a>
         <a href="index.html#faq" role="listitem">FAQ</a>
       </div>
 
@@ -638,6 +650,8 @@
       <a href="trainee.html">Trainee</a>
       <a href="trade-in-words.html" aria-current="page">Trade in Words</a>
       <a href="language-watchdog.html">Language Watchdog</a>
+      <a href="figure-checker.html">Call the Ledger</a>
+      <a href="call-the-gaps.html">Call the Gaps</a>
       <a href="index.html#faq">FAQ</a>
       <a href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
     </div>
@@ -734,6 +748,8 @@
         <a href="trainee.html">Trainee</a>
         <a href="trade-in-words.html">Trade in Words</a>
         <a href="language-watchdog.html">Language Watchdog</a>
+        <a href="figure-checker.html">Call the Ledger</a>
+        <a href="call-the-gaps.html">Call the Gaps</a>
         <span>Hong Kong</span>
       </div>
       <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
