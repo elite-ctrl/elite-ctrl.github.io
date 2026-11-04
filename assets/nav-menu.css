@@ -1,0 +1,39 @@
+/* Mobile menu scroll lock. Shared by every page that has #nav-toggle.
+   Opening the menu used to set overflow:hidden on body only. That left two
+   holes: the fixed panel is not a scroll container, so links past the
+   viewport are clipped and cannot be reached, and the panel paints over the
+   bar, so the close control is buried while the page is locked.
+   Locking html as well stops iOS from scrolling the document under the
+   overlay, but overflow:hidden on html releases position:sticky, so the bar
+   is pinned for as long as the menu is open. */
+
+html.nav-scroll-lock {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.nav-scroll-lock body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.topnav.is-open {
+  position: fixed;
+  top: 12px;
+  left: 0;
+  right: 0;
+}
+
+.topnav.is-open .topnav__bar {
+  position: relative;
+  z-index: 100;
+  touch-action: manipulation;
+}
+
+.topnav.is-open .topnav__panel {
+  z-index: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
