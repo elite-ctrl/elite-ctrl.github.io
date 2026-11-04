@@ -12,11 +12,11 @@
     gtag('config', 'G-6YMJ8X3SVM');
   </script>
   <title>Figure Checker | LedgerLex Language Studio</title>
-  <meta name="description" content="Browser-local figure check for a source and its translation. Numbers, dates, currencies, stock codes, and scale words are compared on your machine. Paste is not uploaded.">
+  <meta name="description" content="Compare figures in a source PDF and a translation PDF in the browser. Numbers, dates, currencies, stock codes, and scale words are checked on your machine. The files are not uploaded.">
   <meta name="theme-color" content="#FFFFFB">
   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/figure-checker.html">
   <meta property="og:title" content="Figure Checker | LedgerLex Language Studio">
-  <meta property="og:description" content="Browser-local figure check for a source and its translation. Numbers, dates, currencies, stock codes, and scale words are compared on your machine. Paste is not uploaded.">
+  <meta property="og:description" content="Compare figures in a source PDF and a translation PDF in the browser. Numbers, dates, currencies, stock codes, and scale words are checked on your machine. The files are not uploaded.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/figure-checker.html">
   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
@@ -25,7 +25,7 @@
   <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Figure Checker | LedgerLex Language Studio">
-  <meta name="twitter:description" content="Browser-local figure check for a source and its translation. Numbers, dates, currencies, stock codes, and scale words are compared on your machine. Paste is not uploaded.">
+  <meta name="twitter:description" content="Compare figures in a source PDF and a translation PDF in the browser. Numbers, dates, currencies, stock codes, and scale words are checked on your machine. The files are not uploaded.">
   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -310,7 +310,8 @@
     .btn:focus-visible,
     button:focus-visible,
     a:focus-visible,
-    textarea:focus-visible {
+    .drop__input:focus-visible + .drop,
+    .upload:focus-within .drop {
       outline: 3px solid var(--accent);
       outline-offset: 3px;
     }
@@ -446,22 +447,74 @@
       line-height: 20px;
     }
 
-    textarea {
-      width: 100%;
-      height: 220px;
-      padding: 12px;
+    .upload { min-width: 0; }
+
+    .drop {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      min-height: 148px;
+      padding: 16px;
       border: 3px solid var(--ink);
-      border-radius: 0;
       background: var(--bg);
-      color: var(--ink);
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.5;
-      resize: vertical;
+      cursor: pointer;
     }
 
-    textarea::placeholder { color: var(--muted); }
+    .drop:hover,
+    .drop.is-drag { background: var(--yellow); }
+
+    .drop__kicker {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .drop__name {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      overflow-wrap: anywhere;
+    }
+
+    .drop__sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .drop__input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .file-status {
+      min-height: 22px;
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .file-status.is-error {
+      color: var(--ink);
+      border-left: 6px solid var(--accent);
+      padding-left: 8px;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
 
     .results {
       background: var(--surface);
@@ -630,7 +683,6 @@
 
     @media (max-width: 720px) {
       .panes { grid-template-columns: 1fr; }
-      textarea { height: 170px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -699,37 +751,51 @@
         <header>
           <p class="eyebrow">Tools</p>
           <h1>Figure Checker</h1>
-          <p class="subtitle">Paste source and translation. Numbers, percentages, dates, currencies, stock codes and 億/百萬 scale words are extracted, normalised, and compared — deterministically, with nothing sent anywhere.</p>
-          <p class="privacy-note">Paste stays in this browser. Nothing you paste is uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+          <p class="subtitle">Upload a source PDF and a translation PDF. Numbers, percentages, dates, currencies, stock codes and 億/百萬 scale words are read from the text in each file and compared in this browser.</p>
+          <p class="privacy-note">The PDFs stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
         </header>
 
         <div class="panes">
           <div class="pane">
             <div class="pane-head">
-              <span class="pane-title" id="srcLabel">Source<span class="count" id="srcCount">0 figures</span></span>
-              <div class="btn-group">
-                <button class="btn btn--cream" id="btnSample" type="button">Sample</button>
-                <button class="btn btn--cream" id="btnClear" type="button">Clear</button>
-              </div>
+              <span class="pane-title" id="srcLabel">Source PDF<span class="count" id="srcCount"></span></span>
             </div>
-            <textarea id="src" aria-labelledby="srcLabel" placeholder="Paste source text…" spellcheck="false"></textarea>
+            <div class="upload" id="srcUpload">
+              <input class="drop__input" id="srcFile" type="file" accept="application/pdf,.pdf" aria-labelledby="srcLabel">
+              <label class="drop" id="srcDrop" for="srcFile">
+                <span class="drop__kicker">Source</span>
+                <span class="drop__name" id="srcName">Choose a PDF</span>
+                <span class="drop__sub">or drop it here</span>
+              </label>
+            </div>
+            <p class="file-status" id="srcStatus" role="status"></p>
           </div>
           <div class="pane">
             <div class="pane-head">
-              <span class="pane-title" id="tgtLabel">Translation<span class="count" id="tgtCount">0 figures</span></span>
-              <div class="btn-group">
-                <button class="btn btn--cream" id="btnCopy" type="button">Copy report</button>
-              </div>
+              <span class="pane-title" id="tgtLabel">Translation PDF<span class="count" id="tgtCount"></span></span>
             </div>
-            <textarea id="tgt" aria-labelledby="tgtLabel" placeholder="Paste translation…" spellcheck="false"></textarea>
+            <div class="upload" id="tgtUpload">
+              <input class="drop__input" id="tgtFile" type="file" accept="application/pdf,.pdf" aria-labelledby="tgtLabel">
+              <label class="drop" id="tgtDrop" for="tgtFile">
+                <span class="drop__kicker">Translation</span>
+                <span class="drop__name" id="tgtName">Choose a PDF</span>
+                <span class="drop__sub">or drop it here</span>
+              </label>
+            </div>
+            <p class="file-status" id="tgtStatus" role="status"></p>
           </div>
         </div>
 
-        <div class="results" id="results" aria-live="polite">
-          <p class="empty">Results appear here as you type.</p>
+        <div class="tool-actions">
+          <button class="btn btn--cream" id="btnClear" type="button">Clear</button>
+          <button class="btn btn--cream" id="btnCopy" type="button">Copy report</button>
         </div>
 
-        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Not covered: spelt-out numbers ("twelve", 一百二十萬), and scanned or image-only content. Always run your own final check on anything flagged.</p>
+        <div class="results" id="results" aria-live="polite">
+          <p class="empty">Upload a source PDF and a translation PDF to compare.</p>
+        </div>
+
+        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Not covered: spelt-out numbers ("twelve", 一百二十萬), and scanned or image-only PDFs. Always run your own final check on anything flagged.</p>
       </div>
     </div>
   </main>
@@ -755,6 +821,7 @@
     </div>
   </footer>
 
+  <script src="/assets/pdfjs/pdf.min.js"></script>
   <script>
   (function () {
     "use strict";
@@ -986,6 +1053,10 @@
     var KIND_NAMES = { date: "date", percent: "percentage", bps: "basis points", pp: "percentage points", code: "stock code", amount: "amount", number: "number" };
     /*ENGINE-END*/
   
+    if (typeof pdfjsLib !== "undefined") {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/pdfjs/pdf.worker.min.js";
+    }
+
     var $ = function (id) { return document.getElementById(id); };
     function esc(s) {
       return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -999,19 +1070,135 @@
       if (sides.indexOf("tgt") >= 0) { entry.tgt.forEach(function (it) { h += snip("Translation", it); }); }
       return h + "</div>";
     }
-  
+
+    var SIDES = ["src", "tgt"];
+    var jobs = { src: 0, tgt: 0 };
+    var texts = { src: "", tgt: "" };
+    var names = { src: "", tgt: "" };
+    var statusText = { src: "", tgt: "" };
+    var statusError = { src: false, tgt: false };
     var lastReport = "";
+
+    function isCjkChar(ch) {
+      return /[\u3400-\u9FFF\uF900-\uFAFF]/.test(ch);
+    }
+    function itemsToText(items) {
+      var out = "";
+      var lastY = null;
+      var lastEnd = null;
+      var lastChar = "";
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var str = item.str || "";
+        if (!str) continue;
+        var tr = item.transform || [0, 0, 0, 0, 0, 0];
+        var x = tr[4];
+        var y = tr[5];
+        var size = Math.abs(tr[3]) || item.height || 10;
+        if (lastY !== null && Math.abs(y - lastY) > size * 0.8) {
+          out += "\n";
+          lastEnd = null;
+          lastChar = "\n";
+        }
+        if (lastEnd !== null && out && !/\s$/.test(out)) {
+          var gap = x - lastEnd;
+          var prevCjk = isCjkChar(lastChar);
+          var nextCjk = isCjkChar(str.charAt(0));
+          if (!prevCjk && !nextCjk && gap > size * 0.25) out += " ";
+        }
+        out += str;
+        lastY = y;
+        lastEnd = x + (item.width || 0);
+        lastChar = str.charAt(str.length - 1);
+        if (item.hasEOL) {
+          out += "\n";
+          lastY = null;
+          lastEnd = null;
+          lastChar = "\n";
+        }
+      }
+      return out.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n");
+    }
+    function isPdf(file) {
+      var type = (file.type || "").toLowerCase();
+      var name = (file.name || "").toLowerCase();
+      return type === "application/pdf" || type === "application/x-pdf" || /\.pdf$/.test(name);
+    }
+    function friendlyError(err) {
+      var name = err && err.name;
+      if (name === "PasswordException") return "This PDF is password-protected. Remove the password and upload it again.";
+      if (name === "InvalidPDFException") return "This file is not a readable PDF.";
+      if (err && err.message === "reader-missing") return "The PDF reader did not load. Reload the page and try again.";
+      return "Could not read this PDF. Try another file.";
+    }
+    function extractPdfText(file, onPage) {
+      if (typeof pdfjsLib === "undefined") return Promise.reject(new Error("reader-missing"));
+      return file.arrayBuffer().then(function (buf) {
+        var task = pdfjsLib.getDocument({
+          data: new Uint8Array(buf),
+          cMapUrl: "/assets/pdfjs/cmaps/",
+          cMapPacked: true,
+          standardFontDataUrl: "/assets/pdfjs/standard_fonts/",
+          disableFontFace: true,
+          isEvalSupported: false
+        });
+        return task.promise.then(function (pdf) {
+          var pages = pdf.numPages;
+          var chain = Promise.resolve([]);
+          for (var n = 1; n <= pages; n++) {
+            (function (pageNo) {
+              chain = chain.then(function (chunks) {
+                if (onPage) onPage(pageNo, pages);
+                return pdf.getPage(pageNo).then(function (page) {
+                  return page.getTextContent().then(function (content) {
+                    chunks.push(itemsToText(content.items));
+                    return chunks;
+                  });
+                });
+              });
+            })(n);
+          }
+          return chain.then(function (chunks) {
+            pdf.destroy();
+            return { text: chunks.join("\n\n"), pages: pages };
+          }, function (err) {
+            pdf.destroy();
+            throw err;
+          });
+        });
+      });
+    }
+    function paintStatus() {
+      SIDES.forEach(function (side) {
+        var el = $(side + "Status");
+        el.textContent = statusText[side];
+        el.className = "file-status" + (statusError[side] ? " is-error" : "");
+        $(side + "Name").textContent = names[side] || "Choose a PDF";
+        var count = texts[side].trim() ? extract(texts[side]).length + " figures" : "";
+        $(side + "Count").textContent = count;
+      });
+    }
     function run() {
-      var srcText = $("src").value, tgtText = $("tgt").value;
-      var r = compare(srcText, tgtText);
-      $("srcCount").textContent = r.src.length + " figures";
-      $("tgtCount").textContent = r.tgt.length + " figures";
+      paintStatus();
+      var srcText = texts.src, tgtText = texts.tgt;
       var el = $("results");
-      if (!srcText.trim() || !tgtText.trim()) {
-        el.innerHTML = '<p class="empty">Paste text on both sides to compare.</p>';
+      var busy = statusText.src.indexOf("Reading") === 0 || statusText.tgt.indexOf("Reading") === 0;
+      if (busy) {
+        el.innerHTML = '<p class="empty">Reading the PDF…</p>';
         lastReport = "";
         return;
       }
+      if (!srcText.trim() || !tgtText.trim()) {
+        var msg = "Upload a source PDF and a translation PDF to compare.";
+        if ((srcText.trim() && !tgtText.trim()) || (!srcText.trim() && tgtText.trim())) {
+          msg = "Upload the other PDF to compare.";
+        }
+        if (statusError.src || statusError.tgt) msg = "Choose a readable PDF on both sides to compare.";
+        el.innerHTML = '<p class="empty">' + msg + "</p>";
+        lastReport = "";
+        return;
+      }
+      var r = compare(srcText, tgtText);
       var issueCount = r.missing.length + r.extra.length + r.scaleIssues.length;
       var h = '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
@@ -1061,19 +1248,88 @@
       lastReport = head + (report.length ? "\n" + report.join("\n") : "\nAll figures agree.");
     }
   
-    var timer = null;
-    function schedule() { clearTimeout(timer); timer = setTimeout(run, 250); }
-    $("src").addEventListener("input", schedule);
-    $("tgt").addEventListener("input", schedule);
-  
-    $("btnClear").addEventListener("click", function () { $("src").value = ""; $("tgt").value = ""; run(); $("src").focus(); });
-  
-    $("btnSample").addEventListener("click", function () {
-      $("src").value = "The Group recorded revenue of HK$1,234.5 million for the six months ended 30 June 2025, up 12.3% year on year. Gross margin improved to 34.5%, while funding costs fell by 25 basis points. Capital expenditure was HK$85.0 million. The Board declared an interim dividend of HK3.5 cents per share. Net gearing stood at 18.2% as at 30 June 2025. (Stock code: 989)";
-      $("tgt").value = "\u672c\u96c6\u5718\u65bc\u622a\u81f3\u4e8c\u96f6\u4e8c\u4e94\u5e74\u516d\u6708\u4e09\u5341\u65e5\u6b62\u516d\u500b\u6708\u9304\u5f97\u6536\u76ca\u6e2f\u5e631,234.5\u767e\u842c\u5143\uff0c\u6309\u5e74\u589e\u957712.8%\u3002\u6bdb\u5229\u7387\u6539\u5584\u81f334.5%\uff0c\u800c\u8cc7\u91d1\u6210\u672c\u4e0b\u964d25\u500b\u57fa\u9ede\u3002\u8cc7\u672c\u958b\u652f\u70ba\u6e2f\u5e6385.0\u5104\u5143\u3002\u8463\u4e8b\u6703\u5ba3\u6d3e\u4e2d\u671f\u80a1\u606f\u6bcf\u80a13.5\u6e2f\u4ed9\u3002\u65bc\u4e8c\u96f6\u4e8c\u4e94\u5e74\u516d\u6708\u4e09\u5341\u65e5\uff0c\u6de8\u8ca0\u50b5\u6bd4\u7387\u70ba18.2%\u3002\uff08\u80a1\u4efd\u4ee3\u865f\uff1a989\uff09";
+    function takeFile(side, file) {
+      var job = ++jobs[side];
+      texts[side] = "";
+      statusError[side] = false;
+      if (!file) {
+        names[side] = "";
+        statusText[side] = "";
+        run();
+        return;
+      }
+      names[side] = file.name;
+      if (!isPdf(file)) {
+        statusError[side] = true;
+        statusText[side] = "Choose a PDF file.";
+        run();
+        return;
+      }
+      statusText[side] = "Reading PDF…";
       run();
+      extractPdfText(file, function (pageNo, total) {
+        if (job !== jobs[side]) return;
+        statusText[side] = "Reading page " + pageNo + " of " + total + "…";
+        paintStatus();
+        $("results").innerHTML = '<p class="empty">Reading the PDF…</p>';
+      }).then(function (result) {
+        if (job !== jobs[side]) return;
+        if (!result.text.trim()) {
+          statusError[side] = true;
+          statusText[side] = "No selectable text in this PDF. Scanned or image-only files are not covered.";
+          texts[side] = "";
+        } else {
+          statusError[side] = false;
+          statusText[side] = result.pages + (result.pages === 1 ? " page" : " pages");
+          texts[side] = result.text;
+        }
+        run();
+      }, function (err) {
+        if (job !== jobs[side]) return;
+        statusError[side] = true;
+        statusText[side] = friendlyError(err);
+        texts[side] = "";
+        run();
+      });
+    }
+    function bindSide(side) {
+      var input = $(side + "File");
+      var drop = $(side + "Drop");
+      input.addEventListener("change", function () {
+        takeFile(side, input.files && input.files[0] ? input.files[0] : null);
+      });
+      ["dragenter", "dragover"].forEach(function (type) {
+        drop.addEventListener(type, function (e) {
+          e.preventDefault();
+          drop.classList.add("is-drag");
+        });
+      });
+      drop.addEventListener("dragleave", function () { drop.classList.remove("is-drag"); });
+      drop.addEventListener("drop", function (e) {
+        e.preventDefault();
+        drop.classList.remove("is-drag");
+        var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) takeFile(side, file);
+      });
+    }
+    bindSide("src");
+    bindSide("tgt");
+
+    $("btnClear").addEventListener("click", function () {
+      jobs.src += 1;
+      jobs.tgt += 1;
+      SIDES.forEach(function (side) {
+        texts[side] = "";
+        names[side] = "";
+        statusText[side] = "";
+        statusError[side] = false;
+        var input = $(side + "File");
+        input.value = "";
+      });
+      run();
+      $("srcFile").focus();
     });
-  
+
     $("btnCopy").addEventListener("click", function () {
       var btn = this;
       var textToCopy = lastReport || "No report yet.";
