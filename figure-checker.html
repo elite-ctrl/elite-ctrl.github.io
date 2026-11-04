@@ -1077,6 +1077,10 @@
       if (/\bFile:\s*[^\n]*Proof\b/.test(ctx)) { return true; }
       if (/(?:Chapter|\u7b2c)\s*\d+[A-Z]?(?:\s+of|\u7ae0)/i.test(ctx)) { return true; }
       if (/\u7b2c\s*\d+W?\u7ae0/.test(ctx)) { return true; }
+      if (item.kind === "number" && item.value >= 0 && item.value <= 23) {
+        var timeTail = text.slice(end, Math.min(text.length, end + 10));
+        if (/^(?:\s*)?(?:a\.m\.|p\.m\.|am|pm)/i.test(timeTail)) { return true; }
+      }
       if (item.kind !== "date" && /\d{1,2}\s*:\s*\d{2}/.test(ctx)) {
         if (/(?:BL:\(|P\.\d+\s*\(L\d+\)|\(L1\)\s*\(E>C\))/.test(ctx)) { return true; }
         if (/(?:a\.m\.|p\.m\.|noon|midnight|\u6b63|\u5348|\u534a)/i.test(ctx)) { return true; }
@@ -1285,7 +1289,6 @@
         if (e.kind === "date") { return false; }
         if (e.kind === "code") { return false; }
         if (e.kind === "amount" && e.src[0] && Math.abs(e.src[0].value) === 1) { return false; }
-        if (e.kind === "percent" && e.src.length && e.tgt.length) { return false; }
         return true;
       });
       function byPos(a, b) { return (a.src[0] || a.tgt[0]).start - (b.src[0] || b.tgt[0]).start; }
@@ -1541,22 +1544,6 @@
       var r = compare(srcText, tgtText);
       var issueCount = r.missing.length + r.extra.length + r.scaleIssues.length;
       var h = "";
-      var a = structure.src;
-      var b = structure.tgt;
-      if (
-        a &&
-        b &&
-        (a.measure !== b.measure || a.count !== b.count)
-      ) {
-        h +=
-          '<p class="structure-note structure-note--inline" role="note">' +
-          "Source: " +
-          structureCountLabel(a) +
-          ". Translation: " +
-          structureCountLabel(b) +
-          ". Unequal pagination or layout between languages and formats is normal on HK bilingual packs — the check compares the full text of both files, not page by page." +
-          "</p>";
-      }
       h += '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
       if (r.missing.length) { h += '<span class="chip bad">\u2717 ' + r.missing.length + " missing in translation</span>"; }

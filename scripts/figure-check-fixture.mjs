@@ -79,6 +79,20 @@ const clockTc =
   "於2026年12月3日（星期四）上午九時正開始，於2026年12月8日（星期二）中午十二時正結束。";
 assertNoIssues("clock times vs Chinese times", clockEn, clockTc);
 
+const amEn = "The offer opens at 9 a.m. on the Offer Date.";
+const amTc = "發售於發售日期上午九時開始。";
+assertNoIssues("hour without colon before a.m.", amEn, amTc);
+
+const pctCountEn = "Discount 5%. Rebate 5%.";
+const pctCountTc = "折扣5%。";
+const pcr = compare(pctCountEn, pctCountTc);
+if (pcr.countDiffs.length !== 1 || pcr.countDiffs[0].key !== "pct|5") {
+  console.error("FAIL: percent count diff", pcr.countDiffs);
+  process.exitCode = 1;
+} else {
+  console.log("ok: percent count diff surfaced");
+}
+
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
