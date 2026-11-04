@@ -2,6 +2,9 @@
 /**
  * Offline runner for Call the Ledger engine (embedded in figure-checker.html).
  * Usage: node scripts/run-figure-check.mjs <source.pdf> <translation.pdf>
+ *
+ * Word (.docx) packs are checked in the browser on figure-checker.html (Mammoth.js);
+ * this script remains PDF-only for offline engine regression.
  */
 import fs from "fs";
 import path from "path";
