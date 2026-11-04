@@ -33,6 +33,7 @@
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
   <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <link rel="stylesheet" href="/assets/nav-menu.css">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -814,46 +815,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-
-      var nav = document.getElementById("topnav");
-      var toggle = document.getElementById("nav-toggle");
-      var panel = document.getElementById("mobile-panel");
-
-      function closeNav() {
-        if (!nav || !toggle || !panel) return;
-        nav.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.setAttribute("aria-label", "Open menu");
-        panel.hidden = true;
-        document.body.style.overflow = "";
-      }
-
-      function openNav() {
-        nav.classList.add("is-open");
-        toggle.setAttribute("aria-expanded", "true");
-        toggle.setAttribute("aria-label", "Close menu");
-        panel.hidden = false;
-        document.body.style.overflow = "hidden";
-      }
-
-      if (toggle && panel && nav) {
-        toggle.addEventListener("click", function () {
-          if (nav.classList.contains("is-open")) closeNav();
-          else openNav();
-        });
-
-        panel.querySelectorAll("a").forEach(function (link) {
-          link.addEventListener("click", closeNav);
-        });
-
-        window.addEventListener("keydown", function (e) {
-          if (e.key === "Escape") closeNav();
-        });
-      }
-
-    })();
-  </script>
+  <script src="/assets/nav-menu.js"></script>
 </body>
 </html>
