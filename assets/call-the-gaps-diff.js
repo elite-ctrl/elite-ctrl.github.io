@@ -56,6 +56,7 @@
   function tokenKey(tok) {
     if (tok.t === "ws") return "\0ws";
     if (tok.t === "cjk") return tok.v;
+    /* Latin keys fold case so desk diffs ignore capitalisation-only edits. */
     return tok.v.toLowerCase();
   }
 
@@ -158,9 +159,15 @@
   }
 
   function splitParagraphs(text) {
-    return text
-      .replace(/\r\n/g, "\n")
-      .split(/\n\s*\n/)
+    var normalised = text.replace(/\r\n/g, "\n").trim();
+    if (!normalised) return [];
+    var blocks;
+    if (/\n\s*\n/.test(normalised)) {
+      blocks = normalised.split(/\n\s*\n/);
+    } else {
+      blocks = normalised.split(/\n/);
+    }
+    return blocks
       .map(function (s) { return s.replace(/\s+/g, " ").trim(); })
       .filter(Boolean);
   }
@@ -176,34 +183,48 @@
       if (ops[i].type === "equal") {
         var eqA = [];
         var eqB = [];
+        var eqIdxA = [];
+        var eqIdxB = [];
         while (i < ops.length && ops[i].type === "equal") {
           eqA.push(parasA[ops[i].ai]);
           eqB.push(parasB[ops[i].bi]);
+          eqIdxA.push(ops[i].ai);
+          eqIdxB.push(ops[i].bi);
           i++;
         }
         for (var j = 0; j < eqA.length; j++) {
-          segments.push({ type: "equal", textA: eqA[j], textB: eqB[j] });
+          segments.push({
+            type: "equal",
+            textA: eqA[j],
+            textB: eqB[j],
+            idxA: eqIdxA[j],
+            idxB: eqIdxB[j]
+          });
         }
         continue;
       }
       if (ops[i].type === "delete") {
         var del = [];
+        var delIdx = [];
         while (i < ops.length && ops[i].type === "delete") {
           del.push(parasA[ops[i].ai]);
+          delIdx.push(ops[i].ai);
           i++;
         }
-        del.forEach(function (p) {
-          segments.push({ type: "delete", textA: p, textB: "" });
+        del.forEach(function (p, di) {
+          segments.push({ type: "delete", textA: p, textB: "", idxA: delIdx[di] });
         });
         continue;
       }
       var ins = [];
+      var insIdx = [];
       while (i < ops.length && ops[i].type === "insert") {
         ins.push(parasB[ops[i].bi]);
+        insIdx.push(ops[i].bi);
         i++;
       }
-      ins.forEach(function (p) {
-        segments.push({ type: "insert", textA: "", textB: p });
+      ins.forEach(function (p, ii) {
+        segments.push({ type: "insert", textA: "", textB: p, idxB: insIdx[ii] });
       });
     }
     return segments;
@@ -220,7 +241,7 @@
 
   function refineSegmentWithTokenDiff(seg) {
     if (seg.type !== "equal" || !seg.textA || !seg.textB) return seg;
-    if (paraKey(seg.textA) === paraKey(seg.textB)) return seg;
+    if (seg.textA === seg.textB) return seg;
     var tokensA = tokenize(seg.textA);
     var tokensB = tokenize(seg.textB);
     var packA = contentMaps(tokensA);
@@ -312,6 +333,43 @@
     return segments.filter(function (s) { return !s.hide; });
   }
 
+  function nextMoveId(segments) {
+    var max = 0;
+    segments.forEach(function (s) {
+      if (s.id && /^mv-\d+$/.test(s.id)) {
+        var n = parseInt(s.id.slice(3), 10);
+        if (n > max) max = n;
+      }
+    });
+    return max + 1;
+  }
+
+  function promotePositionalMoves(segments) {
+    var hasBlockChange = segments.some(function (s) {
+      return s.type === "insert" || s.type === "delete";
+    });
+    if (hasBlockChange) return segments;
+    var nextId = nextMoveId(segments);
+    return segments.map(function (seg) {
+      if (
+        seg.type === "equal" &&
+        seg.idxA != null &&
+        seg.idxB != null &&
+        seg.idxA !== seg.idxB
+      ) {
+        return {
+          type: "move",
+          id: "mv-" + nextId++,
+          textA: seg.textA,
+          textB: seg.textB,
+          idxA: seg.idxA,
+          idxB: seg.idxB
+        };
+      }
+      return seg;
+    });
+  }
+
   function snippet(text, max) {
     max = max || 72;
     var t = text.replace(/\s+/g, " ").trim();
@@ -340,14 +398,43 @@
     var ops = myersDiff(keysA, keysB);
     var segments = opsToParaSegments(parasA, parasB, ops);
     segments = detectMoves(segments);
+    segments = promotePositionalMoves(segments);
     segments = segments.map(refineSegmentWithTokenDiff);
 
     var summary = { insert: 0, delete: 0, move: 0, unchanged: 0 };
     var changes = [];
 
     segments.forEach(function (seg) {
-      if (seg.type === "equal" || seg.type === "intra") {
+      if (seg.type === "equal") {
         summary.unchanged += contentTokenCount(seg);
+        return;
+      }
+      if (seg.type === "intra" && seg.inner) {
+        seg.inner.forEach(function (part) {
+          if (part.type === "equal") {
+            summary.unchanged += part.a.filter(function (t) { return t.t !== "ws"; }).length;
+          } else if (part.type === "insert") {
+            summary.insert++;
+            var idIns = "ins-" + changes.length;
+            part.changeId = idIns;
+            changes.push({
+              id: idIns,
+              type: "insert",
+              snippet: snippet(joinTokens(part.b)),
+              side: "tgt"
+            });
+          } else if (part.type === "delete") {
+            summary.delete++;
+            var idDel = "del-" + changes.length;
+            part.changeId = idDel;
+            changes.push({
+              id: idDel,
+              type: "delete",
+              snippet: snippet(joinTokens(part.a)),
+              side: "src"
+            });
+          }
+        });
         return;
       }
       if (seg.type === "insert") {
@@ -408,6 +495,7 @@
     tokenize: tokenize,
     compareTexts: compareTexts,
     joinTokens: joinTokens,
+    splitParagraphs: splitParagraphs,
     MOVE_MIN_TOKENS: MOVE_MIN_TOKENS,
     MOVE_MIN_SIMILARITY: MOVE_MIN_SIMILARITY,
     MOVE_MAX_LEN_RATIO: MOVE_MAX_LEN_RATIO

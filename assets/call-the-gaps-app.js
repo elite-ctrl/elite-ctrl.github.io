@@ -355,7 +355,9 @@
   }
 
   function jumpToChange(id) {
-    var marks = document.querySelectorAll('[data-change-id="' + id + '"]');
+    if (!id) return;
+    var safe = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id.replace(/"/g, '\\"');
+    var marks = document.querySelectorAll('[data-change-id="' + safe + '"]');
     marks.forEach(function (m) {
       m.classList.add("is-active");
     });
@@ -413,7 +415,7 @@
     if (!texts.src.trim() || !texts.tgt.trim()) {
       var msg = "Upload precedent and newer-one files (PDF or Word) to compare.";
       if ((texts.src.trim() && !texts.tgt.trim()) || (!texts.src.trim() && texts.tgt.trim())) {
-        msg = "Upload the newer one to compare.";
+        msg = texts.src.trim() ? "Upload the newer one to compare." : "Upload the precedent to compare.";
       }
       if (statusError.src || statusError.tgt) {
         msg = "Choose a readable PDF or Word (.docx) file for both precedent and newer one to compare.";
