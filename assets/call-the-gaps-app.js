@@ -53,9 +53,9 @@
       return;
     }
     noteEl.textContent =
-      "Source: " +
+      "Precedent: " +
       structureCountLabel(a) +
-      ". Other side: " +
+      ". Newer one: " +
       structureCountLabel(b) +
       ". Unequal pagination or layout between languages and formats is normal on HK bilingual packs — the check compares the full text of both files, not page by page.";
     noteEl.hidden = false;
@@ -411,12 +411,12 @@
       return;
     }
     if (!texts.src.trim() || !texts.tgt.trim()) {
-      var msg = "Upload source and other-side files (PDF or Word) to compare.";
+      var msg = "Upload precedent and newer-one files (PDF or Word) to compare.";
       if ((texts.src.trim() && !texts.tgt.trim()) || (!texts.src.trim() && texts.tgt.trim())) {
-        msg = "Upload the other file to compare.";
+        msg = "Upload the newer one to compare.";
       }
       if (statusError.src || statusError.tgt) {
-        msg = "Choose a readable PDF or Word (.docx) file on both sides to compare.";
+        msg = "Choose a readable PDF or Word (.docx) file for both precedent and newer one to compare.";
       }
       el.innerHTML = '<p class="empty">' + msg + "</p>";
       lastResult = null;
@@ -432,8 +432,8 @@
     h += railListHtml(r.changes);
     h += "</aside>";
     h += '<div class="diff-panes">';
-    h += '<div class="diff-pane"><h2 class="diff-pane__title">Source</h2><div class="diff-pane__body" id="srcView">' + renderPane(r.segments, "src") + "</div></div>";
-    h += '<div class="diff-pane"><h2 class="diff-pane__title">Other side</h2><div class="diff-pane__body" id="tgtView">' + renderPane(r.segments, "tgt") + "</div></div>";
+    h += '<div class="diff-pane"><h2 class="diff-pane__title">Precedent</h2><div class="diff-pane__body" id="srcView">' + renderPane(r.segments, "src") + "</div></div>";
+    h += '<div class="diff-pane"><h2 class="diff-pane__title">Newer one</h2><div class="diff-pane__body" id="tgtView">' + renderPane(r.segments, "tgt") + "</div></div>";
     h += "</div></div>";
     el.innerHTML = h;
     bindResultsUi();
