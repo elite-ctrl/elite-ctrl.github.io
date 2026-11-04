@@ -1522,6 +1522,62 @@
       text-wrap: pretty;
     }
 
+    /* —— Call the Ledger promo —— */
+    .ledger-promo__card {
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+    }
+
+    .ledger-promo__title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px 12px;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .ledger-promo__title {
+        font-size: 36px;
+        line-height: 40px;
+      }
+      .ledger-promo__card { padding: 40px 40px; }
+    }
+
+    .ledger-promo__beta {
+      display: inline-flex;
+      align-items: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ledger-promo__pitch {
+      max-width: 62ch;
+      margin: 0 auto 24px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
     /* —— Footer —— */
     .site-footer {
       background: var(--ink);
@@ -1929,6 +1985,20 @@
             </div>
             <a class="btn btn--lg" href="language-watchdog.html">Open Language Watchdog</a>
             <p class="case-card__more"><a href="language-watchdog-fibocom-00638.html">Read the Fibocom (00638) note</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Desk tool: Call the Ledger -->
+    <section class="section" id="call-the-ledger" aria-labelledby="call-the-ledger-title">
+      <div class="wrap">
+        <div class="reveal">
+          <article class="ledger-promo__card">
+            <p class="eyebrow">Desk tool</p>
+            <h2 class="ledger-promo__title" id="call-the-ledger-title">Call the Ledger <span class="ledger-promo__beta">Beta</span></h2>
+            <p class="ledger-promo__pitch">Call the figures on a bilingual pack before it leaves the desk. Drop the source PDF and the translation PDF. All pack data stays on your machine — nothing is uploaded for the check.</p>
+            <a class="btn btn--lg" href="figure-checker.html">Try Call the Ledger</a>
           </article>
         </div>
       </div>
