@@ -350,6 +350,10 @@
     }
 
     .tool h1 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
       font-size: 30px;
       font-weight: 800;
       line-height: 36px;
@@ -363,6 +367,44 @@
         font-size: 36px;
         line-height: 40px;
       }
+    }
+
+    .beta {
+      display: inline-flex;
+      align-items: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .disclaimer {
+      max-width: 78ch;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    .disclaimer__label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     .subtitle {
@@ -839,8 +881,9 @@
       <div class="wrap">
         <header>
           <p class="eyebrow">Tools</p>
-          <h1>Figure Checker</h1>
+          <h1>Figure Checker <span class="beta">Beta</span></h1>
           <p class="subtitle">Upload a source PDF and a translation PDF. Numbers, percentages, dates, currencies, stock codes and 億/百萬 scale words are read from the text in each file and compared in this browser.</p>
+          <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Reading figures from a PDF can miss scan-only text, complex layouts, or other edge cases. Check both PDFs yourself. Figure Checker is not a substitute for professional review.</p>
           <p class="privacy-note">The PDFs stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
         </header>
 
