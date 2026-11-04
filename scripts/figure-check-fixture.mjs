@@ -41,6 +41,7 @@ const proofTc =
   "File: c_27660_AD(5) Project Thundering Horses 1st Proof 210(W)x280(H) (710) 3rd November 2026\n" +
   "13 : 18 BL:(1-13)/(13) P.1 (L1) (E>C)\nBody 港幣28.10百萬元。";
 assertNoIssues("proof headers stripped", proofEn, proofTc);
+// Different folio / page proof lines (11 vs 13 pages in live packs) — whole-document compare, not page-gated.
 
 const datesEn =
   "Listing on [Friday, December 11], 2026 and [Wednesday, December 16], 2026.\n" +
