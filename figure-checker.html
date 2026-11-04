@@ -438,6 +438,27 @@
       border-color: var(--accent);
     }
 
+    .structure-note {
+      max-width: 78ch;
+      margin: 0 0 16px;
+      padding: 12px 16px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .structure-note[hidden] {
+      display: none;
+    }
+
+    .structure-note--inline {
+      margin: 0 0 12px;
+    }
+
     .panes {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -882,7 +903,7 @@
         <header>
           <p class="eyebrow">Tools</p>
           <h1>Call the Ledger <span class="beta">Beta</span></h1>
-          <p class="subtitle">Call the figures on a bilingual pack before it leaves the desk. Drop the source and translation as PDF or Word (.docx); numbers, percentages, dates, currencies, stock codes, and 億/百萬 scale words are paired from the text in this browser. All data stays on your machine — nothing is uploaded for the check.</p>
+          <p class="subtitle">Call the figures on a bilingual pack before it leaves the desk. Drop the source and translation as PDF or Word (.docx); numbers, percentages, dates, currencies, stock codes, and 億/百萬 scale words are paired across the whole document in this browser — not by page number. Unequal page counts, or PDF pages beside Word paragraphs, are expected and fine. All data stays on your machine — nothing is uploaded for the check.</p>
           <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Reading figures from a PDF can miss scan-only text; Word files can miss text in embedded images or text boxes the extractor skips. Complex layouts and other edge cases apply on both formats. Check both files yourself. Call the Ledger is not a substitute for professional review.</p>
           <p class="privacy-note">Your pack files stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
         </header>
@@ -918,6 +939,8 @@
           </div>
         </div>
 
+        <p class="structure-note" id="structureNote" role="note" hidden></p>
+
         <div class="tool-actions">
           <button class="btn btn--cream" id="btnClear" type="button">Clear</button>
           <button class="btn btn--cream" id="btnCopy" type="button">Copy report</button>
@@ -927,7 +950,7 @@
           <p class="empty">Upload a source and translation (PDF or Word) to compare.</p>
         </div>
 
-        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Not covered: spelt-out numbers ("twelve", 一百二十萬), scanned or image-only PDFs, and text trapped in Word images without OCR. Always run your own final check on anything flagged.</p>
+        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Pagination can differ between EN and TC PDFs, or between PDF and Word; the tool still compares the full extracted text. Not covered: spelt-out numbers ("twelve", 一百二十萬), scanned or image-only PDFs, and text trapped in Word images without OCR. Always run your own final check on anything flagged.</p>
       </div>
     </div>
   </main>
@@ -1317,8 +1340,42 @@
     var names = { src: "", tgt: "" };
     var statusText = { src: "", tgt: "" };
     var statusError = { src: false, tgt: false };
+    var structure = { src: null, tgt: null };
     var lastReport = "";
     var CHOOSE_LABEL = "Choose a PDF or Word file";
+
+    function structureCountLabel(meta) {
+      if (!meta) return "";
+      if (meta.measure === "pages") {
+        return meta.count + (meta.count === 1 ? " page" : " pages");
+      }
+      return meta.count + (meta.count === 1 ? " paragraph" : " paragraphs");
+    }
+    function paintStructureNote() {
+      var noteEl = $("structureNote");
+      if (!noteEl) return;
+      var a = structure.src;
+      var b = structure.tgt;
+      var ready =
+        texts.src.trim() &&
+        texts.tgt.trim() &&
+        !statusError.src &&
+        !statusError.tgt &&
+        a &&
+        b;
+      if (!ready || (a.measure === b.measure && a.count === b.count)) {
+        noteEl.hidden = true;
+        noteEl.textContent = "";
+        return;
+      }
+      noteEl.textContent =
+        "Source: " +
+        structureCountLabel(a) +
+        ". Translation: " +
+        structureCountLabel(b) +
+        ". Unequal pagination or layout between languages and formats is normal on HK bilingual packs — the check compares the full text of both files, not page by page.";
+      noteEl.hidden = false;
+    }
 
     function isCjkChar(ch) {
       return /[\u3400-\u9FFF\uF900-\uFAFF]/.test(ch);
@@ -1459,6 +1516,7 @@
         var count = texts[side].trim() ? extract(texts[side]).length + " figures" : "";
         $(side + "Count").textContent = count;
       });
+      paintStructureNote();
     }
     function run() {
       paintStatus();
@@ -1482,7 +1540,24 @@
       }
       var r = compare(srcText, tgtText);
       var issueCount = r.missing.length + r.extra.length + r.scaleIssues.length;
-      var h = '<div class="summary">';
+      var h = "";
+      var a = structure.src;
+      var b = structure.tgt;
+      if (
+        a &&
+        b &&
+        (a.measure !== b.measure || a.count !== b.count)
+      ) {
+        h +=
+          '<p class="structure-note structure-note--inline" role="note">' +
+          "Source: " +
+          structureCountLabel(a) +
+          ". Translation: " +
+          structureCountLabel(b) +
+          ". Unequal pagination or layout between languages and formats is normal on HK bilingual packs — the check compares the full text of both files, not page by page." +
+          "</p>";
+      }
+      h += '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
       if (r.missing.length) { h += '<span class="chip bad">\u2717 ' + r.missing.length + " missing in translation</span>"; }
       if (r.extra.length) { h += '<span class="chip bad">\u2717 ' + r.extra.length + " not in source</span>"; }
@@ -1538,6 +1613,7 @@
     function takeFile(side, file) {
       var job = ++jobs[side];
       texts[side] = "";
+      structure[side] = null;
       statusError[side] = false;
       if (!file) {
         names[side] = "";
@@ -1592,9 +1668,11 @@
           statusError[side] = false;
           if (kind === "pdf") {
             statusText[side] = result.pages + (result.pages === 1 ? " page" : " pages");
+            structure[side] = { measure: "pages", count: result.pages };
           } else {
             var p = result.paragraphs;
             statusText[side] = p + (p === 1 ? " paragraph" : " paragraphs");
+            structure[side] = { measure: "paragraphs", count: p };
           }
           texts[side] = result.text;
         }
@@ -1638,6 +1716,7 @@
         names[side] = "";
         statusText[side] = "";
         statusError[side] = false;
+        structure[side] = null;
         var input = $(side + "File");
         input.value = "";
       });
