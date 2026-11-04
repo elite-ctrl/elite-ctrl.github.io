@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YMJ8X3SVM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6YMJ8X3SVM');
+  </script>
+  <title>Call the Gaps | LedgerLex Language Studio</title>
+  <meta name="description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+  <meta name="theme-color" content="#FFFFFB">
+  <link rel="canonical" href="https://ledgerlexlanguagestudio.net/call-the-gaps.html">
+  <meta property="og:title" content="Call the Gaps | LedgerLex Language Studio">
+  <meta property="og:description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ledgerlexlanguagestudio.net/call-the-gaps.html">
+  <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Call the Gaps | LedgerLex Language Studio">
+  <meta name="twitter:description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+  <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <link rel="stylesheet" href="/assets/nav-menu.css">
+  <style>
+    :root {
+      --bg: #FFFFFB;
+      --ink: #000000;
+      --surface: #FFFFFF;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(255, 255, 251, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .topnav__brand img {
+      display: block;
+      height: 36px;
+      width: auto;
+    }
+
+    .topnav__links {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .topnav__links a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 12px;
+      border: 2px solid transparent;
+      transition:
+        background-color 300ms var(--ease),
+        border-color 300ms var(--ease),
+        transform 300ms var(--ease);
+    }
+
+    .topnav__links a:hover {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .topnav__links a:active { transform: scale(0.98); }
+
+    .topnav__cta {
+      display: none !important;
+    }
+
+    .topnav__toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      flex-shrink: 0;
+    }
+
+    .topnav__toggle:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    .topnav__toggle:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .topnav__toggle span {
+      display: block;
+      height: 3px;
+      background: var(--ink);
+      transition: transform 300ms var(--ease), opacity 300ms var(--ease);
+      transform-origin: center;
+    }
+
+    .topnav.is-open .topnav__toggle span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .topnav.is-open .topnav__toggle span:nth-child(2) { opacity: 0; }
+    .topnav.is-open .topnav__toggle span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .topnav__panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(255, 255, 251, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 96px 24px 48px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .topnav.is-open .topnav__panel {
+      display: flex;
+      pointer-events: auto;
+    }
+
+    .topnav__panel a {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 32px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 400ms var(--ease),
+        transform 400ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .topnav.is-open .topnav__panel a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .topnav.is-open .topnav__panel a:nth-child(1) { transition-delay: 0ms; }
+    .topnav.is-open .topnav__panel a:nth-child(2) { transition-delay: 60ms; }
+    .topnav.is-open .topnav__panel a:nth-child(3) { transition-delay: 120ms; }
+    .topnav.is-open .topnav__panel a:nth-child(4) { transition-delay: 180ms; }
+    .topnav.is-open .topnav__panel a:nth-child(5) { transition-delay: 240ms; }
+    .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
+    .topnav.is-open .topnav__panel a:nth-child(7) { transition-delay: 360ms; }
+    .topnav.is-open .topnav__panel a:nth-child(8) { transition-delay: 400ms; }
+    .topnav.is-open .topnav__panel a:nth-child(9) { transition-delay: 440ms; }
+
+    .topnav__panel a:hover { background: var(--yellow); }
+
+    @media (min-width: 900px) {
+      .topnav__links { display: flex; }
+      .topnav__cta { display: inline-flex !important; }
+      .topnav__toggle { display: none; }
+      .topnav__panel { display: none !important; }
+      .topnav__brand img { height: 32px; }
+    }
+
+    /* The shared secondary bar is full at 900–1100px. Keep Call the Ledger
+       in the row only once the 1160px bar can hold it without covering the CTA. */
+    @media (max-width: 1199.98px) {
+      .topnav__links a[href="figure-checker.html"],
+      .topnav__links a[href="call-the-gaps.html"] { display: none; }
+    }
+
+    .topnav__links a[aria-current="page"],
+    .topnav__panel a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn--cream { background: var(--surface); }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn:focus-visible,
+    button:focus-visible,
+    a:focus-visible,
+    .drop__input:focus-visible + .drop,
+    .upload:focus-within .drop {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    .tool {
+      padding: 32px 0 64px;
+    }
+
+    @media (min-width: 768px) {
+      .tool { padding: 48px 0 80px; }
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .tool h1 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .tool h1 {
+        font-size: 36px;
+        line-height: 40px;
+      }
+    }
+
+    .beta {
+      display: inline-flex;
+      align-items: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .disclaimer {
+      max-width: 78ch;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    .disclaimer__label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 78ch;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .privacy-note {
+      max-width: 78ch;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .privacy-note a {
+      font-weight: 800;
+      border-bottom: 2px solid currentColor;
+    }
+
+    .privacy-note a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .structure-note {
+      max-width: 78ch;
+      margin: 0 0 16px;
+      padding: 12px 16px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .structure-note[hidden] {
+      display: none;
+    }
+
+    .structure-note--inline {
+      margin: 0 0 12px;
+    }
+
+    .panes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0 16px;
+    }
+
+    .pane {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    .pane-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 44px;
+    }
+
+    .pane-title {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 20px;
+    }
+
+    .pane-title .count {
+      font-weight: 600;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-group .btn {
+      min-height: 40px;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .upload { min-width: 0; }
+
+    .drop {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      min-height: 148px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      cursor: pointer;
+    }
+
+    .drop:hover,
+    .drop.is-drag { background: var(--yellow); }
+
+    .drop__kicker {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .drop__name {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      overflow-wrap: anywhere;
+    }
+
+    .drop__sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .drop__input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .file-status {
+      min-height: 22px;
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .file-status.is-error {
+      color: var(--ink);
+      border-left: 6px solid var(--accent);
+      padding-left: 8px;
+    }
+
+    .tool-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .results {
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border: 2px solid var(--ink);
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 2px 2px 0 #000;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+
+    .chip.ok { background: var(--yellow); }
+    .chip.bad { background: var(--ink); color: var(--bg); }
+    .chip.warn { background: var(--yellow); box-shadow: 2px 2px 0 var(--accent); }
+    .chip.info { background: var(--bg); }
+
+    .pair-board {
+      margin-top: 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+    }
+
+    .pair-head,
+    .pair-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .pair-head {
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .pair-head span,
+    .pair-cell {
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .pair-head span + span,
+    .pair-cell + .pair-cell {
+      border-left: 3px solid var(--ink);
+    }
+
+    .pair-row {
+      position: relative;
+      border-top: 3px solid var(--ink);
+      background: var(--bg);
+    }
+
+    .pair-row.is-scale { background: var(--yellow); }
+
+    .pair-banner {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 8px 12px;
+      background: var(--ink);
+      color: var(--bg);
+      border-bottom: 3px solid var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 18px;
+    }
+
+    .pair-row.is-scale .pair-banner { background: var(--accent); }
+
+    .pair-cell { position: relative; }
+
+    .pair-side {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .pair-val {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    .pair-val + .pair-val { margin-top: 4px; }
+
+    .pair-kind {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pair-note {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 22px;
+      color: var(--muted);
+    }
+
+    .pair-cell.is-gap { background: var(--bg); }
+
+    .pair-cell .snip { margin-top: 8px; }
+
+    .snip {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .snip mark {
+      background: var(--yellow);
+      color: var(--ink);
+      padding: 0 2px;
+    }
+
+    .snip .side { font-weight: 800; color: var(--ink); }
+
+    details.matched { margin-top: 16px; }
+
+    details.matched summary {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    details.matched .pair-board { margin-top: 8px; }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hint {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--muted);
+      text-wrap: pretty;
+      max-width: 90ch;
+    }
+
+
+    .chip--insert { background: var(--yellow); }
+    .chip--delete { background: var(--accent); color: var(--bg); }
+    .chip--move { background: var(--surface); border: 2px dashed var(--ink); }
+    .chip--ok { background: var(--surface); }
+    .gap-layout { display: grid; grid-template-columns: minmax(220px, 280px) 1fr; gap: 16px; margin-top: 16px; min-width: 0; }
+    .change-rail { border: 3px solid var(--ink); background: var(--bg); box-shadow: var(--shadow-sm); max-height: 560px; overflow: auto; min-width: 0; }
+    .rail-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 3px solid var(--ink); background: var(--surface); position: sticky; top: 0; z-index: 1; }
+    .rail-filter { cursor: pointer; min-height: 36px; }
+    .rail-filter.is-on { box-shadow: inset 0 0 0 3px var(--ink); }
+    .rail-list { list-style: none; }
+    .rail-item { display: block; width: 100%; text-align: left; padding: 10px 12px; border: 0; border-bottom: 2px solid var(--ink); background: var(--bg); font-size: 13px; font-weight: 600; line-height: 20px; }
+    .rail-item:hover { background: var(--yellow); }
+    .rail-item__type { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 8px; }
+    .rail-item__snippet { overflow-wrap: anywhere; }
+    .rail-empty { padding: 12px; }
+    .diff-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
+    .diff-pane { border: 3px solid var(--ink); background: var(--surface); box-shadow: var(--shadow); min-width: 0; display: flex; flex-direction: column; min-height: 280px; }
+    .diff-pane__title { font-size: 13px; font-weight: 800; padding: 10px 12px; border-bottom: 3px solid var(--ink); background: var(--yellow); }
+    .diff-pane__body { flex: 1; max-height: 520px; overflow: auto; padding: 12px; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
+    .diff-block { margin: 0 0 12px; white-space: pre-wrap; }
+    .mark-insert { background: var(--yellow); padding: 0 2px; border: 2px solid var(--ink); }
+    .mark-delete { background: var(--accent); color: var(--bg); text-decoration: line-through; padding: 0 2px; }
+    .mark-move { background: var(--surface); padding: 0 2px; border: 2px dashed var(--ink); cursor: pointer; }
+    .mark-move.is-active, .mark-insert.is-active, .mark-delete.is-active { outline: 3px solid var(--yellow); outline-offset: 2px; }
+    @media (max-width: 900px) { .gap-layout { grid-template-columns: 1fr; } .diff-panes { grid-template-columns: 1fr; } }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      margin-bottom: 12px;
+      line-height: 0;
+    }
+
+    .site-footer .brand img {
+      display: block;
+      height: 44px;
+      width: auto;
+      margin: 0 auto;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 251, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 720px) {
+      .panes { grid-template-columns: 1fr; }
+      .pair-head { display: none; }
+      .pair-row { grid-template-columns: 1fr; }
+      .pair-cell + .pair-cell {
+        border-left: 0;
+        border-top: 3px solid var(--ink);
+      }
+      .pair-side {
+        position: static;
+        display: block;
+        width: auto;
+        height: auto;
+        margin: 0 0 4px;
+        overflow: visible;
+        clip: auto;
+        white-space: normal;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn, .topnav__toggle, .topnav__links a {
+        transition: none;
+      }
+      .btn:hover, .btn:active,
+      .topnav__toggle:hover, .topnav__toggle:active {
+        transform: none;
+      }
+      .topnav__panel a {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
+
+      <div class="topnav__links" role="list">
+        <a href="index.html" role="listitem">Home</a>
+        <a href="financial-translation.html" role="listitem">Finance</a>
+        <a href="trainee.html" role="listitem">Trainee</a>
+        <a href="trade-in-words.html" role="listitem">Trade in Words</a>
+        <a href="language-watchdog.html" role="listitem">Language Watchdog</a>
+        <a href="figure-checker.html" role="listitem">Call the Ledger</a>
+        <a href="call-the-gaps.html" role="listitem" aria-current="page">Call the Gaps</a>
+        <a href="call-the-gaps.html" role="listitem">Call the Gaps</a>
+        <a href="index.html#faq" role="listitem">FAQ</a>
+      </div>
+
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+
+      <button
+        class="topnav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+        id="nav-toggle"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <a href="index.html">Home</a>
+      <a href="financial-translation.html">Finance</a>
+      <a href="trainee.html">Trainee</a>
+      <a href="trade-in-words.html">Trade in Words</a>
+      <a href="language-watchdog.html">Language Watchdog</a>
+      <a href="figure-checker.html">Call the Ledger</a>
+      <a href="call-the-gaps.html" aria-current="page">Call the Gaps</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="tool">
+      <div class="wrap">
+        <header>
+          <h1>Call the Gaps <span class="beta">Beta</span></h1>
+          <p class="subtitle">Call text gaps on a bilingual pack before it leaves the desk. Drop the source and the other side as PDF or Word (.docx); inserts, deletes, and moves are typed across the whole document in this browser — not by page number. Unequal page counts, or PDF pages beside Word paragraphs, are expected and fine. All data stays on your machine — nothing is uploaded for the check.</p>
+          <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Extracted text can miss scan-only PDF content, embedded images, and text boxes the reader skips. Complex layouts and other edge cases apply on both formats. Check both files yourself. Call the Gaps is not a substitute for professional review.</p>
+          <p class="privacy-note">Your pack files stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+        </header>
+
+        <div class="panes">
+          <div class="pane">
+            <div class="pane-head">
+              <span class="pane-title" id="srcLabel">Source · PDF / Word<span class="count" id="srcCount"></span></span>
+            </div>
+            <div class="upload" id="srcUpload">
+              <input class="drop__input" id="srcFile" type="file" accept="application/pdf,.pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx" aria-labelledby="srcLabel">
+              <label class="drop" id="srcDrop" for="srcFile">
+                <span class="drop__kicker">Source</span>
+                <span class="drop__name" id="srcName">Choose a PDF or Word file</span>
+                <span class="drop__sub">or drop it here</span>
+              </label>
+            </div>
+            <p class="file-status" id="srcStatus" role="status"></p>
+          </div>
+          <div class="pane">
+            <div class="pane-head">
+              <span class="pane-title" id="tgtLabel">Other side · PDF / Word<span class="count" id="tgtCount"></span></span>
+            </div>
+            <div class="upload" id="tgtUpload">
+              <input class="drop__input" id="tgtFile" type="file" accept="application/pdf,.pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx" aria-labelledby="tgtLabel">
+              <label class="drop" id="tgtDrop" for="tgtFile">
+                <span class="drop__kicker">Other side</span>
+                <span class="drop__name" id="tgtName">Choose a PDF or Word file</span>
+                <span class="drop__sub">or drop it here</span>
+              </label>
+            </div>
+            <p class="file-status" id="tgtStatus" role="status"></p>
+          </div>
+        </div>
+
+        <p class="structure-note" id="structureNote" role="note" hidden></p>
+
+        <div class="tool-actions">
+          <button class="btn btn--cream" id="btnClear" type="button">Clear</button>
+          </div>
+
+        <div class="results" id="results" aria-live="polite">
+          <p class="empty">Upload source and other-side files (PDF or Word) to compare.</p>
+        </div>
+
+        <p class="hint">Paragraph-level alignment handles bilingual packs where wording differs but structure should track. Short inserts and typos inside a matched paragraph are marked with token-level diff when the paragraph text differs. Scanned or image-only PDFs, and text trapped in Word images without extraction, are not covered. Always run your own final check on anything flagged.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trainee.html">Trainee</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+        <a href="language-watchdog.html">Language Watchdog</a>
+        <a href="figure-checker.html">Call the Ledger</a>
+        <a href="call-the-gaps.html">Call the Gaps</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/assets/pdfjs/pdf.min.js"></script>
+  <script src="/assets/mammoth/mammoth.browser.min.js"></script>
+  <script src="/assets/call-the-gaps-diff.js"></script>
+  <script src="/assets/call-the-gaps-app.js"></script>
+  <script src="/assets/nav-menu.js"></script>
+</body>
+</html>
