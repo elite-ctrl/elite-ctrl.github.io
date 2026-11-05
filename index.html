@@ -312,6 +312,15 @@
     }
 
     .topnav__panel a {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 400ms var(--ease),
+        transform 400ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .topnav__panel .sitemap-group:not(.sitemap-group--page-index) a {
       font-size: 24px;
       font-weight: 800;
       line-height: 32px;
@@ -320,12 +329,6 @@
       background: var(--surface);
       box-shadow: var(--shadow-sm);
       text-align: center;
-      opacity: 0;
-      transform: translateY(24px);
-      transition:
-        opacity 400ms var(--ease),
-        transform 400ms var(--ease),
-        background-color 300ms var(--ease);
     }
 
     .topnav.is-open .topnav__panel a {
@@ -345,7 +348,9 @@
     .topnav.is-open .topnav__panel a:nth-child(10) { transition-delay: 480ms; }
     .topnav.is-open .topnav__panel a:nth-child(11) { transition-delay: 520ms; }
 
-    .topnav__panel a:hover { background: var(--yellow); }
+    .topnav__panel .sitemap-group:not(.sitemap-group--page-index) a:hover {
+      background: var(--yellow);
+    }
 
     @media (min-width: 900px) {
       .topnav__links { display: flex; }
@@ -1829,17 +1834,17 @@
     </div>
 
     <div class="topnav__panel" id="mobile-panel" hidden>
-      <div class="sitemap-group">
+      <div class="sitemap-group sitemap-group--page-index">
         <p class="sitemap-label">On this page</p>
-        <a href="#hero" aria-current="page">Home</a>
-        <a href="#benefits">Benefits</a>
-        <a href="#coverage">Coverage</a>
-        <a href="#how">How it works</a>
-        <a href="#case-study">Case study</a>
-        <a href="#language-watchdog">Language Watchdog</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-        <a href="#engage">Engage the Studio</a>
+        <a href="#hero" aria-current="page"><span class="page-index__num" aria-hidden="true">01</span>Home</a>
+        <a href="#benefits"><span class="page-index__num" aria-hidden="true">02</span>Benefits</a>
+        <a href="#coverage"><span class="page-index__num" aria-hidden="true">03</span>Coverage</a>
+        <a href="#how"><span class="page-index__num" aria-hidden="true">04</span>How it works</a>
+        <a href="#case-study"><span class="page-index__num" aria-hidden="true">05</span>Case study</a>
+        <a href="#language-watchdog"><span class="page-index__num" aria-hidden="true">06</span>Language Watchdog</a>
+        <a href="#pricing"><span class="page-index__num" aria-hidden="true">07</span>Pricing</a>
+        <a href="#faq"><span class="page-index__num" aria-hidden="true">08</span>FAQ</a>
+        <a href="#engage"><span class="page-index__num" aria-hidden="true">09</span>Engage the Studio</a>
       </div>
       <div class="sitemap-group">
         <p class="sitemap-label">Tools</p>
