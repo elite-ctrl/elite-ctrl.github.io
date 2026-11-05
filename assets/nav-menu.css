@@ -86,6 +86,89 @@ html.nav-scroll-lock body {
   background: var(--yellow, #FFE566);
 }
 
+/* Homepage hamburger "On this page" — numbered index rail.
+   Tools / Journal / Desk groups keep the stacked neo-brutalist buttons. */
+.topnav__panel .sitemap-group--page-index {
+  position: relative;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 12px 10px 10px 8px;
+  background: var(--bg, #FFFFFB);
+  border: 3px solid var(--ink, #000000);
+  border-left-width: 8px;
+  box-shadow: 6px 6px 0 #000;
+}
+
+.topnav__panel .sitemap-group--page-index .sitemap-label {
+  align-self: flex-start;
+  margin: 0 10px 8px 12px;
+}
+
+.topnav__panel .sitemap-group--page-index a {
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 12px;
+  min-height: 44px;
+  margin: 0 8px 0 8px;
+  padding: 8px 12px;
+  border: 3px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  transition:
+    opacity 400ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 400ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    background-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    box-shadow 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.topnav__panel .sitemap-group--page-index a:hover,
+.topnav__panel .sitemap-group--page-index a:focus-visible {
+  background: var(--yellow, #FFE566);
+  border-color: var(--ink, #000000);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.topnav__panel .sitemap-group--page-index a[aria-current="page"] {
+  background: var(--yellow, #FFE566);
+  border-color: var(--ink, #000000);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.topnav__panel .sitemap-group--page-index a:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.topnav__panel .sitemap-group--page-index .page-index__num {
+  flex: 0 0 auto;
+  min-width: 1.75em;
+  color: var(--accent, #FF4D1A);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.topnav__panel .sitemap-group--page-index a:hover .page-index__num,
+.topnav__panel .sitemap-group--page-index a:focus-visible .page-index__num,
+.topnav__panel .sitemap-group--page-index a[aria-current="page"] .page-index__num {
+  color: var(--ink, #000000);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topnav__panel .sitemap-group--page-index a,
+  .topnav__panel .sitemap-group--page-index a:active {
+    transform: none;
+    transition: none;
+  }
+}
+
 .nav-beta {
   display: inline-flex;
   align-items: center;
