@@ -118,9 +118,25 @@ if (pcr.countDiffs.length !== 1 || pcr.countDiffs[0].key !== "pct|5") {
 }
 
 const nearEn =
-  "Revenue was HKD 1,234.5 million. Stock code 09988. Margin 12.5%. Volume 456.0. Headcount 8,900.0. Dated 30 June 2025.";
+  "Ledger Source (EN)\n" +
+  "Annual Results Summary — Stock Code: 09988\n" +
+  "For the year ended 31 December 2025\n" +
+  "Revenue for the year amounted to HKD 1,234.5 million,\n" +
+  "representing an increase of 12.5% as compared with the prior year.\n" +
+  "Profit attributable to shareholders was HKD 456.0 million.\n" +
+  "Total assets stood at HKD 8,900.0 million as at 31 December 2025.\n" +
+  "Board of Directors\n" +
+  "Hong Kong, 31 December 2025";
 const nearTc =
-  "收入為港幣1,235.5百萬元。股份代號09988。利潤率12.5%。成交量456.0。人數8,900.0。日期2025年6月30日。";
+  "Ledger Translation (TC)\n" +
+  "全年業績摘要 — 股份代號：09988\n" +
+  "截至二零二五年十二月三十一日止年度\n" +
+  "本年度收益為港幣1,235.5百萬元，\n" +
+  "較去年增加12.5%。\n" +
+  "股東應佔溢利為港幣456.0百萬元。\n" +
+  "於二零二五年十二月三十一日，總資產為港幣8,900.0百萬元。\n" +
+  "董事會\n" +
+  "香港，二零二五年十二月三十一日";
 const nr = compare(nearEn, nearTc);
 const nearPairs = nr.valueIssues || [];
 if (nearPairs.length !== 1) {
@@ -136,6 +152,9 @@ if (nearPairs.length !== 1) {
     missing: nr.missing.map((e) => e.key),
     extra: nr.extra.map((e) => e.key),
   });
+  process.exitCode = 1;
+} else if (nr.matched.length !== 5) {
+  console.error("FAIL: official ledger pack should match 5 other figures", nr.matched.map((e) => e.key));
   process.exitCode = 1;
 } else {
   const srcHit = nearPairs[0].src.src[0].text;
