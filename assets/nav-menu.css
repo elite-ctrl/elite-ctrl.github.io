@@ -43,6 +43,89 @@ html.nav-scroll-lock body {
   touch-action: pan-y;
 }
 
+/* Baseline chrome so privacy / terms / 404 (which only link this sheet)
+   get the same hamburger + desktop groups as the rest of the site.
+   Page-level copies keep winning where they repeat these selectors. */
+.topnav__brand {
+  flex-shrink: 0;
+}
+
+.topnav__links {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.topnav__cta {
+  display: none !important;
+  flex-shrink: 0;
+}
+
+.topnav__toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 3px solid var(--ink, #000000);
+  background: var(--yellow, #FFE566);
+  box-shadow: 4px 4px 0 #000;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.topnav__toggle span {
+  display: block;
+  height: 3px;
+  background: var(--ink, #000000);
+  transition: transform 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)), opacity 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+  transform-origin: center;
+}
+
+.topnav.is-open .topnav__toggle span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.topnav.is-open .topnav__toggle span:nth-child(2) { opacity: 0; }
+
+.topnav.is-open .topnav__toggle span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.topnav__panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(255, 255, 251, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 96px 24px 48px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.topnav.is-open .topnav__panel {
+  display: flex;
+  pointer-events: auto;
+}
+
+.topnav__panel .sitemap-group:not(.sitemap-group--page-index) a {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 32px;
+  padding: 16px;
+  border: 3px solid var(--ink, #000000);
+  background: var(--surface, #FFFFFF);
+  box-shadow: 4px 4px 0 #000;
+  text-align: center;
+}
+
 /* Full site map in the hamburger and the footer. House tokens only:
    yellow chips, 3px ink borders, hard offset shadows, JetBrains Mono. */
 
@@ -218,14 +301,55 @@ html.nav-scroll-lock body {
    each opens a neo-brutalist panel (surface, 3px ink, hard shadow). The
    hamburger #mobile-panel stays the <900px map — do not restyle it here. */
 
-.topnav__bar {
+/* backdrop-filter on the bar itself clips absolutely positioned menus in
+   Chromium / WebKit. Keep the blur on a pseudo, leave the bar overflow visible. */
+nav.topnav .topnav__bar {
+  position: relative;
   overflow: visible;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+nav.topnav .topnav__bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(255, 255, 251, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+nav.topnav .topnav__bar > * {
+  position: relative;
+  z-index: 1;
+}
+
+nav.topnav .topnav__bar > .topnav__links {
+  z-index: 3;
 }
 
 @media (min-width: 900px) {
   .topnav__links {
+    display: flex;
     flex: 1 1 auto;
     justify-content: center;
+    min-width: 0;
+  }
+  .topnav__cta { display: inline-flex !important; }
+  .topnav__toggle { display: none; }
+  .topnav__panel { display: none !important; }
+}
+
+@media (min-width: 900px) and (max-width: 1100px) {
+  .topnav__trigger {
+    padding: 8px 8px;
+    font-size: 13px;
+  }
+  .topnav__cta {
+    font-size: 14px;
+    padding: 8px 10px;
   }
 }
 
@@ -378,9 +502,18 @@ html.nav-scroll-lock body {
 @media (prefers-reduced-motion: reduce) {
   .topnav__trigger,
   .topnav__trigger::after,
+  .topnav__toggle span,
   .topnav__links .topnav__menu a,
   .topnav__links .topnav__menu a:active {
     transform: none;
     transition: none;
+  }
+}
+
+/* No-JS: hover or focus-within reveals a group. JS removes html.no-js. */
+@media (min-width: 900px) {
+  html.no-js .topnav__item:hover .topnav__menu[hidden],
+  html.no-js .topnav__item:focus-within .topnav__menu[hidden] {
+    display: flex !important;
   }
 }

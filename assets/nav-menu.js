@@ -1,3 +1,6 @@
+/* Shared by every public page that ships the menu. */
+document.documentElement.classList.remove("no-js");
+
 /* Mobile nav toggle. One copy for every public page that ships the menu. */
 (function () {
   var nav = document.getElementById("topnav");
@@ -144,7 +147,8 @@
 })();
 
 /* Desktop site-map popups. Hover or click opens one group; Escape and
-   click-outside close. Mobile (<900px) never shows .topnav__links. */
+   click-outside close. A click on an already hover-open group pins it so
+   mouseleave cannot shut it. Mobile (<900px) never shows .topnav__links. */
 (function () {
   var links = document.querySelector(".topnav__links");
   if (!links) return;
@@ -155,7 +159,7 @@
   var desktop = window.matchMedia("(min-width: 900px)");
   var hoverTimer = 0;
   var openItem = null;
-  var openedAt = 0;
+  var sticky = false;
 
   function triggerOf(item) {
     return item.querySelector(".topnav__trigger");
@@ -175,32 +179,33 @@
       if (restoreFocus) trigger.focus();
     }
     if (menu) menu.hidden = true;
-    if (openItem === item) openItem = null;
+    if (openItem === item) {
+      openItem = null;
+      sticky = false;
+    }
   }
 
   function closeAll(restoreFocus) {
     var current = openItem;
+    sticky = false;
     items.forEach(function (item) {
       closeItem(item, restoreFocus && item === current);
     });
   }
 
-  function openItemMenu(item) {
+  function openItemMenu(item, how) {
     if (!desktop.matches) return;
     if (openItem && openItem !== item) closeItem(openItem, false);
     var trigger = triggerOf(item);
     var menu = menuOf(item);
     if (!trigger || !menu) return;
+    var already = item.classList.contains("is-open");
     item.classList.add("is-open");
     trigger.setAttribute("aria-expanded", "true");
     menu.hidden = false;
     openItem = item;
-    openedAt = Date.now();
-  }
-
-  function toggleItem(item) {
-    if (item.classList.contains("is-open")) closeItem(item, false);
-    else openItemMenu(item);
+    if (how === "click" || how === "keyboard") sticky = true;
+    else if (!already) sticky = false;
   }
 
   function firstLink(item) {
@@ -216,32 +221,42 @@
     trigger.addEventListener("click", function (e) {
       if (!desktop.matches) return;
       e.preventDefault();
-      /* Hover already opens the panel. The pointerdown that follows would
-         otherwise toggle it shut. Ignore a click in that short window; a
-         later click still closes, and a tap with no hover still opens. */
-      if (item.classList.contains("is-open") && Date.now() - openedAt < 400) return;
-      toggleItem(item);
+      /* Hover already opens the panel. A following click used to toggle it
+         shut. Pin instead so Escape / outside click / a later click close. */
+      if (item.classList.contains("is-open")) {
+        if (!sticky) {
+          sticky = true;
+          return;
+        }
+        closeItem(item, false);
+        return;
+      }
+      openItemMenu(item, "click");
     });
 
     trigger.addEventListener("keydown", function (e) {
       if (!desktop.matches) return;
       if (e.key !== "ArrowDown") return;
       e.preventDefault();
-      openItemMenu(item);
+      openItemMenu(item, "keyboard");
       var link = firstLink(item);
       if (link) link.focus();
     });
 
     item.addEventListener("mouseenter", function () {
       if (!desktop.matches) return;
-      if (hoverTimer) window.clearTimeout(hoverTimer);
-      openItemMenu(item);
+      if (hoverTimer) {
+        window.clearTimeout(hoverTimer);
+        hoverTimer = 0;
+      }
+      openItemMenu(item, "hover");
     });
 
     item.addEventListener("mouseleave", function () {
-      if (!desktop.matches) return;
+      if (!desktop.matches || sticky) return;
       hoverTimer = window.setTimeout(function () {
-        closeItem(item, false);
+        hoverTimer = 0;
+        if (!sticky) closeItem(item, false);
       }, 160);
     });
 
