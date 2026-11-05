@@ -590,19 +590,16 @@
     .hero__paths {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 24px;
-      width: min(960px, calc(100vw - 32px));
-      max-width: none;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
+      gap: 24px;
+      margin: 32px auto 0;
+      max-width: 960px;
+      padding: 0 0 8px;
     }
 
     @media (min-width: 768px) {
       .hero__paths {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 16px;
+        gap: 24px;
       }
     }
 
@@ -610,27 +607,31 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      justify-content: flex-start;
+      gap: 16px;
       background: var(--surface);
+      color: var(--ink);
       border: 3px solid var(--ink);
-      box-shadow: var(--shadow);
-      padding: 24px 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 32px 24px;
       transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
     }
 
     .hero-path:hover {
       transform: translate(-2px, -2px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: 10px 10px 0 #000;
     }
 
     .hero-path__title {
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 800;
       line-height: 24px;
+      letter-spacing: -0.02em;
       text-wrap: balance;
     }
 
     .hero-path__body {
+      flex: 1;
       font-size: 14px;
       font-weight: 600;
       line-height: 20px;
@@ -639,7 +640,8 @@
     }
 
     @media (min-width: 768px) {
-      .hero-path { padding: 24px 20px; }
+      .hero-path__title { font-size: 20px; line-height: 24px; }
+      .hero-path__body { font-size: 16px; line-height: 24px; }
     }
 
     /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
@@ -709,7 +711,7 @@
       will-change: opacity, transform;
     }
 
-    .hero__inner.is-in .hero-visual {
+    .reveal.is-in .hero-visual {
       opacity: 1;
       transform: translateY(0);
     }
@@ -1877,25 +1879,27 @@
             </div>
             <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
           </div>
+        </div>
 
-          <div class="hero__paths" aria-label="Paths">
-            <article class="hero-path">
-              <h2 class="hero-path__title">Clients</h2>
-              <p class="hero-path__body">Funds, listed reporting, IPO, and IR.</p>
-              <a class="btn" href="#engage">Engage the Studio</a>
-            </article>
-            <article class="hero-path">
-              <h2 class="hero-path__title">Language Trainee</h2>
-              <p class="hero-path__body">Part-time, remote practice on a Hong Kong desk.</p>
-              <a class="btn" href="trainee.html">Open Trainee</a>
-            </article>
-            <article class="hero-path">
-              <h2 class="hero-path__title">Journals</h2>
-              <p class="hero-path__body">Language Watchdog and The Trade in Words.</p>
-              <a class="btn" href="language-watchdog.html">Open Language Watchdog</a>
-            </article>
-          </div>
+        <div class="hero__paths" aria-label="Paths">
+          <article class="hero-path">
+            <h2 class="hero-path__title">Clients</h2>
+            <p class="hero-path__body">Funds, listed reporting, IPO, and IR.</p>
+            <a class="btn" href="#engage">Engage the Studio</a>
+          </article>
+          <article class="hero-path">
+            <h2 class="hero-path__title">Trainees</h2>
+            <p class="hero-path__body">Part-time, remote practice on a Hong Kong desk.</p>
+            <a class="btn" href="trainee.html">Language Trainee</a>
+          </article>
+          <article class="hero-path">
+            <h2 class="hero-path__title">Journals</h2>
+            <p class="hero-path__body">Language Watchdog and The Trade in Words.</p>
+            <a class="btn" href="language-watchdog.html">Language Watchdog</a>
+          </article>
+        </div>
 
+        <div class="hero__inner reveal">
           <div class="proof-strip" role="list" aria-label="Desk proof points">
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Priced before you commit</span>
