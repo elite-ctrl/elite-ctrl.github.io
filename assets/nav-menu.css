@@ -70,35 +70,8 @@ html.nav-scroll-lock body {
   text-transform: uppercase;
 }
 
-.topnav__panel .sitemap-start {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
-  margin: 0 0 8px;
-}
-
-.topnav__panel .sitemap-start .sitemap-label {
-  margin: 0;
-  align-self: center;
-}
-
-.topnav__panel .sitemap-path {
-  display: inline-block;
-  background: var(--yellow, #FFE566);
-  color: var(--ink, #000000);
-  border: 3px solid var(--ink, #000000);
-  box-shadow: 3px 3px 0 #000;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 16px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.topnav__panel .sitemap-group:first-of-type .sitemap-label {
-  margin-top: 8px;
+.topnav__panel .sitemap-group:first-child .sitemap-label {
+  margin-top: 0;
 }
 
 .topnav__panel a {

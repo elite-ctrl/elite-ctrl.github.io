@@ -587,14 +587,59 @@
       .hero__cta { margin-top: 32px; }
     }
 
-    .hero__browse {
-      margin: 16px auto 0;
-      max-width: 56ch;
+    .hero__paths {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 24px;
+      width: min(960px, calc(100vw - 32px));
+      max-width: none;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    @media (min-width: 768px) {
+      .hero__paths {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+      }
+    }
+
+    .hero-path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+      padding: 24px 16px;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    .hero-path:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-path__title {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      text-wrap: balance;
+    }
+
+    .hero-path__body {
       font-size: 14px;
       font-weight: 600;
       line-height: 20px;
       color: var(--muted);
       text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero-path { padding: 24px 20px; }
     }
 
     /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
@@ -1710,12 +1755,13 @@
         color: #000;
         transition: none;
       }
-      .btn, .cov-card, .topnav__toggle, .topnav__links a,
+      .btn, .cov-card, .hero-path, .topnav__toggle, .topnav__links a,
       .final-cta__mail, .faq-item summary {
         transition: none;
       }
       .btn:hover, .btn:active,
       .cov-card:hover,
+      .hero-path:hover,
       .topnav__toggle:hover, .topnav__toggle:active {
         transform: none;
       }
@@ -1781,13 +1827,6 @@
     </div>
 
     <div class="topnav__panel" id="mobile-panel" hidden>
-      <div class="sitemap-start">
-        <p class="sitemap-label">Start here</p>
-        <a href="#engage"><span class="sitemap-path">Clients</span> Engage the Studio</a>
-        <a href="trainee.html"><span class="sitemap-path">Trainees</span> Trainee</a>
-        <a href="language-watchdog.html"><span class="sitemap-path">Journals</span> Language Watchdog</a>
-        <a href="trade-in-words.html"><span class="sitemap-path">Journals</span> Trade in Words</a>
-      </div>
       <div class="sitemap-group">
         <p class="sitemap-label">On this page</p>
         <a href="#hero" aria-current="page">Home</a>
@@ -1839,7 +1878,23 @@
             <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
           </div>
 
-          <p class="hero__browse">Clients: Engage, or try the desk tools. Trainees: open Trainee. Journal readers: Language Watchdog or Trade in Words. The menu maps the rest.</p>
+          <div class="hero__paths" aria-label="Paths">
+            <article class="hero-path">
+              <h2 class="hero-path__title">Clients</h2>
+              <p class="hero-path__body">Funds, listed reporting, IPO, and IR.</p>
+              <a class="btn" href="#engage">Engage the Studio</a>
+            </article>
+            <article class="hero-path">
+              <h2 class="hero-path__title">Language Trainee</h2>
+              <p class="hero-path__body">Part-time, remote practice on a Hong Kong desk.</p>
+              <a class="btn" href="trainee.html">Open Trainee</a>
+            </article>
+            <article class="hero-path">
+              <h2 class="hero-path__title">Journals</h2>
+              <p class="hero-path__body">Language Watchdog and The Trade in Words.</p>
+              <a class="btn" href="language-watchdog.html">Open Language Watchdog</a>
+            </article>
+          </div>
 
           <div class="proof-strip" role="list" aria-label="Desk proof points">
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
