@@ -989,7 +989,7 @@
           <p class="empty">Upload a source and translation (PDF or Word) to compare.</p>
         </div>
 
-        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Pagination can differ between EN and TC PDFs, or between PDF and Word; the tool still compares the full extracted text. Not covered: spelt-out numbers ("twelve", 一百二十萬), scanned or image-only PDFs, and text trapped in Word images without OCR. Always run your own final check on anything flagged.</p>
+        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Common finance spell-outs pair with digits: twelve per cent / twelve percent = 百分之十二 = 12%; one hundred and twenty million = 一億二千萬 = 120 million; 一百二十萬 = 1.2 million. Pagination can differ between EN and TC PDFs, or between PDF and Word; the tool still compares the full extracted text. Not covered: bare spell-outs without a scale or per cent ("twelve" alone), long or exotic compounds, ordinals, fractions, cheque-style 大寫 (壹佰…), same-document inconsistency, scanned or image-only PDFs, and text trapped in Word images without OCR. Always run your own final check on anything flagged.</p>
       </div>
     </div>
   </main>
@@ -1065,6 +1065,30 @@
     var ZHD = "[\u96f6\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]";
     var ZHN = "[\u96f6\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\\d]";
     var MONTH_EN = "(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec)";
+    /* Locked finance spell-out lexicon (Louis 2026-11-05): EN cardinals 0–999
+       (incl. a/one hundred and …, hyphenated tens, optional "point" + ones) then
+       per cent/percent or thousand/million/billion/trillion. TC 百分之… and
+       萬/億 compounds (一百二十萬, 一億二千萬, 一點二億). Not this slice: bare
+       "twelve", ordinals, fractions, 大寫, long exotic compounds, same-document
+       inconsistency. */
+    var EN_ONES = { zero: 0, nought: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
+    var EN_SMALL = { zero: 0, nought: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
+      ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19 };
+    var EN_TENS = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+    var EN_SCALE_WORD = { thousand: 1e3, million: 1e6, billion: 1e9, trillion: 1e12 };
+    var EN_ONES_RE = "zero|nought|one|two|three|four|five|six|seven|eight|nine";
+    var EN_TEENS_RE = "ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen";
+    var EN_TENS_RE = "twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety";
+    var EN_SMALL_RE = "(?:(?:" + EN_TENS_RE + ")(?:[\\s-]+(?:" + EN_ONES_RE + "))?|" + EN_TEENS_RE + "|" + EN_ONES_RE + ")";
+    var EN_CARD_RE = "(?:(?:a|" + EN_SMALL_RE + ")\\s+hundred(?:\\s+and)?(?:[\\s-]+" + EN_SMALL_RE + ")?|" + EN_SMALL_RE + ")";
+    var EN_POINT_RE = "(?:\\s+point\\s+(?:" + EN_ONES_RE + "))?";
+    var EN_SCALE_WORD_RE = "thousand|million|billion|trillion";
+    var EN_PCT_WORD_RE = "per\\s*cent|percent";
+    var ZH_SPELL_DIG = { "\u96f6": 0, "\u3007": 0, "\u4e00": 1, "\u4e8c": 2, "\u4e09": 3, "\u56db": 4, "\u4e94": 5, "\u516d": 6, "\u4e03": 7, "\u516b": 8, "\u4e5d": 9, "\u5169": 2 };
+    var ZH_SPELL_CORE = "\u96f6\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5169\u5341\u767e\u5343\u9ede";
+    var ZH_SPELL_NUMERAL = "\u96f6\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5169\u5341";
+    var ZH_SPELL_UNIT = "\u842c\u4e07\u5104\u4ebf";
+    var ZH_CHEQUE_RE = /[\u58f9\u8cb3\u53c3\u53c1\u8086\u4f0d\u9678\u67d2\u634c\u7396\u62fe\u4f70\u4edf]/;
   
     function zhYear(s) {
       var out = "";
@@ -1086,6 +1110,158 @@
       if (m) { return (m[1] ? ZH_DIG[m[1]] : 1) * 10 + (m[2] ? ZH_DIG[m[2]] : 0); }
       if (s.length === 1 && ZH_DIG[s] !== undefined) { return ZH_DIG[s]; }
       return null;
+    }
+    function takeEnSmall(tokens, i) {
+      var w = tokens[i];
+      if (!w) { return null; }
+      if (EN_TENS[w] !== undefined) {
+        var nxt = tokens[i + 1];
+        if (nxt && EN_ONES[nxt] !== undefined && EN_ONES[nxt] >= 1) {
+          return { value: EN_TENS[w] + EN_ONES[nxt], next: i + 2 };
+        }
+        return { value: EN_TENS[w], next: i + 1 };
+      }
+      if (EN_SMALL[w] !== undefined) { return { value: EN_SMALL[w], next: i + 1 }; }
+      return null;
+    }
+    function parseEnCardinal(tokens) {
+      if (!tokens.length) { return null; }
+      var i = 0;
+      var n = 0;
+      if (tokens[0] === "a" && tokens[1] === "hundred") {
+        n = 100;
+        i = 2;
+        if (tokens[i] === "and") { i++; }
+        if (i < tokens.length) {
+          var aRest = takeEnSmall(tokens, i);
+          if (!aRest) { return null; }
+          n += aRest.value;
+          i = aRest.next;
+        }
+        return i === tokens.length ? n : null;
+      }
+      var first = takeEnSmall(tokens, 0);
+      if (!first) { return null; }
+      i = first.next;
+      if (tokens[i] === "hundred") {
+        n = first.value * 100;
+        i++;
+        if (tokens[i] === "and") { i++; }
+        if (i < tokens.length) {
+          var rest = takeEnSmall(tokens, i);
+          if (!rest) { return null; }
+          n += rest.value;
+          i = rest.next;
+        }
+        return i === tokens.length ? n : null;
+      }
+      return i === tokens.length ? first.value : null;
+    }
+    function parseEnSpell(raw) {
+      var s = String(raw).toLowerCase();
+      s = s.replace(new RegExp("^(?:" + CUR + ")\\s*", "i"), "");
+      s = s.replace(/-/g, " ").replace(/\s+/g, " ").trim();
+      var tokens = s.split(" ");
+      if (!tokens[0]) { return null; }
+      var isPct = false;
+      if (tokens.length >= 2 && tokens[tokens.length - 1] === "cent" && tokens[tokens.length - 2] === "per") {
+        isPct = true;
+        tokens = tokens.slice(0, -2);
+      } else if (tokens[tokens.length - 1] === "percent") {
+        isPct = true;
+        tokens = tokens.slice(0, -1);
+      }
+      var scale = 1;
+      var last = tokens[tokens.length - 1];
+      if (last && EN_SCALE_WORD[last]) {
+        scale = EN_SCALE_WORD[last];
+        tokens = tokens.slice(0, -1);
+      }
+      if (!isPct && scale === 1) { return null; }
+      if (isPct && scale !== 1) { return null; }
+      var frac = 0;
+      var p = tokens.indexOf("point");
+      if (p !== -1) {
+        if (p !== tokens.length - 2) { return null; }
+        var fw = tokens[p + 1];
+        if (EN_ONES[fw] === undefined) { return null; }
+        frac = EN_ONES[fw] / 10;
+        tokens = tokens.slice(0, p);
+      }
+      var card = parseEnCardinal(tokens);
+      if (card === null) { return null; }
+      var mant = card + frac;
+      if (isPct) { return { kind: "percent", value: mant, numText: numKey(mant) }; }
+      return { kind: "amount", value: mant * scale, cur: "", numText: numKey(mant) };
+    }
+    function parseZhBelowWan(s) {
+      if (!s) { return 0; }
+      var total = 0;
+      var current = 0;
+      for (var i = 0; i < s.length; i++) {
+        var ch = s.charAt(i);
+        if (ch === "\u96f6" || ch === "\u3007") { current = 0; continue; }
+        if (ZH_SPELL_DIG[ch] !== undefined) {
+          if (current !== 0) { return null; }
+          current = ZH_SPELL_DIG[ch];
+          continue;
+        }
+        var unit = ch === "\u5343" ? 1000 : ch === "\u767e" ? 100 : ch === "\u5341" ? 10 : 0;
+        if (!unit) { return null; }
+        total += (current || 1) * unit;
+        current = 0;
+      }
+      return total + current;
+    }
+    function parseZhMantissa(s) {
+      var dot = s.indexOf("\u9ede");
+      if (dot === -1) { return parseZhBelowWan(s); }
+      if (dot === 0 || dot === s.length - 1) { return null; }
+      var whole = parseZhBelowWan(s.slice(0, dot));
+      if (whole === null) { return null; }
+      var frac = "";
+      var fracPart = s.slice(dot + 1);
+      for (var i = 0; i < fracPart.length; i++) {
+        var ch = fracPart.charAt(i);
+        if (ZH_SPELL_DIG[ch] === undefined || ch === "\u5169") { return null; }
+        frac += ZH_SPELL_DIG[ch];
+      }
+      if (!frac) { return null; }
+      return parseFloat(whole + "." + frac);
+    }
+    function parseZhSpellNumber(s) {
+      if (!s || ZH_CHEQUE_RE.test(s)) { return null; }
+      s = s.replace(/\u4ebf/g, "\u5104").replace(/\u4e07/g, "\u842c");
+      var total = 0;
+      var yi = s.split("\u5104");
+      if (yi.length > 2) { return null; }
+      if (yi.length === 2) {
+        if (!yi[0]) { return null; }
+        var left = parseZhMantissa(yi[0]);
+        if (left === null) { return null; }
+        total += left * 1e8;
+        s = yi[1];
+      }
+      var wan = s.split("\u842c");
+      if (wan.length > 2) { return null; }
+      if (wan.length === 2) {
+        if (!wan[0]) { return null; }
+        var w = parseZhMantissa(wan[0]);
+        if (w === null) { return null; }
+        total += w * 1e4;
+        s = wan[1];
+      }
+      if (s) {
+        var rest = parseZhMantissa(s);
+        if (rest === null) { return null; }
+        total += rest;
+      }
+      return total;
+    }
+    function isChequeNear(text, start, end) {
+      var b = start > 0 ? text.charAt(start - 1) : "";
+      var a = end < text.length ? text.charAt(end) : "";
+      return ZH_CHEQUE_RE.test(b) || ZH_CHEQUE_RE.test(a);
     }
     function parseNum(s) { return parseFloat(s.replace(/,/g, "")); }
     function numKey(v) { return parseFloat(v.toPrecision(12)).toString(); }
@@ -1250,8 +1426,21 @@
             if (/^\.\d+\s*%/.test(tail)) { return null; }
             return { kind: "percent", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") };
           } },
+        { prio: 4, re: new RegExp("\\b(" + EN_CARD_RE + EN_POINT_RE + ")\\s+(?:" + EN_PCT_WORD_RE + ")\\b", "gi"),
+          make: function (m) {
+            var parsed = parseEnSpell(m[0]);
+            if (!parsed || parsed.kind !== "percent") { return null; }
+            return parsed;
+          } },
         { prio: 4, re: new RegExp("\u767e\u5206\u4e4b(" + NUM + ")", "g"),
           make: function (m) { return { kind: "percent", value: parseNum(m[1]), numText: m[1].replace(/,/g, "") }; } },
+        { prio: 4, re: new RegExp("\u767e\u5206\u4e4b([" + ZH_SPELL_CORE + "]+)", "g"),
+          make: function (m, text, idx) {
+            if (isChequeNear(text, idx, idx + m[0].length)) { return null; }
+            var n = parseZhSpellNumber(m[1]);
+            if (n === null || !isFinite(n)) { return null; }
+            return { kind: "percent", value: n, numText: numKey(n) };
+          } },
         { prio: 5, re: new RegExp("\\[(" + NUM + ")\\]", "g"),
           make: function (m) {
             var raw = m[1].replace(/,/g, "");
@@ -1270,6 +1459,22 @@
           } },
         { prio: 5, re: /\b(\d{1,5})\.HK\b/g,
           make: function (m) { return { kind: "code", value: parseInt(m[1], 10), codeText: m[1] }; } },
+        { prio: 6, re: new RegExp("(?:" + CUR + ")?\\s{0,8}\\b(" + EN_CARD_RE + EN_POINT_RE + ")\\s+(" + EN_SCALE_WORD_RE + ")\\b", "gi"),
+          make: function (m) {
+            var parsed = parseEnSpell(m[0]);
+            if (!parsed || parsed.kind !== "amount") { return null; }
+            var curHit = m[0].match(new RegExp(CUR, "i"));
+            parsed.cur = curHit ? curHit[0] : "";
+            return parsed;
+          } },
+        { prio: 6, re: new RegExp("(?:" + CUR + ")?\\s{0,8}([" + ZH_SPELL_CORE + "]*[" + ZH_SPELL_NUMERAL + "][" + ZH_SPELL_CORE + "]*[" + ZH_SPELL_UNIT + "][" + ZH_SPELL_CORE + ZH_SPELL_UNIT + "]*)(\u5143|\u5713)?", "g"),
+          make: function (m, text, idx) {
+            if (isChequeNear(text, idx, idx + m[0].length)) { return null; }
+            var n = parseZhSpellNumber(m[1]);
+            if (n === null || !isFinite(n) || n === 0) { return null; }
+            var curHit = m[0].match(new RegExp(CUR, "i"));
+            return { kind: "amount", value: n, cur: curHit ? curHit[0] : "", numText: numKey(n) };
+          } },
         { prio: 6, re: new RegExp("(" + CUR + ")?\\s{0,8}(" + NUM + ")\\s{0,8}(" + SCALE_RE + ")?(\u5143|\u5713)?", "g"),
           make: function (m) {
             if (!m[2]) { return null; }

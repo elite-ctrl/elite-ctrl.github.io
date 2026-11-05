@@ -180,6 +180,140 @@ if (!orr.missing.some((e) => /1234\.5|1\.2345e\+9/i.test(e.key) || /1234500000/.
   console.log("ok: true missing amount stays missing");
 }
 
+function assertExtractValue(name, text, kind, value) {
+  const hits = extract(text).filter((it) => it.kind === kind);
+  const hit = hits.find((it) => it.value === value);
+  if (!hit) {
+    console.error("FAIL:", name, {
+      expected: { kind, value },
+      got: extract(text).map((it) => ({ kind: it.kind, value: it.value, text: it.text })),
+    });
+    process.exitCode = 1;
+    return;
+  }
+  console.log("ok:", name);
+}
+
+function assertNoSpellHit(name, text) {
+  const hits = extract(text).filter((it) =>
+    /twelve|percent|per cent|hundred|million|百分之|萬|億/.test(it.text)
+  );
+  if (hits.length) {
+    console.error("FAIL:", name, hits.map((it) => it.text));
+    process.exitCode = 1;
+    return;
+  }
+  console.log("ok:", name);
+}
+
+assertExtractValue("EN twelve percent extracts 12", "Revenue rose twelve percent.", "percent", 12);
+assertExtractValue("EN twelve per cent extracts 12", "Revenue rose twelve per cent.", "percent", 12);
+assertExtractValue("EN one hundred and twenty million", "Profit was one hundred and twenty million.", "amount", 1.2e8);
+assertExtractValue("EN twenty-five million", "A placing of twenty-five million shares.", "amount", 25e6);
+assertExtractValue("TC 百分之十二", "收益上升百分之十二。", "percent", 12);
+assertExtractValue("TC 一百二十萬", "代價為一百二十萬。", "amount", 1.2e6);
+assertExtractValue("TC 一億二千萬", "收益為一億二千萬。", "amount", 1.2e8);
+assertExtractValue("TC 一點二億", "收益為一點二億元。", "amount", 1.2e8);
+
+assertNoSpellHit("bare twelve is not a figure", "The board noted twelve items.");
+assertNoSpellHit("TC 十二時 is not an amount", "於中午十二時正結束。");
+assertNoSpellHit("cheque-style 大寫 is not this slice", "金額壹佰二十萬元整。");
+
+assertNoIssues(
+  "spell-out percent matches digits",
+  "Revenue rose twelve percent year on year.",
+  "收益按年上升12%。"
+);
+assertNoIssues(
+  "spell-out per cent matches 百分之",
+  "Revenue rose twelve per cent year on year.",
+  "收益按年上升百分之十二。"
+);
+assertNoIssues(
+  "spell-out million matches 1.2億",
+  "Profit was one hundred and twenty million.",
+  "溢利為1.2億元。"
+);
+assertNoIssues(
+  "一百二十萬 matches 1.2 million",
+  "Consideration was HK$1.2 million.",
+  "代價為一百二十萬元。"
+);
+assertNoIssues(
+  "EN spell-out million matches TC spell-out 一億二千萬",
+  "Profit was one hundred and twenty million.",
+  "溢利為一億二千萬。"
+);
+
+const spellNearEn = "Profit attributable to shareholders was one hundred and twenty million.";
+const spellNearTc = "股東應佔溢利為港幣1.21億元。";
+const snr = compare(spellNearEn, spellNearTc);
+const spellPairs = snr.valueIssues || [];
+if (spellPairs.length !== 1) {
+  console.error("FAIL: spell-out vs digit should be one value mismatch", {
+    valueIssues: spellPairs.length,
+    missing: snr.missing.map((e) => e.key),
+    extra: snr.extra.map((e) => e.key),
+    matched: snr.matched.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else if (snr.missing.length || snr.extra.length) {
+  console.error("FAIL: spell-out near-match must not stay missing/extra", {
+    missing: snr.missing.map((e) => e.key),
+    extra: snr.extra.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else {
+  const srcHit = spellPairs[0].src.src[0].text;
+  const tgtHit = spellPairs[0].tgt.tgt[0].text;
+  if (!/one hundred and twenty million/i.test(srcHit) || !/1\.21/.test(tgtHit)) {
+    console.error("FAIL: spell-out value mismatch pair texts", srcHit, tgtHit);
+    process.exitCode = 1;
+  } else {
+    console.log("ok: spell-out amount vs digit is a paired value mismatch");
+  }
+}
+
+const packEn =
+  "Call the Ledger spell-out pack (EN)\n" +
+  "The margin rose twelve per cent year on year.\n" +
+  "Profit attributable to shareholders was one hundred and twenty million.\n" +
+  "Consideration was HK$1.2 million.\n" +
+  "Stock code: 09988";
+const packTc =
+  "Call the Ledger 拼寫數字包（TC）\n" +
+  "利潤率按年上升百分之十二。\n" +
+  "股東應佔溢利為港幣1.21億元。\n" +
+  "代價為一百二十萬元。\n" +
+  "股份代號：09988";
+const pack = compare(packEn, packTc);
+if ((pack.valueIssues || []).length !== 1 || pack.matched.length !== 3) {
+  console.error("FAIL: planted Word pack should be 3 matched + 1 value mismatch", {
+    matched: pack.matched.map((e) => e.key),
+    valueIssues: (pack.valueIssues || []).length,
+    missing: pack.missing.map((e) => e.key),
+    extra: pack.extra.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else {
+  console.log("ok: planted spell-out Word pack is 3 matched + 1 value mismatch");
+}
+
+const spellPctEn = "The margin was twelve percent.";
+const spellPctTc = "利潤率為12.2%。";
+const spr = compare(spellPctEn, spellPctTc);
+const spellPctPairs = spr.valueIssues || [];
+if (spellPctPairs.length !== 1) {
+  console.error("FAIL: spell-out percent vs 12.2% should be one value mismatch", {
+    valueIssues: spellPctPairs.length,
+    missing: spr.missing.map((e) => e.key),
+    extra: spr.extra.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else {
+  console.log("ok: spell-out percent vs digit is a paired value mismatch");
+}
+
 if (process.exitCode) {
   process.exit(process.exitCode);
 }
