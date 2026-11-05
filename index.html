@@ -523,7 +523,8 @@
       .hero { padding: 48px 0 64px; }
     }
 
-    .hero__inner {
+    .hero__inner,
+    .hero__copy {
       max-width: var(--prose);
       margin: 0 auto;
     }
@@ -547,10 +548,6 @@
 
     @media (min-width: 640px) {
       .hero__title { font-size: 48px; }
-    }
-
-    @media (min-width: 900px) {
-      .hero__title { font-size: 60px; }
     }
 
     .hero__sub {
@@ -647,6 +644,65 @@
     @media (min-width: 768px) {
       .hero-path__title { font-size: 20px; line-height: 24px; }
       .hero-path__body { font-size: 16px; line-height: 24px; }
+    }
+
+    /* Desktop split: copy + CTA cluster left, path cards stacked right.
+       900px matches the existing desktop nav / display breakpoint.
+       Title scales so “Financial storytelling” stays one line (no orphan wrap).
+       Cards compact so all three sit above the fold at 1280×800. */
+    @media (min-width: 900px) {
+      .hero { padding: 28px 0 48px; }
+
+      .hero__stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+        gap: 24px 32px;
+        align-items: start;
+      }
+
+      .hero__copy {
+        max-width: none;
+        margin: 0;
+        text-align: left;
+      }
+
+      .hero__title {
+        font-size: clamp(32px, 3.4vw, 44px);
+        max-width: none;
+        margin: 0;
+      }
+
+      .hero__title span { white-space: nowrap; }
+
+      .hero__sub {
+        max-width: 42em;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .hero__cta {
+        align-items: flex-start;
+        margin-top: 24px;
+      }
+
+      .hero__cta-tools { justify-content: flex-start; }
+
+      .hero__paths {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin: 0;
+        max-width: none;
+        padding: 0;
+      }
+
+      .hero-path {
+        padding: 20px 20px;
+        gap: 12px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-path__title { font-size: 18px; line-height: 22px; }
+      .hero-path__body { font-size: 14px; line-height: 20px; }
     }
 
     /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
@@ -1867,41 +1923,43 @@
     <!-- 1. Hero -->
     <section class="hero" id="hero" aria-label="Hero">
       <div class="wrap">
-        <div class="hero__inner reveal">
-          <h1 class="hero__title">
-            <span>Financial storytelling</span>
-            <span>that never drops</span>
-            <span>a language</span>
-          </h1>
+        <div class="hero__stage">
+          <div class="hero__copy reveal">
+            <h1 class="hero__title">
+              <span>Financial storytelling</span>
+              <span>that never drops</span>
+              <span>a language</span>
+            </h1>
 
-          <p class="hero__sub">A specialist financial language studio for storytelling across funds, listed reporting, IPO, and IR. Boutique desk judgment for copy that has to hold under market pressure.</p>
+            <p class="hero__sub">A specialist financial language studio for storytelling across funds, listed reporting, IPO, and IR. Boutique desk judgment for copy that has to hold under market pressure.</p>
 
-          <div class="hero__cta">
-            <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
-            <div class="hero__cta-tools">
-              <a class="btn btn--lg btn--cream" href="figure-checker.html">Try Call the Ledger</a>
-              <a class="btn btn--lg btn--cream" href="call-the-gaps.html">Try Call the Gaps</a>
+            <div class="hero__cta">
+              <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+              <div class="hero__cta-tools">
+                <a class="btn btn--lg btn--cream" href="figure-checker.html">Try Call the Ledger</a>
+                <a class="btn btn--lg btn--cream" href="call-the-gaps.html">Try Call the Gaps</a>
+              </div>
+              <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
             </div>
-            <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
           </div>
-        </div>
 
-        <div class="hero__paths" aria-label="Paths">
-          <article class="hero-path">
-            <h2 class="hero-path__title">Work with us</h2>
-            <p class="hero-path__body">Brief the desk for the four lanes.</p>
-            <a class="btn" href="#engage">Engage the Studio</a>
-          </article>
-          <article class="hero-path">
-            <h2 class="hero-path__title">Join our journey</h2>
-            <p class="hero-path__body">Part-time, remote practice on a Hong Kong financial language desk.</p>
-            <a class="btn" href="trainee.html">Language Trainee</a>
-          </article>
-          <article class="hero-path">
-            <h2 class="hero-path__title">Lost in the context</h2>
-            <p class="hero-path__body">Language Watchdog and The Trade in Words: when a metaphor or a filing parallel is lost.</p>
-            <a class="btn" href="language-watchdog.html">Language Watchdog</a>
-          </article>
+          <div class="hero__paths" aria-label="Paths">
+            <article class="hero-path">
+              <h2 class="hero-path__title">Work with us</h2>
+              <p class="hero-path__body">Brief the desk for the four lanes.</p>
+              <a class="btn" href="#engage">Engage the Studio</a>
+            </article>
+            <article class="hero-path">
+              <h2 class="hero-path__title">Join our journey</h2>
+              <p class="hero-path__body">Part-time, remote practice on a Hong Kong financial language desk.</p>
+              <a class="btn" href="trainee.html">Language Trainee</a>
+            </article>
+            <article class="hero-path">
+              <h2 class="hero-path__title">Lost in the context</h2>
+              <p class="hero-path__body">Language Watchdog and The Trade in Words: when a metaphor or a filing parallel is lost.</p>
+              <a class="btn" href="language-watchdog.html">Language Watchdog</a>
+            </article>
+          </div>
         </div>
 
         <div class="hero__inner reveal">
