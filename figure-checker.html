@@ -644,7 +644,8 @@
       background: var(--bg);
     }
 
-    .pair-row.is-scale { background: var(--yellow); }
+    .pair-row.is-scale,
+    .pair-row.is-value { background: var(--yellow); }
 
     .pair-banner {
       grid-column: 1 / -1;
@@ -658,7 +659,8 @@
       line-height: 18px;
     }
 
-    .pair-row.is-scale .pair-banner { background: var(--accent); }
+    .pair-row.is-scale .pair-banner,
+    .pair-row.is-value .pair-banner { background: var(--accent); }
 
     .pair-cell { position: relative; }
 
@@ -1372,6 +1374,74 @@
         }
         return true;
       });
+      var valueIssues = [];
+      function curFamily(it) {
+        var c = ((it && it.cur) || "") + ((it && it.text) || "");
+        if (/HK\$|HKD|\u6e2f\u5e63|\u6e2f\u5e01|\u6e2f\u5143/i.test(c)) return "hkd";
+        if (/US\$|USD|\u7f8e\u5143|\u7f8e\u91d1/i.test(c)) return "usd";
+        if (/RMB|CNY|\u4eba\u6c11\u5e63|\u4eba\u6c11\u5e01/i.test(c)) return "cny";
+        if (/EUR|\u20ac|\u6b50\u5143|\u6b27\u5143/i.test(c)) return "eur";
+        if (/GBP|\u00a3|\u82f1\u938a|\u82f1\u9551/i.test(c)) return "gbp";
+        if (/JPY|\u00a5|\u65e5\u5713|\u65e5\u5143/i.test(c)) return "jpy";
+        return "";
+      }
+      function sameNumericFamily(a, b) {
+        if (!a || !b) return false;
+        if (a.kind === "percent" || b.kind === "percent") return a.kind === b.kind;
+        if (a.kind === "bps" || b.kind === "bps") return a.kind === b.kind;
+        if (a.kind === "pp" || b.kind === "pp") return a.kind === b.kind;
+        if (a.kind === "date" || a.kind === "year" || a.kind === "code") return false;
+        if (b.kind === "date" || b.kind === "year" || b.kind === "code") return false;
+        if (a.kind !== "amount" || b.kind !== "amount") return false;
+        var fa = curFamily(a);
+        var fb = curFamily(b);
+        if (fa && fb && fa !== fb) return false;
+        return true;
+      }
+      function relDiff(a, b) {
+        var va = Math.abs(a);
+        var vb = Math.abs(b);
+        var m = Math.max(va, vb);
+        if (!m) return 1;
+        return Math.abs(va - vb) / m;
+      }
+      function canNearPair(me, xe) {
+        var a = me.src[0];
+        var b = xe.tgt[0];
+        if (!sameNumericFamily(a, b)) return false;
+        var va = Math.abs(a.value);
+        var vb = Math.abs(b.value);
+        if (!isFinite(va) || !isFinite(vb) || va === 0 || vb === 0) return false;
+        if (Math.max(va, vb) / Math.min(va, vb) > 2) return false;
+        return relDiff(va, vb) <= 0.02;
+      }
+      var nearCands = [];
+      missing.forEach(function (me, mi) {
+        extra.forEach(function (xe, xi) {
+          if (canNearPair(me, xe)) {
+            nearCands.push({
+              mi: mi,
+              xi: xi,
+              me: me,
+              xe: xe,
+              rel: relDiff(me.src[0].value, xe.tgt[0].value)
+            });
+          }
+        });
+      });
+      nearCands.sort(function (a, b) { return a.rel - b.rel; });
+      var usedMiss = {};
+      var usedExtra = {};
+      nearCands.forEach(function (c) {
+        if (usedMiss[c.mi] || usedExtra[c.xi]) return;
+        usedMiss[c.mi] = true;
+        usedExtra[c.xi] = true;
+        valueIssues.push({ src: c.me, tgt: c.xe });
+      });
+      if (valueIssues.length) {
+        missing = missing.filter(function (_, i) { return !usedMiss[i]; });
+        extra = extra.filter(function (_, i) { return !usedExtra[i]; });
+      }
       countDiffs = countDiffs.filter(function (e) {
         if (e.kind === "number") { return false; }
         if (e.kind === "date") { return false; }
@@ -1381,8 +1451,10 @@
         return true;
       });
       function byPos(a, b) { return (a.src[0] || a.tgt[0]).start - (b.src[0] || b.tgt[0]).start; }
-      matched.sort(byPos); missing.sort(byPos); extra.sort(byPos); countDiffs.sort(byPos); scaleIssues.sort(byPos);
-      return { src: src, tgt: tgt, matched: matched, missing: missing, extra: extra, countDiffs: countDiffs, scaleIssues: scaleIssues };
+      function byPairPos(a, b) { return (a.src.src[0] || a.src.tgt[0]).start - (b.src.src[0] || b.src.tgt[0]).start; }
+      matched.sort(byPos); missing.sort(byPos); extra.sort(byPos); countDiffs.sort(byPos);
+      scaleIssues.sort(byPairPos); valueIssues.sort(byPairPos);
+      return { src: src, tgt: tgt, matched: matched, missing: missing, extra: extra, countDiffs: countDiffs, scaleIssues: scaleIssues, valueIssues: valueIssues };
     }
   
     var KIND_NAMES = { date: "date", year: "year", percent: "percentage", bps: "basis points", pp: "percentage points", code: "stock code", amount: "amount", number: "number" };
@@ -1631,14 +1703,16 @@
         return;
       }
       var r = compare(srcText, tgtText);
+      var valueIssues = r.valueIssues || [];
       var issueCount =
-        r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length;
+        r.missing.length + r.extra.length + r.scaleIssues.length + valueIssues.length + r.countDiffs.length;
       var h = "";
       h += '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
       if (r.missing.length) { h += '<span class="chip bad">\u2717 ' + r.missing.length + " missing in translation</span>"; }
       if (r.extra.length) { h += '<span class="chip bad">\u2717 ' + r.extra.length + " not in source</span>"; }
       if (r.scaleIssues.length) { h += '<span class="chip warn">\u26a0 ' + r.scaleIssues.length + " scale/unit to verify</span>"; }
+      if (valueIssues.length) { h += '<span class="chip warn">\u26a0 ' + valueIssues.length + " value mismatch</span>"; }
       if (r.countDiffs.length) { h += '<span class="chip info">' + r.countDiffs.length + " count differs</span>"; }
       if (!issueCount) { h += '<span class="chip ok">All figures agree</span>'; }
       h += "</div>";
@@ -1651,6 +1725,14 @@
           filledCell("Source", p.src.src),
           filledCell("Translation", p.tgt.tgt));
         report.push("VERIFY SCALE/UNIT: " + srcText + " (source) vs " + tgtText + " (translation)");
+      });
+      valueIssues.forEach(function (p) {
+        var srcVal = sideTexts(p.src.src);
+        var tgtVal = sideTexts(p.tgt.tgt);
+        issueRows += pairRow("is-value", "Paired figures, value differs",
+          filledCell("Source", p.src.src),
+          filledCell("Translation", p.tgt.tgt));
+        report.push("VALUE MISMATCH: " + srcVal + " (source) vs " + tgtVal + " (translation)");
       });
       r.missing.forEach(function (e) {
         issueRows += pairRow("is-miss", "Missing in the translation",

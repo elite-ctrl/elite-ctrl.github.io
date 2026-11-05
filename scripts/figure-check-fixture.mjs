@@ -20,7 +20,8 @@ const { compare, extract } = fn();
 function assertNoIssues(name, en, tc) {
   const r = compare(en, tc);
   const issues =
-    r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length;
+    r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length +
+    (r.valueIssues ? r.valueIssues.length : 0);
   if (issues !== 0) {
     console.error("FAIL:", name, {
       missing: r.missing.map((e) => e.key),
@@ -114,6 +115,69 @@ if (pcr.countDiffs.length !== 1 || pcr.countDiffs[0].key !== "pct|5") {
   process.exitCode = 1;
 } else {
   console.log("ok: percent count diff surfaced");
+}
+
+const nearEn =
+  "Ledger Source (EN)\n" +
+  "Annual Results Summary — Stock Code: 09988\n" +
+  "For the year ended 31 December 2025\n" +
+  "Revenue for the year amounted to HKD 1,234.5 million,\n" +
+  "representing an increase of 12.5% as compared with the prior year.\n" +
+  "Profit attributable to shareholders was HKD 456.0 million.\n" +
+  "Total assets stood at HKD 8,900.0 million as at 31 December 2025.\n" +
+  "Board of Directors\n" +
+  "Hong Kong, 31 December 2025";
+const nearTc =
+  "Ledger Translation (TC)\n" +
+  "全年業績摘要 — 股份代號：09988\n" +
+  "截至二零二五年十二月三十一日止年度\n" +
+  "本年度收益為港幣1,235.5百萬元，\n" +
+  "較去年增加12.5%。\n" +
+  "股東應佔溢利為港幣456.0百萬元。\n" +
+  "於二零二五年十二月三十一日，總資產為港幣8,900.0百萬元。\n" +
+  "董事會\n" +
+  "香港，二零二五年十二月三十一日";
+const nr = compare(nearEn, nearTc);
+const nearPairs = nr.valueIssues || [];
+if (nearPairs.length !== 1) {
+  console.error("FAIL: near-match should be one value mismatch", {
+    valueIssues: nearPairs.length,
+    missing: nr.missing.map((e) => e.key),
+    extra: nr.extra.map((e) => e.key),
+    matched: nr.matched.length,
+  });
+  process.exitCode = 1;
+} else if (nr.missing.length || nr.extra.length) {
+  console.error("FAIL: near-match must not stay as missing/extra", {
+    missing: nr.missing.map((e) => e.key),
+    extra: nr.extra.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else if (nr.matched.length !== 5) {
+  console.error("FAIL: official ledger pack should match 5 other figures", nr.matched.map((e) => e.key));
+  process.exitCode = 1;
+} else {
+  const srcHit = nearPairs[0].src.src[0].text;
+  const tgtHit = nearPairs[0].tgt.tgt[0].text;
+  if (!/1,234\.5/.test(srcHit) || !/1,235\.5/.test(tgtHit)) {
+    console.error("FAIL: value mismatch pair texts", srcHit, tgtHit);
+    process.exitCode = 1;
+  } else {
+    console.log("ok: near-match amount is a paired value mismatch");
+  }
+}
+
+const orphanEn = "Only this HKD 1,234.5 million appears on the source.";
+const orphanTc = "翻譯只有股份代號09988。";
+const orr = compare(orphanEn, orphanTc);
+if (!orr.missing.some((e) => /1234\.5|1\.2345e\+9/i.test(e.key) || /1234500000/.test(e.key))) {
+  console.error("FAIL: true missing amount should stay missing", orr.missing.map((e) => e.key));
+  process.exitCode = 1;
+} else if ((orr.valueIssues || []).length) {
+  console.error("FAIL: orphan amount must not become a value mismatch");
+  process.exitCode = 1;
+} else {
+  console.log("ok: true missing amount stays missing");
 }
 
 if (process.exitCode) {

@@ -102,14 +102,16 @@ const srcText = await extractPdfText(srcPath);
 const tgtText = await extractPdfText(tgtPath);
 const r = compare(srcText, tgtText);
 
+const valueIssues = r.valueIssues || [];
 const issueCount =
-  r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length;
+  r.missing.length + r.extra.length + r.scaleIssues.length + valueIssues.length + r.countDiffs.length;
 console.log("Source figures:", extract(srcText).length);
 console.log("Translation figures:", extract(tgtText).length);
 console.log("Matched:", r.matched.length);
 console.log("Missing:", r.missing.length);
 console.log("Extra:", r.extra.length);
 console.log("Scale verify:", r.scaleIssues.length);
+console.log("Value mismatch:", valueIssues.length);
 console.log("Count diffs:", r.countDiffs.length);
 console.log("Issue rows:", issueCount);
 console.log("\n--- MISSING ---");
@@ -124,6 +126,10 @@ for (const e of r.extra) {
 }
 console.log("\n--- SCALE ---");
 for (const p of r.scaleIssues) {
+  console.log(p.src.src[0].text, "vs", p.tgt.tgt[0].text);
+}
+console.log("\n--- VALUE MISMATCH ---");
+for (const p of valueIssues) {
   console.log(p.src.src[0].text, "vs", p.tgt.tgt[0].text);
 }
 console.log("\n--- COUNT DIFF ---");

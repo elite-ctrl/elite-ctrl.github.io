@@ -12,7 +12,7 @@ const diffCode = fs.readFileSync(path.join(root, "assets/call-the-gaps-diff.js")
 const ctx = { globalThis: {}, window: {} };
 ctx.window = ctx.globalThis;
 await import("vm").then((vm) => vm.runInNewContext(diffCode, ctx));
-const { compareTexts, tokenize, splitParagraphs } = ctx.globalThis.CallTheGapsDiff;
+const { compareTexts, tokenize, splitParagraphs, orderSegmentsForSide } = ctx.globalThis.CallTheGapsDiff;
 
 function assert(cond, msg) {
   if (!cond) {
@@ -117,6 +117,82 @@ function summarize(label, a, b) {
   const b = "One.\n\nThree.\n\nTwo short.";
   const r = summarize("short move", a, b);
   console.log("  (short para may stay insert+delete, not move)");
+}
+
+// Desk fixture: A → B → C vs C → A → D (B deleted, D inserted, A/C swapped)
+{
+  const A = "Paragraph A. The Company maintains robust internal controls over financial reporting and disclosure processes.";
+  const B = "Paragraph B. Management reviews all material contracts before execution and documents the approval trail.";
+  const C = "Paragraph C. External auditors are appointed annually by the shareholders at the annual general meeting.";
+  const D = "Paragraph D (inserted). The Company also publishes an annual ESG report covering environmental and social metrics.";
+  const r = summarize("A/C swap + insert D + delete B", [A, B, C].join("\n\n"), [C, A, D].join("\n\n"));
+  assert(r.changes.some((c) => c.type === "insert" && /Paragraph D/.test(c.snippet)), "expect insert D");
+  assert(r.changes.some((c) => c.type === "delete" && /Paragraph B/.test(c.snippet)), "expect delete B");
+  const moves = r.changes.filter((c) => c.type === "move");
+  assert(moves.length >= 2, "expect A and C both typed as moves, got " + moves.length);
+  assert(moves.some((c) => /Paragraph A/.test(c.snippet)), "move should cover Paragraph A, not a first-line fragment");
+  assert(moves.some((c) => /Paragraph C/.test(c.snippet)), "move should cover Paragraph C");
+  const newer = orderSegmentsForSide(r.segments, "tgt").map((s) => (s.textB || "").slice(0, 12));
+  assert(newer[0].indexOf("Paragraph C") === 0, "newer pane should start with C, got " + JSON.stringify(newer));
+  assert(newer[1].indexOf("Paragraph A") === 0, "newer pane should show A after C, got " + JSON.stringify(newer));
+  assert(newer[2].indexOf("Paragraph D") === 0, "newer pane should end with D, got " + JSON.stringify(newer));
+}
+
+// PDF soft-wrap of the same fixture (ReportLab line breaks + titles)
+{
+  const pdfA = [
+    "Gaps Precedent",
+    "Paragraph A. The Company maintains robust internal controls over financial reporting and disclosure",
+    "processes.",
+    "Paragraph B. Management reviews all material contracts before execution and documents the",
+    "approval trail.",
+    "Paragraph C. External auditors are appointed annually by the shareholders at the annual general",
+    "meeting."
+  ].join("\n");
+  const pdfB = [
+    "Gaps Newer",
+    "Paragraph C. External auditors are appointed annually by the shareholders at the annual general",
+    "meeting.",
+    "Paragraph A. The Company maintains robust internal controls over financial reporting and disclosure",
+    "processes.",
+    "Paragraph D (inserted). The Company also publishes an annual ESG report covering environmental",
+    "and social metrics."
+  ].join("\n");
+  const parasA = splitParagraphs(pdfA);
+  const parasB = splitParagraphs(pdfB);
+  assert(parasA.some((p) => /disclosure processes/.test(p)), "PDF wrap should join A tail 'processes.'");
+  assert(parasB.some((p) => /social metrics/.test(p)), "PDF wrap should join D tail");
+  assert(!parasA.includes("processes."), "soft-wrap tail must not stay a paragraph");
+  const r = summarize("PDF-wrapped A/C swap", pdfA, pdfB);
+  assert(r.changes.some((c) => c.type === "insert" && /Paragraph D/.test(c.snippet)), "PDF: insert D");
+  assert(r.changes.some((c) => c.type === "delete" && /Paragraph B/.test(c.snippet)), "PDF: delete B");
+  const moves = r.changes.filter((c) => c.type === "move");
+  assert(moves.length >= 2, "PDF: expect A and C moves, got " + moves.length);
+  assert(!r.changes.some((c) => /processes/.test(c.snippet) && c.type !== "move"), "PDF: no false insert/delete on wrap tail");
+  const newer = orderSegmentsForSide(r.segments, "tgt")
+    .map((s) => s.textB || "")
+    .filter((t) => /Paragraph [ACD]/.test(t));
+  assert(newer[0].indexOf("Paragraph C") === 0, "PDF newer order should be C then A then D");
+  assert(newer[1].indexOf("Paragraph A") === 0, "PDF newer order A after C");
+  assert(newer[2].indexOf("Paragraph D") === 0, "PDF newer order D last");
+}
+
+// Insert in the middle must not mark later paragraphs as moves
+{
+  const a = [
+    "Revenue increased by ten per cent in the first half.",
+    "The board declared an interim dividend.",
+    "Operating profit was stable year on year."
+  ].join("\n\n");
+  const b = [
+    "Revenue increased by ten per cent in the first half.",
+    "The Group opened a new office in Singapore with enough words.",
+    "The board declared an interim dividend.",
+    "Operating profit was stable year on year."
+  ].join("\n\n");
+  const r = summarize("insert shifts later paras", a, b);
+  assert(r.summary.insert >= 1, "expect insert");
+  assert(r.summary.move === 0, "index shift from a pure insert is not a move, got " + r.summary.move);
 }
 
 console.log("\nDone. exit=", process.exitCode || 0);
