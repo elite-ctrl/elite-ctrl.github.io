@@ -155,6 +155,7 @@
   var desktop = window.matchMedia("(min-width: 900px)");
   var hoverTimer = 0;
   var openItem = null;
+  var openedAt = 0;
 
   function triggerOf(item) {
     return item.querySelector(".topnav__trigger");
@@ -194,6 +195,7 @@
     trigger.setAttribute("aria-expanded", "true");
     menu.hidden = false;
     openItem = item;
+    openedAt = Date.now();
   }
 
   function toggleItem(item) {
@@ -214,6 +216,10 @@
     trigger.addEventListener("click", function (e) {
       if (!desktop.matches) return;
       e.preventDefault();
+      /* Hover already opens the panel. The pointerdown that follows would
+         otherwise toggle it shut. Ignore a click in that short window; a
+         later click still closes, and a tap with no hover still opens. */
+      if (item.classList.contains("is-open") && Date.now() - openedAt < 400) return;
       toggleItem(item);
     });
 
@@ -237,6 +243,12 @@
       hoverTimer = window.setTimeout(function () {
         closeItem(item, false);
       }, 160);
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        closeAll(false);
+      });
     });
   });
 
