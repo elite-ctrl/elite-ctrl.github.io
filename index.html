@@ -587,6 +587,63 @@
       .hero__cta { margin-top: 32px; }
     }
 
+    .hero__paths {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin: 32px auto 0;
+      max-width: 960px;
+      padding: 0 0 8px;
+    }
+
+    @media (min-width: 768px) {
+      .hero__paths {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+      }
+    }
+
+    .hero-path {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      background: var(--surface);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-lg);
+      padding: 32px 24px;
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+    }
+
+    .hero-path:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 10px 10px 0 #000;
+    }
+
+    .hero-path__title {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    .hero-path__body {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    @media (min-width: 768px) {
+      .hero-path__title { font-size: 20px; line-height: 24px; }
+      .hero-path__body { font-size: 16px; line-height: 24px; }
+    }
+
     /* Proof chips sit once under the CTA. Column stack below fit width; single nowrap row above (no 2+1 wrap).
        Breaks out of .hero__inner (--prose 680px) so strip can use up to 720/820. */
     .proof-strip {
@@ -654,7 +711,7 @@
       will-change: opacity, transform;
     }
 
-    .hero__inner.is-in .hero-visual {
+    .reveal.is-in .hero-visual {
       opacity: 1;
       transform: translateY(0);
     }
@@ -1700,12 +1757,13 @@
         color: #000;
         transition: none;
       }
-      .btn, .cov-card, .topnav__toggle, .topnav__links a,
+      .btn, .cov-card, .hero-path, .topnav__toggle, .topnav__links a,
       .final-cta__mail, .faq-item summary {
         transition: none;
       }
       .btn:hover, .btn:active,
       .cov-card:hover,
+      .hero-path:hover,
       .topnav__toggle:hover, .topnav__toggle:active {
         transform: none;
       }
@@ -1821,7 +1879,27 @@
             </div>
             <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
           </div>
+        </div>
 
+        <div class="hero__paths" aria-label="Paths">
+          <article class="hero-path">
+            <h2 class="hero-path__title">Work with us</h2>
+            <p class="hero-path__body">Brief the desk for funds, listed reporting, IPO, and IR.</p>
+            <a class="btn" href="#engage">Engage the Studio</a>
+          </article>
+          <article class="hero-path">
+            <h2 class="hero-path__title">Join our journey</h2>
+            <p class="hero-path__body">Part-time, remote practice on a Hong Kong financial language desk.</p>
+            <a class="btn" href="trainee.html">Language Trainee</a>
+          </article>
+          <article class="hero-path">
+            <h2 class="hero-path__title">Lost in the context</h2>
+            <p class="hero-path__body">Language Watchdog and The Trade in Words: when a metaphor or a filing parallel is lost.</p>
+            <a class="btn" href="language-watchdog.html">Language Watchdog</a>
+          </article>
+        </div>
+
+        <div class="hero__inner reveal">
           <div class="proof-strip" role="list" aria-label="Desk proof points">
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Priced before you commit</span>
