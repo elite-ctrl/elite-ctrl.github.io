@@ -1,6 +1,7 @@
 /**
  * Call the Gaps — client-side text diff (paragraph Myers/LCS, token pass on
- * fuzzy paragraphs, move relabelling). Move pass thresholds (tune on desk):
+ * fuzzy paragraphs, move relabelling). Soft-wrapped PDF lines are joined
+ * before the paragraph pass. Move pass thresholds (tune on desk):
  *   MOVE_MIN_TOKENS = 6 — ignore tiny spans for move pairing
  *   MOVE_MIN_SIMILARITY = 0.72 — Jaccard on normalised token bags
  *   MOVE_MAX_LEN_RATIO = 1.45 — |lenA − lenB| / max(lenA, lenB)
@@ -158,18 +159,62 @@
     return segments;
   }
 
+  function hasSentenceEnd(s) {
+    return /[.!?。！？…]["'”’)\]]*$/.test(s);
+  }
+
+  function startsLowerContinuation(s) {
+    return /^[a-z]/.test(s);
+  }
+
+  function isShortHeading(s) {
+    if (!s || hasSentenceEnd(s)) return false;
+    var cjk = (s.match(/[\u3400-\u9FFF\uF900-\uFAFF]/g) || []).length;
+    if (cjk > 0 && cjk <= 12 && s.length < 40) return true;
+    var words = s.split(/\s+/).filter(Boolean);
+    return s.length < 48 && words.length <= 8;
+  }
+
+  function shouldJoinSoftWrap(prev, next) {
+    if (!prev || !next) return false;
+    if (startsLowerContinuation(next)) return true;
+    if (/[,;:，；、]$/.test(prev)) return true;
+    if (/[-\u2010-\u2015]$/.test(prev)) return true;
+    if (hasSentenceEnd(prev)) return false;
+    if (isShortHeading(prev) && /^[A-Z\u3400-\u9FFF\uF900-\uFAFF]/.test(next)) return false;
+    return prev.length >= 40;
+  }
+
   function splitParagraphs(text) {
-    var normalised = text.replace(/\r\n/g, "\n").trim();
-    if (!normalised) return [];
-    var blocks;
-    if (/\n\s*\n/.test(normalised)) {
-      blocks = normalised.split(/\n\s*\n/);
-    } else {
-      blocks = normalised.split(/\n/);
+    var normalised = String(text || "").replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n");
+    if (!normalised.trim()) return [];
+    var lines = normalised.split("\n");
+    var blocks = [];
+    var buf = "";
+    function flush() {
+      var t = buf.replace(/\s+/g, " ").trim();
+      if (t) blocks.push(t);
+      buf = "";
     }
-    return blocks
-      .map(function (s) { return s.replace(/\s+/g, " ").trim(); })
-      .filter(Boolean);
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].replace(/\s+/g, " ").trim();
+      if (!line) {
+        flush();
+        continue;
+      }
+      if (!buf) {
+        buf = line;
+        continue;
+      }
+      if (shouldJoinSoftWrap(buf, line)) {
+        buf += " " + line;
+      } else {
+        flush();
+        buf = line;
+      }
+    }
+    flush();
+    return blocks;
   }
 
   function paraKey(p) {
@@ -250,7 +295,14 @@
     var contentB = packB.map.map(function (i) { return tokensB[i]; });
     var ops = myersDiff(packA.keys, packB.keys);
     var inner = opsToSegments(contentA, contentB, ops);
-    return { type: "intra", textA: seg.textA, textB: seg.textB, inner: inner };
+    return {
+      type: "intra",
+      textA: seg.textA,
+      textB: seg.textB,
+      inner: inner,
+      idxA: seg.idxA,
+      idxB: seg.idxB
+    };
   }
 
   function normaliseForMove(s) {
@@ -324,7 +376,9 @@
           type: "move",
           id: id,
           textA: segDel.textA,
-          textB: segIns.textB
+          textB: segIns.textB,
+          idxA: segDel.idxA,
+          idxB: segIns.idxB
         };
         segments[best.ins.idx] = { type: "move-gap", hide: true };
       }
@@ -344,30 +398,115 @@
     return max + 1;
   }
 
+  function pairCrosses(a, b) {
+    if (a.idxA == null || a.idxB == null || b.idxA == null || b.idxB == null) return false;
+    var dA = a.idxA - b.idxA;
+    var dB = a.idxB - b.idxB;
+    return dA !== 0 && dB !== 0 && dA > 0 !== dB > 0;
+  }
+
+  function adjacentAmongMatched(seg, other, matched) {
+    var aLo = Math.min(seg.idxA, other.idxA);
+    var aHi = Math.max(seg.idxA, other.idxA);
+    var bLo = Math.min(seg.idxB, other.idxB);
+    var bHi = Math.max(seg.idxB, other.idxB);
+    for (var i = 0; i < matched.length; i++) {
+      var s = matched[i];
+      if (s === seg || s === other) continue;
+      if (s.idxA != null && s.idxA > aLo && s.idxA < aHi) return false;
+      if (s.idxB != null && s.idxB > bLo && s.idxB < bHi) return false;
+    }
+    return true;
+  }
+
+  function asMove(seg, id) {
+    return {
+      type: "move",
+      id: id,
+      textA: seg.textA,
+      textB: seg.textB,
+      idxA: seg.idxA,
+      idxB: seg.idxB
+    };
+  }
+
   function promotePositionalMoves(segments) {
+    var nextId = nextMoveId(segments);
     var hasBlockChange = segments.some(function (s) {
       return s.type === "insert" || s.type === "delete";
     });
-    if (hasBlockChange) return segments;
-    var nextId = nextMoveId(segments);
+    if (!hasBlockChange) {
+      return segments.map(function (seg) {
+        if (
+          seg.type === "equal" &&
+          seg.idxA != null &&
+          seg.idxB != null &&
+          seg.idxA !== seg.idxB
+        ) {
+          return asMove(seg, "mv-" + nextId++);
+        }
+        return seg;
+      });
+    }
+    var matched = segments.filter(function (s) {
+      return s.type === "equal" || s.type === "move" || s.type === "intra";
+    });
+    var moves = segments.filter(function (s) { return s.type === "move"; });
     return segments.map(function (seg) {
       if (
-        seg.type === "equal" &&
-        seg.idxA != null &&
-        seg.idxB != null &&
-        seg.idxA !== seg.idxB
+        seg.type !== "equal" ||
+        seg.idxA == null ||
+        seg.idxB == null ||
+        seg.idxA === seg.idxB
       ) {
-        return {
-          type: "move",
-          id: "mv-" + nextId++,
-          textA: seg.textA,
-          textB: seg.textB,
-          idxA: seg.idxA,
-          idxB: seg.idxB
-        };
+        return seg;
       }
-      return seg;
+      var swap = moves.some(function (mv) {
+        return pairCrosses(seg, mv) && adjacentAmongMatched(seg, mv, matched);
+      });
+      return swap ? asMove(seg, "mv-" + nextId++) : seg;
     });
+  }
+
+  function orderSegmentsForSide(segments, side) {
+    var src = side === "src" || side === "a";
+    var out = [];
+    for (var i = 0; i < segments.length; i++) {
+      var seg = segments[i];
+      if (!seg || seg.hide) continue;
+      if (src) {
+        if (seg.type === "insert") continue;
+        if (seg.idxA == null && !seg.textA) continue;
+      } else {
+        if (seg.type === "delete") continue;
+        if (seg.idxB == null && !seg.textB) continue;
+      }
+      out.push(seg);
+    }
+    out.sort(function (a, b) {
+      var ka = src ? a.idxA : a.idxB;
+      var kb = src ? b.idxA : b.idxB;
+      if (ka == null && kb == null) return 0;
+      if (ka == null) return 1;
+      if (kb == null) return -1;
+      return ka - kb;
+    });
+    return out;
+  }
+
+  function sortChanges(changes) {
+    changes.sort(function (a, b) {
+      function key(c) {
+        if (c.idxB != null) return c.idxB;
+        if (c.idxA != null) return 100000 + c.idxA;
+        return 200000;
+      }
+      var d = key(a) - key(b);
+      if (d !== 0) return d;
+      var rank = { move: 0, insert: 1, delete: 2 };
+      return (rank[a.type] || 0) - (rank[b.type] || 0);
+    });
+    return changes;
   }
 
   function snippet(text, max) {
@@ -421,7 +560,9 @@
               id: idIns,
               type: "insert",
               snippet: snippet(joinTokens(part.b)),
-              side: "tgt"
+              side: "tgt",
+              idxA: seg.idxA,
+              idxB: seg.idxB
             });
           } else if (part.type === "delete") {
             summary.delete++;
@@ -431,7 +572,9 @@
               id: idDel,
               type: "delete",
               snippet: snippet(joinTokens(part.a)),
-              side: "src"
+              side: "src",
+              idxA: seg.idxA,
+              idxB: seg.idxB
             });
           }
         });
@@ -444,7 +587,9 @@
           id: idIns,
           type: "insert",
           snippet: snippet(seg.textB),
-          side: "tgt"
+          side: "tgt",
+          idxA: seg.idxA,
+          idxB: seg.idxB
         });
         seg.changeId = idIns;
         return;
@@ -456,7 +601,9 @@
           id: idDel,
           type: "delete",
           snippet: snippet(seg.textA),
-          side: "src"
+          side: "src",
+          idxA: seg.idxA,
+          idxB: seg.idxB
         });
         seg.changeId = idDel;
         return;
@@ -467,10 +614,14 @@
           id: seg.id,
           type: "move",
           snippet: snippet(seg.textA),
-          side: "both"
+          side: "both",
+          idxA: seg.idxA,
+          idxB: seg.idxB
         });
       }
     });
+
+    sortChanges(changes);
 
     return {
       segments: segments,
@@ -496,6 +647,8 @@
     compareTexts: compareTexts,
     joinTokens: joinTokens,
     splitParagraphs: splitParagraphs,
+    shouldJoinSoftWrap: shouldJoinSoftWrap,
+    orderSegmentsForSide: orderSegmentsForSide,
     MOVE_MIN_TOKENS: MOVE_MIN_TOKENS,
     MOVE_MIN_SIMILARITY: MOVE_MIN_SIMILARITY,
     MOVE_MAX_LEN_RATIO: MOVE_MAX_LEN_RATIO

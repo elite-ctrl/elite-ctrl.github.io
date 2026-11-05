@@ -20,7 +20,8 @@ const { compare, extract } = fn();
 function assertNoIssues(name, en, tc) {
   const r = compare(en, tc);
   const issues =
-    r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length;
+    r.missing.length + r.extra.length + r.scaleIssues.length + r.countDiffs.length +
+    (r.valueIssues ? r.valueIssues.length : 0);
   if (issues !== 0) {
     console.error("FAIL:", name, {
       missing: r.missing.map((e) => e.key),
@@ -114,6 +115,50 @@ if (pcr.countDiffs.length !== 1 || pcr.countDiffs[0].key !== "pct|5") {
   process.exitCode = 1;
 } else {
   console.log("ok: percent count diff surfaced");
+}
+
+const nearEn =
+  "Revenue was HKD 1,234.5 million. Stock code 09988. Margin 12.5%. Volume 456.0. Headcount 8,900.0. Dated 30 June 2025.";
+const nearTc =
+  "收入為港幣1,235.5百萬元。股份代號09988。利潤率12.5%。成交量456.0。人數8,900.0。日期2025年6月30日。";
+const nr = compare(nearEn, nearTc);
+const nearPairs = nr.valueIssues || [];
+if (nearPairs.length !== 1) {
+  console.error("FAIL: near-match should be one value mismatch", {
+    valueIssues: nearPairs.length,
+    missing: nr.missing.map((e) => e.key),
+    extra: nr.extra.map((e) => e.key),
+    matched: nr.matched.length,
+  });
+  process.exitCode = 1;
+} else if (nr.missing.length || nr.extra.length) {
+  console.error("FAIL: near-match must not stay as missing/extra", {
+    missing: nr.missing.map((e) => e.key),
+    extra: nr.extra.map((e) => e.key),
+  });
+  process.exitCode = 1;
+} else {
+  const srcHit = nearPairs[0].src.src[0].text;
+  const tgtHit = nearPairs[0].tgt.tgt[0].text;
+  if (!/1,234\.5/.test(srcHit) || !/1,235\.5/.test(tgtHit)) {
+    console.error("FAIL: value mismatch pair texts", srcHit, tgtHit);
+    process.exitCode = 1;
+  } else {
+    console.log("ok: near-match amount is a paired value mismatch");
+  }
+}
+
+const orphanEn = "Only this HKD 1,234.5 million appears on the source.";
+const orphanTc = "翻譯只有股份代號09988。";
+const orr = compare(orphanEn, orphanTc);
+if (!orr.missing.some((e) => /1234\.5|1\.2345e\+9/i.test(e.key) || /1234500000/.test(e.key))) {
+  console.error("FAIL: true missing amount should stay missing", orr.missing.map((e) => e.key));
+  process.exitCode = 1;
+} else if ((orr.valueIssues || []).length) {
+  console.error("FAIL: orphan amount must not become a value mismatch");
+  process.exitCode = 1;
+} else {
+  console.log("ok: true missing amount stays missing");
 }
 
 if (process.exitCode) {

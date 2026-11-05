@@ -236,7 +236,10 @@
 
   function renderPane(segments, side) {
     var html = "";
-    segments.forEach(function (seg) {
+    var ordered = CallTheGapsDiff.orderSegmentsForSide
+      ? CallTheGapsDiff.orderSegmentsForSide(segments, side)
+      : segments;
+    ordered.forEach(function (seg) {
       if (seg.type === "equal") {
         var t = side === "src" ? seg.textA : seg.textB;
         html += wrapBlock(esc(t));
