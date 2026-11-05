@@ -142,3 +142,135 @@
   if (desktop.addEventListener) desktop.addEventListener("change", onDesktopChange);
   else if (desktop.addListener) desktop.addListener(onDesktopChange);
 })();
+
+/* Desktop site-map popups. Hover or click opens one group; Escape and
+   click-outside close. Mobile (<900px) never shows .topnav__links. */
+(function () {
+  var links = document.querySelector(".topnav__links");
+  if (!links) return;
+
+  var items = Array.prototype.slice.call(links.querySelectorAll(".topnav__item"));
+  if (!items.length) return;
+
+  var desktop = window.matchMedia("(min-width: 900px)");
+  var hoverTimer = 0;
+  var openItem = null;
+  var openedAt = 0;
+
+  function triggerOf(item) {
+    return item.querySelector(".topnav__trigger");
+  }
+
+  function menuOf(item) {
+    return item.querySelector(".topnav__menu");
+  }
+
+  function closeItem(item, restoreFocus) {
+    if (!item) return;
+    var trigger = triggerOf(item);
+    var menu = menuOf(item);
+    item.classList.remove("is-open");
+    if (trigger) {
+      trigger.setAttribute("aria-expanded", "false");
+      if (restoreFocus) trigger.focus();
+    }
+    if (menu) menu.hidden = true;
+    if (openItem === item) openItem = null;
+  }
+
+  function closeAll(restoreFocus) {
+    var current = openItem;
+    items.forEach(function (item) {
+      closeItem(item, restoreFocus && item === current);
+    });
+  }
+
+  function openItemMenu(item) {
+    if (!desktop.matches) return;
+    if (openItem && openItem !== item) closeItem(openItem, false);
+    var trigger = triggerOf(item);
+    var menu = menuOf(item);
+    if (!trigger || !menu) return;
+    item.classList.add("is-open");
+    trigger.setAttribute("aria-expanded", "true");
+    menu.hidden = false;
+    openItem = item;
+    openedAt = Date.now();
+  }
+
+  function toggleItem(item) {
+    if (item.classList.contains("is-open")) closeItem(item, false);
+    else openItemMenu(item);
+  }
+
+  function firstLink(item) {
+    var menu = menuOf(item);
+    return menu ? menu.querySelector("a") : null;
+  }
+
+  items.forEach(function (item) {
+    var trigger = triggerOf(item);
+    var menu = menuOf(item);
+    if (!trigger || !menu) return;
+
+    trigger.addEventListener("click", function (e) {
+      if (!desktop.matches) return;
+      e.preventDefault();
+      /* Hover already opens the panel. The pointerdown that follows would
+         otherwise toggle it shut. Ignore a click in that short window; a
+         later click still closes, and a tap with no hover still opens. */
+      if (item.classList.contains("is-open") && Date.now() - openedAt < 400) return;
+      toggleItem(item);
+    });
+
+    trigger.addEventListener("keydown", function (e) {
+      if (!desktop.matches) return;
+      if (e.key !== "ArrowDown") return;
+      e.preventDefault();
+      openItemMenu(item);
+      var link = firstLink(item);
+      if (link) link.focus();
+    });
+
+    item.addEventListener("mouseenter", function () {
+      if (!desktop.matches) return;
+      if (hoverTimer) window.clearTimeout(hoverTimer);
+      openItemMenu(item);
+    });
+
+    item.addEventListener("mouseleave", function () {
+      if (!desktop.matches) return;
+      hoverTimer = window.setTimeout(function () {
+        closeItem(item, false);
+      }, 160);
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        closeAll(false);
+      });
+    });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!openItem) return;
+    if (links.contains(e.target)) return;
+    closeAll(false);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape" || !openItem) return;
+    closeAll(true);
+  });
+
+  document.addEventListener("focusin", function (e) {
+    if (!openItem) return;
+    if (!openItem.contains(e.target)) closeItem(openItem, false);
+  });
+
+  function onDesktopChange(event) {
+    if (!event.matches) closeAll(false);
+  }
+  if (desktop.addEventListener) desktop.addEventListener("change", onDesktopChange);
+  else if (desktop.addListener) desktop.addListener(onDesktopChange);
+})();

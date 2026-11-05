@@ -213,3 +213,174 @@ html.nav-scroll-lock body {
   justify-content: center;
   gap: 8px 24px;
 }
+
+/* Desktop site-map popups. Four group labels in .topnav__links from 900px;
+   each opens a neo-brutalist panel (surface, 3px ink, hard shadow). The
+   hamburger #mobile-panel stays the <900px map — do not restyle it here. */
+
+.topnav__bar {
+  overflow: visible;
+}
+
+@media (min-width: 900px) {
+  .topnav__links {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+.topnav__item {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+}
+
+.topnav__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 8px 12px;
+  color: inherit;
+  background: transparent;
+  border: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.topnav__trigger::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 200ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.topnav__trigger:hover,
+.topnav__trigger:focus-visible,
+.topnav__item.is-open .topnav__trigger,
+.topnav__item--current .topnav__trigger {
+  background: var(--yellow, #FFE566);
+  border-color: var(--ink, #000000);
+}
+
+.topnav__trigger:focus-visible {
+  outline: 3px solid var(--accent, #FF4D1A);
+  outline-offset: 2px;
+}
+
+.topnav__trigger:active {
+  transform: scale(0.98);
+}
+
+.topnav__item.is-open .topnav__trigger::after {
+  transform: rotate(180deg);
+}
+
+.topnav__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 120;
+  pointer-events: auto;
+  min-width: 220px;
+  width: max-content;
+  max-height: min(70vh, 560px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg, #FFFFFB);
+  color: var(--ink, #000000);
+  border: 3px solid var(--ink, #000000);
+  box-shadow: 6px 6px 0 #000;
+}
+
+.topnav__item:last-child .topnav__menu {
+  left: auto;
+  right: 0;
+}
+
+.topnav__item.is-open .topnav__menu {
+  display: flex;
+}
+
+.topnav__item.is-open .topnav__menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 10px;
+}
+
+.topnav__menu[hidden] {
+  display: none !important;
+}
+
+.topnav__links .topnav__menu a {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 8px 12px;
+  border: 2px solid transparent;
+  background: transparent;
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+  transition:
+    background-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 300ms var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.topnav__links .topnav__menu a:hover,
+.topnav__links .topnav__menu a:focus-visible {
+  background: var(--yellow, #FFE566);
+  border-color: var(--ink, #000000);
+}
+
+.topnav__links .topnav__menu a:focus-visible {
+  outline: 3px solid var(--accent, #FF4D1A);
+  outline-offset: 2px;
+}
+
+.topnav__links .topnav__menu a:active {
+  transform: scale(0.98);
+}
+
+.topnav__links .topnav__menu a[aria-current="page"] {
+  background: var(--yellow, #FFE566);
+  border-color: var(--ink, #000000);
+}
+
+.topnav__links .topnav__menu .nav-beta {
+  margin-left: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topnav__trigger,
+  .topnav__trigger::after,
+  .topnav__links .topnav__menu a,
+  .topnav__links .topnav__menu a:active {
+    transform: none;
+    transition: none;
+  }
+}

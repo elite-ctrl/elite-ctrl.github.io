@@ -326,15 +326,6 @@
       .topnav__brand img { height: 32px; }
     }
 
-    /* The shared secondary bar is full at 900–1100px. Keep Call the Ledger
-       and Call the Gaps in the row only once the 1160px bar can hold them
-       without covering the CTA. Hidden from .topnav__links only — the
-       hamburger #mobile-panel always keeps both links. */
-    @media (max-width: 1199.98px) {
-      .topnav__links a[href="figure-checker.html"],
-      .topnav__links a[href="call-the-gaps.html"] { display: none; }
-    }
-
     .topnav__links a[aria-current="page"] {
       background: var(--yellow);
       border-color: var(--ink);
@@ -987,14 +978,39 @@
       <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
 
       <div class="topnav__links" role="list">
-        <a href="index.html" role="listitem">Home</a>
-        <a href="financial-translation.html" role="listitem">Finance</a>
-        <a href="trainee.html" role="listitem">Trainee</a>
-        <a href="trade-in-words.html" role="listitem">Trade in Words</a>
-        <a href="language-watchdog.html" role="listitem" aria-current="page">Language Watchdog</a>
-        <a href="figure-checker.html" role="listitem">Call the Ledger</a>
-        <a href="call-the-gaps.html" role="listitem">Call the Gaps</a>
-        <a href="index.html#faq" role="listitem">FAQ</a>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-page-btn" aria-expanded="false" aria-controls="topnav-page-menu" aria-haspopup="true">On this page</button>
+          <div class="topnav__menu" id="topnav-page-menu" role="group" aria-labelledby="topnav-page-btn" hidden>
+            <a href="index.html#hero">Home</a>
+            <a href="index.html#benefits">Benefits</a>
+            <a href="index.html#coverage">Coverage</a>
+            <a href="index.html#how">How it works</a>
+            <a href="index.html#case-study">Case study</a>
+            <a href="index.html#language-watchdog">Language Watchdog</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="index.html#engage">Engage the Studio</a>
+          </div>
+        </div>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-tools-btn" aria-expanded="false" aria-controls="topnav-tools-menu" aria-haspopup="true">Tools</button>
+          <div class="topnav__menu" id="topnav-tools-menu" role="group" aria-labelledby="topnav-tools-btn" hidden>
+            <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+            <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+          </div>
+        </div>
+        <div class="topnav__item topnav__item--current" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-journal-btn" aria-expanded="false" aria-controls="topnav-journal-menu" aria-haspopup="true">Journal</button>
+          <div class="topnav__menu" id="topnav-journal-menu" role="group" aria-labelledby="topnav-journal-btn" hidden>
+            <a href="language-watchdog.html" aria-current="page">Language Watchdog</a>
+          </div>
+        </div>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-desk-btn" aria-expanded="false" aria-controls="topnav-desk-menu" aria-haspopup="true">Desk</button>
+          <div class="topnav__menu" id="topnav-desk-menu" role="group" aria-labelledby="topnav-desk-btn" hidden>
+            <a href="trainee.html">Trainee</a>
+          </div>
+        </div>
       </div>
 
       <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
