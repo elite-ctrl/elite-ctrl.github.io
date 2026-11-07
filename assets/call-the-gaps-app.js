@@ -26,6 +26,10 @@
   var lastResult = null;
   var activeFilter = "all";
   var CHOOSE_LABEL = "Choose a PDF or Word file";
+  var syncLocked = false;
+  var syncLockTimer = null;
+  var jumpClearTimer = null;
+  var jumpTypeCursor = { type: "", index: -1 };
 
   function structureCountLabel(meta) {
     if (!meta) return "";
@@ -292,10 +296,46 @@
 
   function summaryHtml(summary) {
     var h = '<div class="summary" id="summaryStrip">';
-    h += '<span class="chip chip--insert">' + summary.insert + " insert" + (summary.insert === 1 ? "" : "s") + "</span>";
-    h += '<span class="chip chip--delete">' + summary.delete + " delete" + (summary.delete === 1 ? "" : "s") + "</span>";
-    h += '<span class="chip chip--move">' + summary.move + " move" + (summary.move === 1 ? "" : "s") + "</span>";
+    h += chipButton("insert", summary.insert, summary.insert + " insert" + (summary.insert === 1 ? "" : "s"));
+    h += chipButton("delete", summary.delete, summary.delete + " delete" + (summary.delete === 1 ? "" : "s"));
+    h += chipButton("move", summary.move, summary.move + " move" + (summary.move === 1 ? "" : "s"));
     h += '<span class="chip chip--ok">' + summary.unchanged + " unchanged tokens</span>";
+    h += "</div>";
+    return h;
+  }
+
+  function chipButton(type, count, label) {
+    return (
+      '<button type="button" class="chip chip--' +
+      type +
+      '" data-jump-type="' +
+      type +
+      '"' +
+      (count ? "" : " disabled") +
+      ">" +
+      label +
+      "</button>"
+    );
+  }
+
+  function errorStripHtml(changes) {
+    if (!changes.length) return "";
+    var h =
+      '<div class="error-strip" id="errorStrip" role="list" aria-label="Typed changes">';
+    changes.forEach(function (c) {
+      h +=
+        '<button type="button" class="chip chip--' +
+        c.type +
+        ' error-chip" role="listitem" data-change-id="' +
+        esc(c.id) +
+        '" data-change-type="' +
+        c.type +
+        '"><span class="error-chip__type">' +
+        c.type +
+        "</span> " +
+        esc(c.snippet) +
+        "</button>";
+    });
     h += "</div>";
     return h;
   }
@@ -339,13 +379,59 @@
     return h;
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function lockScrollSync(ms) {
+    syncLocked = true;
+    if (syncLockTimer) clearTimeout(syncLockTimer);
+    syncLockTimer = setTimeout(function () {
+      syncLocked = false;
+      syncLockTimer = null;
+    }, ms || 700);
+  }
+
+  function attrEscape(id) {
+    if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(id);
+    return String(id).replace(/"/g, '\\"');
+  }
+
+  function scrollContainerToEl(container, el, center) {
+    if (!container || !el) return;
+    var cRect = container.getBoundingClientRect();
+    var eRect = el.getBoundingClientRect();
+    var delta = 0;
+    if (center) {
+      delta = eRect.top - cRect.top - container.clientHeight / 2 + eRect.height / 2;
+    } else if (eRect.top < cRect.top) {
+      delta = eRect.top - cRect.top;
+    } else if (eRect.bottom > cRect.bottom) {
+      delta = eRect.bottom - cRect.bottom;
+    }
+    if (!delta) return;
+    var max = container.scrollHeight - container.clientHeight;
+    if (max < 0) max = 0;
+    var top = container.scrollTop + delta;
+    if (top < 0) top = 0;
+    if (top > max) top = max;
+    if (typeof container.scrollTo === "function") {
+      container.scrollTo({
+        top: top,
+        behavior: prefersReducedMotion() ? "auto" : "smooth"
+      });
+    } else {
+      container.scrollTop = top;
+    }
+  }
+
   function bindScrollSync() {
     var srcView = $("srcView");
     var tgtView = $("tgtView");
     if (!srcView || !tgtView) return;
     var syncing = false;
     function sync(from, to) {
-      if (syncing) return;
+      if (syncLocked || syncing) return;
       syncing = true;
       var maxFrom = from.scrollHeight - from.clientHeight;
       var maxTo = to.scrollHeight - to.clientHeight;
@@ -357,22 +443,84 @@
     tgtView.addEventListener("scroll", function () { sync(tgtView, srcView); });
   }
 
+  function clearJumpHighlight() {
+    document.querySelectorAll(".is-active").forEach(function (el) {
+      el.classList.remove("is-active");
+    });
+    document.querySelectorAll(".is-current").forEach(function (el) {
+      el.classList.remove("is-current");
+      if (el.hasAttribute("aria-current")) el.removeAttribute("aria-current");
+    });
+  }
+
   function jumpToChange(id) {
     if (!id) return;
-    var safe = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id.replace(/"/g, '\\"');
-    var marks = document.querySelectorAll('[data-change-id="' + safe + '"]');
+    var safe = attrEscape(id);
+    clearJumpHighlight();
+    if (jumpClearTimer) clearTimeout(jumpClearTimer);
+
+    var marks = document.querySelectorAll('.diff-pane__body [data-change-id="' + safe + '"]');
     marks.forEach(function (m) {
       m.classList.add("is-active");
     });
-    if (marks[0]) {
-      marks[0].scrollIntoView({ block: "center", behavior: "smooth" });
+
+    document.querySelectorAll('[data-change-id="' + safe + '"]').forEach(function (el) {
+      if (el.classList.contains("rail-item") || el.classList.contains("error-chip")) {
+        el.classList.add("is-current");
+        el.setAttribute("aria-current", "true");
+      }
+    });
+
+    lockScrollSync(prefersReducedMotion() ? 50 : 700);
+
+    var panes = document.querySelector(".diff-panes");
+    if (panes) {
+      var paneRect = panes.getBoundingClientRect();
+      var navOffset = 88;
+      if (paneRect.top < navOffset || paneRect.bottom > window.innerHeight) {
+        panes.scrollIntoView({
+          block: "nearest",
+          behavior: prefersReducedMotion() ? "auto" : "smooth"
+        });
+      }
     }
-    if (marks[1]) {
-      marks[1].scrollIntoView({ block: "center", behavior: "smooth" });
-    }
-    setTimeout(function () {
+
+    marks.forEach(function (mark) {
+      var pane = mark.closest(".diff-pane__body");
+      scrollContainerToEl(pane, mark, true);
+    });
+
+    var rail = $("changeRail");
+    var railBtn = document.querySelector('.rail-item[data-change-id="' + safe + '"]');
+    if (rail && railBtn) scrollContainerToEl(rail, railBtn, false);
+
+    var strip = $("errorStrip");
+    var chip = document.querySelector('.error-chip[data-change-id="' + safe + '"]');
+    if (strip && chip) scrollContainerToEl(strip, chip, false);
+
+    jumpClearTimer = setTimeout(function () {
       marks.forEach(function (m) { m.classList.remove("is-active"); });
-    }, 1600);
+    }, 2400);
+  }
+
+  function jumpToType(type) {
+    if (!type || type === "all") return;
+    var items = document.querySelectorAll('.error-chip[data-change-type="' + type + '"], .rail-item[data-change-type="' + type + '"]');
+    var seen = [];
+    var unique = [];
+    items.forEach(function (el) {
+      var id = el.getAttribute("data-change-id");
+      if (!id || seen.indexOf(id) !== -1) return;
+      seen.push(id);
+      unique.push(el);
+    });
+    if (!unique.length) return;
+    if (jumpTypeCursor.type !== type) {
+      jumpTypeCursor.type = type;
+      jumpTypeCursor.index = -1;
+    }
+    jumpTypeCursor.index = (jumpTypeCursor.index + 1) % unique.length;
+    jumpToChange(unique[jumpTypeCursor.index].getAttribute("data-change-id"));
   }
 
   function applyFilter() {
@@ -380,23 +528,36 @@
       var type = btn.getAttribute("data-change-type");
       btn.parentElement.hidden = activeFilter !== "all" && activeFilter !== type;
     });
+    document.querySelectorAll(".error-chip").forEach(function (btn) {
+      var type = btn.getAttribute("data-change-type");
+      btn.hidden = activeFilter !== "all" && activeFilter !== type;
+    });
     document.querySelectorAll(".rail-filter").forEach(function (btn) {
       btn.classList.toggle("is-on", btn.getAttribute("data-filter") === activeFilter);
     });
   }
 
   function bindResultsUi() {
-    var rail = $("changeRail");
-    if (!rail) return;
-    rail.addEventListener("click", function (e) {
+    var el = $("results");
+    if (!el) return;
+    el.addEventListener("click", function (e) {
       var filterBtn = e.target.closest(".rail-filter");
       if (filterBtn) {
         activeFilter = filterBtn.getAttribute("data-filter") || "all";
         applyFilter();
         return;
       }
-      var item = e.target.closest(".rail-item");
-      if (item) jumpToChange(item.getAttribute("data-change-id"));
+      var typeChip = e.target.closest("[data-jump-type]");
+      if (typeChip && !typeChip.disabled) {
+        jumpToType(typeChip.getAttribute("data-jump-type"));
+        return;
+      }
+      var item = e.target.closest(".rail-item, .error-chip");
+      if (item) {
+        jumpTypeCursor.type = item.getAttribute("data-change-type") || "";
+        jumpTypeCursor.index = -1;
+        jumpToChange(item.getAttribute("data-change-id"));
+      }
     });
     document.querySelectorAll(".mark-move").forEach(function (mark) {
       mark.addEventListener("click", function () {
@@ -440,6 +601,7 @@
     h += '<div class="diff-pane"><h2 class="diff-pane__title">Precedent</h2><div class="diff-pane__body" id="srcView">' + renderPane(r.segments, "src") + "</div></div>";
     h += '<div class="diff-pane"><h2 class="diff-pane__title">Newer one</h2><div class="diff-pane__body" id="tgtView">' + renderPane(r.segments, "tgt") + "</div></div>";
     h += "</div></div>";
+    h += errorStripHtml(r.changes);
     el.innerHTML = h;
     bindResultsUi();
     applyFilter();
@@ -549,6 +711,7 @@
     jobs.src += 1;
     jobs.tgt += 1;
     activeFilter = "all";
+    jumpTypeCursor = { type: "", index: -1 };
     SIDES.forEach(function (side) {
       texts[side] = "";
       names[side] = "";
@@ -562,7 +725,24 @@
   });
 
   if (typeof window !== "undefined") {
-    window.CallTheGaps = { run: run, takeFile: takeFile };
+    window.CallTheGaps = {
+      run: run,
+      takeFile: takeFile,
+      jumpToChange: jumpToChange,
+      setTexts: function (src, tgt) {
+        texts.src = src || "";
+        texts.tgt = tgt || "";
+        names.src = texts.src ? "precedent.txt" : "";
+        names.tgt = texts.tgt ? "newer.txt" : "";
+        statusError.src = false;
+        statusError.tgt = false;
+        statusText.src = texts.src ? "loaded" : "";
+        statusText.tgt = texts.tgt ? "loaded" : "";
+        structure.src = texts.src ? { measure: "paragraphs", count: countWordParagraphs(texts.src) } : null;
+        structure.tgt = texts.tgt ? { measure: "paragraphs", count: countWordParagraphs(texts.tgt) } : null;
+        run();
+      }
+    };
   }
   run();
 })();
