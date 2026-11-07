@@ -48,6 +48,8 @@
       --shadow-sm: 4px 4px 0 #000;
       --shadow-lg: 8px 8px 0 #000;
       --max: 1160px;
+      /* Gaps-local: house column stays 1160px; split panes need a wider desk. */
+      --tool-max: 1600px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -317,8 +319,24 @@
       padding: 0 16px;
     }
 
+    .tool > .wrap {
+      max-width: var(--tool-max);
+    }
+
     @media (min-width: 768px) {
       .wrap { padding: 0 40px; }
+    }
+
+    @media (min-width: 1280px) {
+      .topnav__bar {
+        max-width: var(--tool-max);
+      }
+      .tool > .wrap {
+        padding: 0 24px;
+      }
+      .panes,
+      .gap-layout,
+      .diff-panes { gap: 20px; }
     }
 
     .tool {
@@ -759,7 +777,7 @@
     .chip--delete { background: var(--accent); color: var(--bg); }
     .chip--move { background: var(--surface); border: 2px dashed var(--ink); }
     .chip--ok { background: var(--surface); }
-    .gap-layout { display: grid; grid-template-columns: minmax(220px, 280px) 1fr; gap: 16px; margin-top: 16px; min-width: 0; }
+    .gap-layout { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 16px; margin-top: 16px; min-width: 0; }
     .change-rail { border: 3px solid var(--ink); background: var(--bg); box-shadow: var(--shadow-sm); max-height: 560px; overflow: auto; min-width: 0; }
     .rail-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 3px solid var(--ink); background: var(--surface); position: sticky; top: 0; z-index: 1; }
     .rail-filter { cursor: pointer; min-height: 36px; }
