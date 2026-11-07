@@ -605,6 +605,12 @@
     .chip.bad { background: var(--ink); color: var(--bg); }
     .chip.warn { background: var(--yellow); box-shadow: 2px 2px 0 var(--accent); }
     .chip.info { background: var(--bg); }
+    .chip[data-jump-type] { cursor: pointer; }
+    .chip[data-jump-type]:hover:not(:disabled) {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+    .chip[disabled] { cursor: default; opacity: 0.55; }
 
     .pair-board {
       margin-top: 16px;
@@ -761,10 +767,11 @@
     .rail-list { list-style: none; }
     .rail-item { display: block; width: 100%; text-align: left; padding: 10px 12px; border: 0; border-bottom: 2px solid var(--ink); background: var(--bg); font-size: 13px; font-weight: 600; line-height: 20px; }
     .rail-item:hover { background: var(--yellow); }
+    .rail-item.is-current { background: var(--yellow); box-shadow: inset 0 0 0 3px var(--ink); }
     .rail-item__type { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 8px; }
     .rail-item__snippet { overflow-wrap: anywhere; }
     .rail-empty { padding: 12px; }
-    .diff-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; }
+    .diff-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; scroll-margin-top: 88px; }
     .diff-pane { border: 3px solid var(--ink); background: var(--surface); box-shadow: var(--shadow); min-width: 0; display: flex; flex-direction: column; min-height: 280px; }
     .diff-pane__title { font-size: 13px; font-weight: 800; padding: 10px 12px; border-bottom: 3px solid var(--ink); background: var(--yellow); }
     .diff-pane__body { flex: 1; max-height: 520px; overflow: auto; padding: 12px; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
@@ -772,7 +779,39 @@
     .mark-insert { background: var(--yellow); padding: 0 2px; border: 2px solid var(--ink); }
     .mark-delete { background: var(--accent); color: var(--bg); text-decoration: line-through; padding: 0 2px; }
     .mark-move { background: var(--surface); padding: 0 2px; border: 2px dashed var(--ink); cursor: pointer; }
-    .mark-move.is-active, .mark-insert.is-active, .mark-delete.is-active { outline: 3px solid var(--yellow); outline-offset: 2px; }
+    .mark-insert, .mark-delete, .mark-move { scroll-margin: 24px; }
+    .mark-move.is-active, .mark-insert.is-active, .mark-delete.is-active { outline: 3px solid var(--ink); outline-offset: 3px; box-shadow: 0 0 0 6px var(--yellow); }
+    .error-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      box-shadow: var(--shadow-sm);
+      max-height: 168px;
+      overflow: auto;
+    }
+    .error-chip {
+      cursor: pointer;
+      max-width: 100%;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .error-chip__type {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .error-chip.is-current {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+      box-shadow: 3px 3px 0 var(--yellow);
+    }
     @media (max-width: 900px) { .gap-layout { grid-template-columns: 1fr; } .diff-panes { grid-template-columns: 1fr; } }
 
     .site-footer {
