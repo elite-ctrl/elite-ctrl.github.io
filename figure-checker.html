@@ -585,6 +585,11 @@
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
+      position: sticky;
+      top: 76px;
+      z-index: 3;
+      background: var(--surface);
+      padding: 8px 0 10px;
     }
 
     .chip {
@@ -605,6 +610,14 @@
     .chip.bad { background: var(--ink); color: var(--bg); }
     .chip.warn { background: var(--yellow); box-shadow: 2px 2px 0 var(--accent); }
     .chip.info { background: var(--bg); }
+    .chip[data-jump-type] { cursor: pointer; }
+    .chip[data-jump-type]:hover:not(:disabled) {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+    .chip.warn[data-jump-type]:hover:not(:disabled) {
+      box-shadow: 3px 3px 0 var(--accent);
+    }
 
     .pair-board {
       margin-top: 16px;
@@ -644,8 +657,20 @@
       background: var(--bg);
     }
 
+    .pair-row[data-issue-id] {
+      cursor: pointer;
+      scroll-margin-top: 180px;
+    }
+
     .pair-row.is-scale,
     .pair-row.is-value { background: var(--yellow); }
+
+    .pair-row.is-active {
+      outline: 3px solid var(--ink);
+      outline-offset: 3px;
+      box-shadow: 0 0 0 6px var(--yellow);
+      z-index: 1;
+    }
 
     .pair-banner {
       grid-column: 1 / -1;
@@ -733,6 +758,41 @@
     }
 
     details.matched .pair-board { margin-top: 8px; }
+
+    .error-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      box-shadow: var(--shadow-sm);
+      max-height: 168px;
+      overflow: auto;
+    }
+
+    .error-chip {
+      cursor: pointer;
+      max-width: 100%;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .error-chip__type {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .error-chip.is-current {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+      box-shadow: 3px 3px 0 var(--yellow);
+    }
 
     .empty {
       color: var(--muted);
@@ -835,11 +895,13 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .btn, .topnav__toggle, .topnav__links a {
+      .btn, .topnav__toggle, .topnav__links a,
+      .chip[data-jump-type] {
         transition: none;
       }
       .btn:hover, .btn:active,
-      .topnav__toggle:hover, .topnav__toggle:active {
+      .topnav__toggle:hover, .topnav__toggle:active,
+      .chip[data-jump-type]:hover:not(:disabled) {
         transform: none;
       }
       .topnav__panel a {
@@ -1692,8 +1754,29 @@
     function gapCell(sideLabel, note) {
       return '<div class="pair-cell is-gap"><span class="pair-side">' + esc(sideLabel) + '</span><p class="pair-note">' + esc(note) + "</p></div>";
     }
-    function pairRow(cls, banner, left, right) {
-      return '<div class="pair-row ' + cls + '">' +
+    var ISSUE_TYPE_LABEL = {
+      miss: "missing",
+      extra: "extra",
+      scale: "scale",
+      value: "value",
+      count: "count"
+    };
+
+    function chipSnippet(text) {
+      var s = String(text || "").replace(/\s+/g, " ").trim();
+      if (s.length > 48) s = s.slice(0, 45) + "\u2026";
+      return s;
+    }
+    function pairRow(cls, banner, left, right, meta) {
+      var attrs = "";
+      if (meta && meta.id) {
+        attrs =
+          ' id="' + esc(meta.id) + '"' +
+          ' data-issue-id="' + esc(meta.id) + '"' +
+          ' data-issue-type="' + esc(meta.type) + '"' +
+          ' tabindex="0" role="button" aria-label="' + esc(banner || "Figure issue") + '"';
+      }
+      return '<div class="pair-row ' + cls + '"' + attrs + ">" +
         (banner ? '<p class="pair-banner">' + esc(banner) + "</p>" : "") +
         left + right + "</div>";
     }
@@ -1701,6 +1784,28 @@
       return '<div class="pair-board">' +
         '<div class="pair-head"><span>Source</span><span>Translation</span></div>' +
         rows + "</div>";
+    }
+    function typeChip(type, cls, label) {
+      return '<button type="button" class="chip ' + cls + '" data-jump-type="' + type + '">' + label + "</button>";
+    }
+    function errorStripHtml(issues) {
+      if (!issues.length) return "";
+      var h = '<div class="error-strip" id="errorStrip" role="list" aria-label="Figure issues">';
+      issues.forEach(function (c) {
+        var tone = c.type === "miss" || c.type === "extra" ? "bad" : c.type === "count" ? "info" : "warn";
+        h +=
+          '<button type="button" class="chip ' + tone + ' error-chip" role="listitem" data-issue-id="' +
+          esc(c.id) +
+          '" data-issue-type="' +
+          c.type +
+          '"><span class="error-chip__type">' +
+          ISSUE_TYPE_LABEL[c.type] +
+          "</span> " +
+          esc(c.snippet) +
+          "</button>";
+      });
+      h += "</div>";
+      return h;
     }
 
     var SIDES = ["src", "tgt"];
@@ -1711,6 +1816,8 @@
     var statusError = { src: false, tgt: false };
     var structure = { src: null, tgt: null };
     var lastReport = "";
+    var jumpClearTimer = null;
+    var jumpTypeCursor = { type: "", index: -1 };
     var CHOOSE_LABEL = "Choose a PDF or Word file";
 
     function structureCountLabel(meta) {
@@ -1887,7 +1994,153 @@
       });
       paintStructureNote();
     }
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    function attrEscape(id) {
+      if (typeof CSS !== "undefined" && CSS.escape) return CSS.escape(id);
+      return String(id).replace(/"/g, '\\"');
+    }
+    function scrollContainerToEl(container, el, center) {
+      if (!container || !el) return;
+      var cRect = container.getBoundingClientRect();
+      var eRect = el.getBoundingClientRect();
+      var delta = 0;
+      if (center) {
+        delta = eRect.top - cRect.top - container.clientHeight / 2 + eRect.height / 2;
+      } else if (eRect.top < cRect.top) {
+        delta = eRect.top - cRect.top;
+      } else if (eRect.bottom > cRect.bottom) {
+        delta = eRect.bottom - cRect.bottom;
+      }
+      if (!delta) return;
+      var max = container.scrollHeight - container.clientHeight;
+      if (max < 0) max = 0;
+      var top = container.scrollTop + delta;
+      if (top < 0) top = 0;
+      if (top > max) top = max;
+      if (typeof container.scrollTo === "function") {
+        container.scrollTo({
+          top: top,
+          behavior: prefersReducedMotion() ? "auto" : "smooth"
+        });
+      } else {
+        container.scrollTop = top;
+      }
+    }
+    function clearJumpHighlight() {
+      document.querySelectorAll(".pair-row.is-active").forEach(function (el) {
+        el.classList.remove("is-active");
+      });
+      document.querySelectorAll(".error-chip.is-current").forEach(function (el) {
+        el.classList.remove("is-current");
+        if (el.hasAttribute("aria-current")) el.removeAttribute("aria-current");
+      });
+    }
+    function resetJumpState() {
+      if (jumpClearTimer) {
+        clearTimeout(jumpClearTimer);
+        jumpClearTimer = null;
+      }
+      jumpTypeCursor = { type: "", index: -1 };
+    }
+    function jumpChromeHeight() {
+      var nav = 76;
+      var summary = document.querySelector("#results > .summary");
+      var sumH = summary ? summary.offsetHeight : 0;
+      return nav + sumH + 8;
+    }
+    function scrollWindowToRow(row) {
+      if (!row) return;
+      var chrome = jumpChromeHeight();
+      row.style.scrollMarginTop = chrome + "px";
+      var rect = row.getBoundingClientRect();
+      var y = (window.pageYOffset || document.documentElement.scrollTop || 0) + rect.top;
+      var viewH = window.innerHeight || document.documentElement.clientHeight;
+      var usable = viewH - chrome;
+      var target;
+      if (usable >= rect.height + 16) {
+        target = y - chrome - (usable - rect.height) / 2;
+      } else {
+        target = y - chrome;
+      }
+      if (target < 0) target = 0;
+      var max = Math.max(0, (document.documentElement.scrollHeight || 0) - viewH);
+      if (target > max) target = max;
+      if (typeof window.scrollTo === "function") {
+        window.scrollTo({
+          top: target,
+          behavior: prefersReducedMotion() ? "auto" : "smooth"
+        });
+      } else {
+        window.scrollTo(0, target);
+      }
+    }
+    function jumpToIssue(id) {
+      if (!id) return;
+      var safe = attrEscape(id);
+      clearJumpHighlight();
+      if (jumpClearTimer) clearTimeout(jumpClearTimer);
+
+      var row = document.querySelector('.pair-row[data-issue-id="' + safe + '"]');
+      if (!row) return;
+      row.classList.add("is-active");
+
+      document.querySelectorAll('.error-chip[data-issue-id="' + safe + '"]').forEach(function (el) {
+        el.classList.add("is-current");
+        el.setAttribute("aria-current", "true");
+      });
+
+      scrollWindowToRow(row);
+
+      var strip = $("errorStrip");
+      var chip = document.querySelector('.error-chip[data-issue-id="' + safe + '"]');
+      if (strip && chip) scrollContainerToEl(strip, chip, false);
+
+      jumpClearTimer = setTimeout(function () {
+        row.classList.remove("is-active");
+      }, 2400);
+    }
+    function jumpToType(type) {
+      if (!type) return;
+      var rows = document.querySelectorAll('.pair-row[data-issue-type="' + type + '"]');
+      if (!rows.length) return;
+      if (jumpTypeCursor.type !== type) {
+        jumpTypeCursor.type = type;
+        jumpTypeCursor.index = -1;
+      }
+      jumpTypeCursor.index = (jumpTypeCursor.index + 1) % rows.length;
+      jumpToIssue(rows[jumpTypeCursor.index].getAttribute("data-issue-id"));
+    }
+    function bindResultsUi() {
+      var el = $("results");
+      if (!el || el.getAttribute("data-jump-bound")) return;
+      el.setAttribute("data-jump-bound", "1");
+      el.addEventListener("click", function (e) {
+        var typeChip = e.target.closest("[data-jump-type]");
+        if (typeChip && !typeChip.disabled) {
+          jumpToType(typeChip.getAttribute("data-jump-type"));
+          return;
+        }
+        var item = e.target.closest(".error-chip, .pair-row[data-issue-id]");
+        if (item) {
+          jumpTypeCursor.type = item.getAttribute("data-issue-type") || "";
+          jumpTypeCursor.index = -1;
+          jumpToIssue(item.getAttribute("data-issue-id"));
+        }
+      });
+      el.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        var row = e.target.closest(".pair-row[data-issue-id]");
+        if (!row || e.target !== row) return;
+        e.preventDefault();
+        jumpTypeCursor.type = row.getAttribute("data-issue-type") || "";
+        jumpTypeCursor.index = -1;
+        jumpToIssue(row.getAttribute("data-issue-id"));
+      });
+    }
     function run() {
+      resetJumpState();
       paintStatus();
       var srcText = texts.src, tgtText = texts.tgt;
       var el = $("results");
@@ -1914,48 +2167,71 @@
       var h = "";
       h += '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
-      if (r.missing.length) { h += '<span class="chip bad">\u2717 ' + r.missing.length + " missing in translation</span>"; }
-      if (r.extra.length) { h += '<span class="chip bad">\u2717 ' + r.extra.length + " not in source</span>"; }
-      if (r.scaleIssues.length) { h += '<span class="chip warn">\u26a0 ' + r.scaleIssues.length + " scale/unit to verify</span>"; }
-      if (valueIssues.length) { h += '<span class="chip warn">\u26a0 ' + valueIssues.length + " value mismatch</span>"; }
-      if (r.countDiffs.length) { h += '<span class="chip info">' + r.countDiffs.length + " count differs</span>"; }
+      if (r.missing.length) {
+        h += typeChip("miss", "bad", "\u2717 " + r.missing.length + " missing in translation");
+      }
+      if (r.extra.length) {
+        h += typeChip("extra", "bad", "\u2717 " + r.extra.length + " not in source");
+      }
+      if (r.scaleIssues.length) {
+        h += typeChip("scale", "warn", "\u26a0 " + r.scaleIssues.length + " scale/unit to verify");
+      }
+      if (valueIssues.length) {
+        h += typeChip("value", "warn", "\u26a0 " + valueIssues.length + " value mismatch");
+      }
+      if (r.countDiffs.length) {
+        h += typeChip("count", "info", r.countDiffs.length + " count differs");
+      }
       if (!issueCount) { h += '<span class="chip ok">All figures agree</span>'; }
       h += "</div>";
       var report = [];
+      var issues = [];
+      var typeIndex = { miss: 0, extra: 0, scale: 0, value: 0, count: 0 };
       var issueRows = "";
+      function pushIssue(type, cls, banner, left, right, snippet, reportLine) {
+        var id = "issue-" + type + "-" + typeIndex[type]++;
+        issues.push({ id: id, type: type, snippet: chipSnippet(snippet) });
+        issueRows += pairRow(cls, banner, left, right, { id: id, type: type });
+        report.push(reportLine);
+      }
       r.scaleIssues.forEach(function (p) {
-        var srcText = sideTexts(p.src.src);
-        var tgtText = sideTexts(p.tgt.tgt);
-        issueRows += pairRow("is-scale", "Same digits, different scale \u2014 verify",
+        var srcFig = sideTexts(p.src.src);
+        var tgtFig = sideTexts(p.tgt.tgt);
+        pushIssue("scale", "is-scale", "Same digits, different scale \u2014 verify",
           filledCell("Source", p.src.src),
-          filledCell("Translation", p.tgt.tgt));
-        report.push("VERIFY SCALE/UNIT: " + srcText + " (source) vs " + tgtText + " (translation)");
+          filledCell("Translation", p.tgt.tgt),
+          srcFig + " vs " + tgtFig,
+          "VERIFY SCALE/UNIT: " + srcFig + " (source) vs " + tgtFig + " (translation)");
       });
       valueIssues.forEach(function (p) {
         var srcVal = sideTexts(p.src.src);
         var tgtVal = sideTexts(p.tgt.tgt);
-        issueRows += pairRow("is-value", "Paired figures, value differs",
+        pushIssue("value", "is-value", "Paired figures, value differs",
           filledCell("Source", p.src.src),
-          filledCell("Translation", p.tgt.tgt));
-        report.push("VALUE MISMATCH: " + srcVal + " (source) vs " + tgtVal + " (translation)");
+          filledCell("Translation", p.tgt.tgt),
+          srcVal + " vs " + tgtVal,
+          "VALUE MISMATCH: " + srcVal + " (source) vs " + tgtVal + " (translation)");
       });
       r.missing.forEach(function (e) {
-        issueRows += pairRow("is-miss", "Missing in the translation",
+        pushIssue("miss", "is-miss", "Missing in the translation",
           filledCell("Source", e.src),
-          gapCell("Translation", "Not in the translation"));
-        report.push("MISSING IN TRANSLATION: " + sideTexts(e.src) + " \u2014 \"" + e.src[0].before + e.src[0].text + e.src[0].after + "\"");
+          gapCell("Translation", "Not in the translation"),
+          sideTexts(e.src),
+          "MISSING IN TRANSLATION: " + sideTexts(e.src) + " \u2014 \"" + e.src[0].before + e.src[0].text + e.src[0].after + "\"");
       });
       r.extra.forEach(function (e) {
-        issueRows += pairRow("is-extra", "Not in the source",
+        pushIssue("extra", "is-extra", "Not in the source",
           gapCell("Source", "Not in the source"),
-          filledCell("Translation", e.tgt));
-        report.push("NOT IN SOURCE: " + sideTexts(e.tgt) + " \u2014 \"" + e.tgt[0].before + e.tgt[0].text + e.tgt[0].after + "\"");
+          filledCell("Translation", e.tgt),
+          sideTexts(e.tgt),
+          "NOT IN SOURCE: " + sideTexts(e.tgt) + " \u2014 \"" + e.tgt[0].before + e.tgt[0].text + e.tgt[0].after + "\"");
       });
       r.countDiffs.forEach(function (e) {
-        issueRows += pairRow("is-count", "Same value, different number of times",
+        pushIssue("count", "is-count", "Same value, different number of times",
           filledCell("Source", e.src, e.src.length + "\u00d7 in the source"),
-          filledCell("Translation", e.tgt, e.tgt.length + "\u00d7 in the translation"));
-        report.push("COUNT DIFFERS: " + sideTexts(e.src) + " \u2014 " + e.src.length + "x source, " + e.tgt.length + "x translation");
+          filledCell("Translation", e.tgt, e.tgt.length + "\u00d7 in the translation"),
+          sideTexts(e.src),
+          "COUNT DIFFERS: " + sideTexts(e.src) + " \u2014 " + e.src.length + "x source, " + e.tgt.length + "x translation");
       });
       if (issueRows) { h += board(issueRows); }
       if (r.matched.length) {
@@ -1969,6 +2245,7 @@
         h += board(matchedRows);
         h += "</details>";
       }
+      h += errorStripHtml(issues);
       el.innerHTML = h;
       var head = "Call the Ledger \u2014 " + r.matched.length + " matched, " + issueCount + " issue(s)";
       lastReport = head + (report.length ? "\n" + report.join("\n") : "\nAll figures agree.");
@@ -2100,8 +2377,28 @@
       } else { done(); }
     });
   
+    bindResultsUi();
     if (typeof window !== "undefined") {
-      window.FigureChecker = { extract: extract, compare: compare, keyOf: keyOf, preprocessText: preprocessText };
+      window.FigureChecker = {
+        extract: extract,
+        compare: compare,
+        keyOf: keyOf,
+        preprocessText: preprocessText,
+        jumpToIssue: jumpToIssue,
+        setTexts: function (src, tgt) {
+          texts.src = src || "";
+          texts.tgt = tgt || "";
+          names.src = texts.src ? "source.txt" : "";
+          names.tgt = texts.tgt ? "translation.txt" : "";
+          statusError.src = false;
+          statusError.tgt = false;
+          statusText.src = texts.src ? "loaded" : "";
+          statusText.tgt = texts.tgt ? "loaded" : "";
+          structure.src = texts.src ? { measure: "paragraphs", count: countWordParagraphs(texts.src) } : null;
+          structure.tgt = texts.tgt ? { measure: "paragraphs", count: countWordParagraphs(texts.tgt) } : null;
+          run();
+        }
+      };
     }
     run();
   })();
