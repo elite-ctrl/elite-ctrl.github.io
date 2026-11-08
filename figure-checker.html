@@ -48,6 +48,8 @@
       --shadow-sm: 4px 4px 0 #000;
       --shadow-lg: 8px 8px 0 #000;
       --max: 1160px;
+      /* Ledger-local: house column stays 1160px; pair-board and summary need a wider desk. */
+      --tool-max: 1600px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -317,8 +319,21 @@
       padding: 0 16px;
     }
 
+    .tool > .wrap {
+      max-width: var(--tool-max);
+    }
+
     @media (min-width: 768px) {
       .wrap { padding: 0 40px; }
+    }
+
+    @media (min-width: 1280px) {
+      .topnav__bar {
+        max-width: var(--tool-max);
+      }
+      .tool > .wrap {
+        padding: 0 24px;
+      }
     }
 
     .tool {
@@ -458,6 +473,10 @@
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       margin: 24px 0 16px;
+    }
+
+    @media (min-width: 1280px) {
+      .panes { gap: 20px; }
     }
 
     .pane {
