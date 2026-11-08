@@ -179,6 +179,133 @@ try {
   assert(rowClick.activeId === rowClick.rowId, "clicking a pair-row should highlight that row");
   assert(rowClick.chipCurrent, "pair-row click should mark the matching bottom chip");
 
+  const keyJump = await page.evaluate(() => {
+    const row = document.querySelector('.pair-row[data-issue-type="count"]');
+    row.focus();
+    row.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    const enterId = document.querySelector(".pair-row.is-active") &&
+      document.querySelector(".pair-row.is-active").getAttribute("data-issue-id");
+    const extra = document.querySelector('.pair-row[data-issue-type="extra"]');
+    extra.focus();
+    extra.dispatchEvent(new KeyboardEvent("keydown", { key: " ", bubbles: true }));
+    const spaceId = document.querySelector(".pair-row.is-active") &&
+      document.querySelector(".pair-row.is-active").getAttribute("data-issue-id");
+    return {
+      enterId,
+      enterWant: row.getAttribute("data-issue-id"),
+      spaceId,
+      spaceWant: extra.getAttribute("data-issue-id")
+    };
+  });
+  assert(keyJump.enterId === keyJump.enterWant, "Enter on a pair-row should jump, got " + JSON.stringify(keyJump));
+  assert(keyJump.spaceId === keyJump.spaceWant, "Space on a pair-row should jump, got " + JSON.stringify(keyJump));
+
+  const wrapIds = [];
+  for (let i = 0; i < 7; i++) {
+    await page.click('[data-jump-type="miss"]');
+    wrapIds.push(
+      await page.evaluate(
+        () => document.querySelector(".pair-row.is-active") && document.querySelector(".pair-row.is-active").getAttribute("data-issue-id")
+      )
+    );
+  }
+  assert(wrapIds[0] === "issue-miss-0", "miss cycle should start at first missing row");
+  assert(wrapIds[5] === "issue-miss-5", "miss cycle should reach the last missing row");
+  assert(wrapIds[6] === "issue-miss-0", "miss cycle should wrap, got " + JSON.stringify(wrapIds));
+
+  await page.evaluate(
+    (a, b) => {
+      window.FigureChecker.setTexts(a, b);
+    },
+    src,
+    tgt
+  );
+  await page.click('[data-jump-type="miss"]');
+  await page.click('[data-jump-type="miss"]');
+  const beforeReset = await page.evaluate(
+    () => document.querySelector(".pair-row.is-active") && document.querySelector(".pair-row.is-active").getAttribute("data-issue-id")
+  );
+  await page.evaluate(
+    (a, b) => {
+      window.FigureChecker.setTexts(a, b);
+    },
+    src,
+    tgt
+  );
+  await page.click('[data-jump-type="miss"]');
+  const afterReset = await page.evaluate(
+    () => document.querySelector(".pair-row.is-active") && document.querySelector(".pair-row.is-active").getAttribute("data-issue-id")
+  );
+  assert(beforeReset === "issue-miss-1", "pre-reset cursor should be on second miss, got " + beforeReset);
+  assert(afterReset === "issue-miss-0", "re-running the check should reset type cycling, got " + afterReset);
+
+  await page.click('[data-jump-type="count"]');
+  await new Promise((r) => setTimeout(r, 2500));
+  const cleared = await page.evaluate(() => ({
+    active: !!document.querySelector(".pair-row.is-active"),
+    current: !!document.querySelector(".error-chip.is-current")
+  }));
+  assert(!cleared.active, "row highlight should clear after a beat");
+  assert(cleared.current, "bottom chip should stay current after highlight clear");
+
+  await page.evaluate(() =>
+    window.FigureChecker.setTexts(
+      "Revenue was HK$1.2 million. Stock code: 09988",
+      "收益為港幣1.2百萬元。股份代號：09988"
+    )
+  );
+  const zeroIssue = await page.evaluate(() => ({
+    strip: !!document.getElementById("errorStrip"),
+    jump: document.querySelectorAll("[data-jump-type]").length,
+    issueRows: document.querySelectorAll(".pair-row[data-issue-id]").length,
+    agree: /All figures agree/.test(document.getElementById("results").textContent)
+  }));
+  assert(!zeroIssue.strip && zeroIssue.jump === 0 && zeroIssue.issueRows === 0 && zeroIssue.agree, "zero-issue packs should have no jump targets, got " + JSON.stringify(zeroIssue));
+
+  await page.evaluate(() => window.FigureChecker.setTexts("Stock code: 09988", "股份代號：09988。另有港幣22.2百萬元。"));
+  await page.waitForSelector(".error-chip");
+  await page.click(".error-chip");
+  await page.waitForSelector(".pair-row.is-active");
+  const shortPack = await page.evaluate(() => {
+    const row = document.querySelector(".pair-row.is-active");
+    return {
+      id: row && row.getAttribute("data-issue-id"),
+      type: row && row.getAttribute("data-issue-type")
+    };
+  });
+  assert(shortPack.type === "extra", "short pack should still highlight the extra row, got " + JSON.stringify(shortPack));
+
+  await page.setViewport({ width: 375, height: 720 });
+  await page.evaluate(
+    (a, b) => {
+      window.FigureChecker.setTexts(a, b);
+    },
+    src,
+    tgt
+  );
+  await page.waitForSelector(".error-chip");
+  async function assertNotUnderSticky(sel, label) {
+    await page.click(sel);
+    await page.waitForSelector(".pair-row.is-active");
+    const cov = await page.evaluate(() => {
+      const row = document.querySelector(".pair-row.is-active");
+      const summary = document.querySelector("#results > .summary");
+      const r = row.getBoundingClientRect();
+      const s = summary.getBoundingClientRect();
+      return {
+        id: row.getAttribute("data-issue-id"),
+        rowTop: r.top,
+        summaryBottom: s.bottom,
+        underSticky: r.top < s.bottom - 2
+      };
+    });
+    assert(!cov.underSticky, label + " should sit below the sticky summary, got " + JSON.stringify(cov));
+    return cov;
+  }
+  const mobileScale = await assertNotUnderSticky('[data-jump-type="scale"]', "mobile scale jump");
+  const mobileCount = await assertNotUnderSticky('[data-jump-type="count"]', "mobile count jump");
+
+  await page.setViewport({ width: 1280, height: 900 });
   await page.reload({ waitUntil: "networkidle0" });
   await page.waitForFunction(() => window.FigureChecker);
   const srcInput = await page.$("#srcFile");
@@ -203,7 +330,39 @@ try {
   assert(wordJump.chipType === "value", "Word fixtures: expected a value-mismatch chip, got " + JSON.stringify(wordJump));
   assert(wordJump.sameId, "Word fixtures: chip click should highlight the matching pair-row");
 
-  console.log("PASS", { inventory, scale, miss1, miss2, extraChip, last, rowClick, wordJump });
+  await page.reload({ waitUntil: "networkidle0" });
+  await page.waitForFunction(() => window.FigureChecker);
+  await (await page.$("#srcFile")).uploadFile("scripts/fixtures/sample-en.docx");
+  await (await page.$("#tgtFile")).uploadFile("scripts/fixtures/sample-tc.docx");
+  await page.waitForFunction(
+    () => /matched|agree/i.test(document.getElementById("results").textContent),
+    { timeout: 15000 }
+  );
+  const sampleWord = await page.evaluate(() => ({
+    strip: !!document.getElementById("errorStrip"),
+    jump: document.querySelectorAll("[data-jump-type]").length,
+    agree: /All figures agree/.test(document.getElementById("results").textContent)
+  }));
+  assert(!sampleWord.strip && sampleWord.jump === 0 && sampleWord.agree, "sample Word packs should agree with no jump targets, got " + JSON.stringify(sampleWord));
+
+  console.log("PASS", {
+    inventory,
+    scale,
+    miss1,
+    miss2,
+    extraChip,
+    last,
+    rowClick,
+    keyJump,
+    wrapIds,
+    afterReset,
+    zeroIssue,
+    shortPack,
+    mobileScale,
+    mobileCount,
+    wordJump,
+    sampleWord
+  });
 } finally {
   await browser.close();
 }

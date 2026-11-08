@@ -659,7 +659,7 @@
 
     .pair-row[data-issue-id] {
       cursor: pointer;
-      scroll-margin-top: 132px;
+      scroll-margin-top: 180px;
     }
 
     .pair-row.is-scale,
@@ -2037,6 +2037,45 @@
         if (el.hasAttribute("aria-current")) el.removeAttribute("aria-current");
       });
     }
+    function resetJumpState() {
+      if (jumpClearTimer) {
+        clearTimeout(jumpClearTimer);
+        jumpClearTimer = null;
+      }
+      jumpTypeCursor = { type: "", index: -1 };
+    }
+    function jumpChromeHeight() {
+      var nav = 76;
+      var summary = document.querySelector("#results > .summary");
+      var sumH = summary ? summary.offsetHeight : 0;
+      return nav + sumH + 8;
+    }
+    function scrollWindowToRow(row) {
+      if (!row) return;
+      var chrome = jumpChromeHeight();
+      row.style.scrollMarginTop = chrome + "px";
+      var rect = row.getBoundingClientRect();
+      var y = (window.pageYOffset || document.documentElement.scrollTop || 0) + rect.top;
+      var viewH = window.innerHeight || document.documentElement.clientHeight;
+      var usable = viewH - chrome;
+      var target;
+      if (usable >= rect.height + 16) {
+        target = y - chrome - (usable - rect.height) / 2;
+      } else {
+        target = y - chrome;
+      }
+      if (target < 0) target = 0;
+      var max = Math.max(0, (document.documentElement.scrollHeight || 0) - viewH);
+      if (target > max) target = max;
+      if (typeof window.scrollTo === "function") {
+        window.scrollTo({
+          top: target,
+          behavior: prefersReducedMotion() ? "auto" : "smooth"
+        });
+      } else {
+        window.scrollTo(0, target);
+      }
+    }
     function jumpToIssue(id) {
       if (!id) return;
       var safe = attrEscape(id);
@@ -2052,10 +2091,7 @@
         el.setAttribute("aria-current", "true");
       });
 
-      row.scrollIntoView({
-        block: "center",
-        behavior: prefersReducedMotion() ? "auto" : "smooth"
-      });
+      scrollWindowToRow(row);
 
       var strip = $("errorStrip");
       var chip = document.querySelector('.error-chip[data-issue-id="' + safe + '"]');
@@ -2104,6 +2140,7 @@
       });
     }
     function run() {
+      resetJumpState();
       paintStatus();
       var srcText = texts.src, tgtText = texts.tgt;
       var el = $("results");
@@ -2315,7 +2352,6 @@
     $("btnClear").addEventListener("click", function () {
       jobs.src += 1;
       jobs.tgt += 1;
-      jumpTypeCursor = { type: "", index: -1 };
       SIDES.forEach(function (side) {
         texts[side] = "";
         names[side] = "";
