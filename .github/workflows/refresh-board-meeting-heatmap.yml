@@ -1,0 +1,101 @@
+# Refresh the Board meeting heat map from HKEX Board Meeting Notices.
+#
+# Schedule: weekdays only, 08:30 in the morning, Asia/Hong_Kong.
+# GitHub Actions cron is UTC. Hong Kong Time is UTC+8 all year (no daylight saving).
+#   30 0 * * 1-5
+#   = 00:30 UTC
+#   = 08:30 Asia/Hong_Kong
+#   = Monday–Friday (cron days 1-5). Saturday and Sunday are not scheduled.
+# GitHub may start the job a few minutes after 00:30 UTC; it still lands in the
+# 08:00–09:00 HKT window when the runner is on time.
+#
+# Manual run (workflow_dispatch):
+#   GitHub → Actions → "Refresh HKEX board meeting heatmap" → Run workflow
+#   Choose branch main (after this file is on main, the schedule only runs there).
+#   Or: gh workflow run refresh-board-meeting-heatmap.yml --ref main
+# A hand run does the same work as the morning run. It commits only when the
+# JSON-normalized meeting set actually changed.
+#
+# The job fetches Main (ebmn_c.htm) and GEM (cbmngem.htm), retries when HKEX or
+# Akamai returns 503 / a bot challenge, and exits before writing if the fetch or
+# parse fails. An empty or partial list is never committed. Pages publishes the
+# site from the main branch, so a data commit on main is what redeploys the page.
+name: Refresh HKEX board meeting heatmap
+
+on:
+  schedule:
+    - cron: "30 0 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-board-meeting-heatmap
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check the BMN parser
+        run: python3 scripts/refresh-board-meeting-heatmap.py --self-test
+
+      - name: Fetch HKEX notices and update the snapshot
+        id: refresh
+        run: |
+          set -euo pipefail
+          python3 scripts/refresh-board-meeting-heatmap.py | tee "$RUNNER_TEMP/bmn-refresh.txt"
+          result="$(grep '^RESULT ' "$RUNNER_TEMP/bmn-refresh.txt" | tail -n 1)"
+          echo "$result"
+          snapshot="$(printf '%s\n' "$result" | sed -n 's/.*snapshot=\([0-9][0-9-]*\).*/\1/p')"
+          changed="$(printf '%s\n' "$result" | sed -n 's/.*changed=\(yes\|no\).*/\1/p')"
+          if ! [[ "$snapshot" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "refusing snapshot date: ${snapshot:-<empty>}"
+            exit 1
+          fi
+          if [[ "$changed" != "yes" && "$changed" != "no" ]]; then
+            echo "refusing changed flag: ${changed:-<empty>}"
+            exit 1
+          fi
+          echo "snapshot=$snapshot" >> "$GITHUB_OUTPUT"
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Commit when the meeting set changed
+        if: steps.refresh.outputs.changed == 'yes'
+        run: |
+          set -euo pipefail
+          snap="${{ steps.refresh.outputs.snapshot }}"
+          if ! [[ "$snap" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "refusing snapshot date: $snap"
+            exit 1
+          fi
+          if git diff --quiet -- board-meeting-heatmap.html; then
+            echo "Script reported a meeting-set change but the page is clean."
+            exit 1
+          fi
+          python3 - << 'PY'
+          import json, pathlib, sys
+          html = pathlib.Path("board-meeting-heatmap.html").read_text(encoding="utf-8")
+          marker = "const DATA = "
+          start = html.find(marker)
+          payload, end = json.JSONDecoder().raw_decode(html, start + len(marker))
+          meetings = payload.get("meetings") or []
+          if not meetings:
+              sys.exit("refusing to commit an empty meeting list")
+          if not any(row.get("board") == "Main" for row in meetings):
+              sys.exit("refusing to commit a snapshot with no Main Board meetings")
+          if html[end:end + 1] != ";":
+              sys.exit("DATA assignment was not left intact")
+          print(f"commit check ok: {len(meetings)} meetings, sourceDate={payload.get('sourceDate')}")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- board-meeting-heatmap.html
+          git commit -m "chore(heatmap): refresh HKEX BMN snapshot $snap"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "Pushed chore(heatmap): refresh HKEX BMN snapshot $snap"
