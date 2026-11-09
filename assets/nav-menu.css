@@ -127,7 +127,10 @@ html.nav-scroll-lock body {
 }
 
 /* Full site map in the hamburger and the footer. House tokens only:
-   yellow chips, 3px ink borders, hard offset shadows, JetBrains Mono. */
+   yellow chips, 3px ink borders, hard offset shadows, JetBrains Mono.
+   Hamburger-only footer parity (desktop popups stay On this page / Tools /
+   Journal / Desk): Desk also lists Finance and Trade in Words; a Legal group
+   lists Privacy and Terms, matching the live legal-page eyebrow. */
 
 .topnav__panel .sitemap-group {
   display: flex;
@@ -165,7 +168,8 @@ html.nav-scroll-lock body {
   gap: 8px;
 }
 
-.topnav__panel a[aria-current="page"] {
+.topnav__panel a[aria-current="page"],
+nav.topnav .topnav__panel .sitemap-group:not(.sitemap-group--page-index) a[aria-current="page"] {
   background: var(--yellow, #FFE566);
 }
 
