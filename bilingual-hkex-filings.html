@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en-HK" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YMJ8X3SVM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6YMJ8X3SVM');
+  </script>
+  <title>Bilingual HKEX filings | LedgerLex Language Studio</title>
+  <meta name="description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese 披露易 PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 9 November 2026. Sample cache for 00700, 00005, and 09988.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#FFFFFB">
+  <link rel="canonical" href="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
+  <meta property="og:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
+  <meta property="og:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese 披露易 PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 9 November 2026. Sample cache for 00700, 00005, and 09988.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
+  <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
+  <meta name="twitter:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese 披露易 PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 9 November 2026. Sample cache for 00700, 00005, and 09988.">
+  <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <link rel="stylesheet" href="/assets/nav-menu.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "url": "https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Bilingual filings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the page query HKEXnews while I search?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The page reads a published sample cache (filings-cache.json, stocks.json, and tiers.json) beside this page. It does not call HKEXnews on every click. Confirm a filing on 披露易 before you rely on it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which filings are left out of the cache?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does Export glossary produce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A light TSV of at most ten English–Traditional Chinese candidate pairs for that filing, marked candidate. It is not publish-ready translation memory, and it is not for unsupervised publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does Bilingual filings sit with the other Tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Call the Ledger checks figures once the PDFs are on the desk. The Printer index is a working list of Hong Kong financial printers. The Board meeting heat map shows which days look busy. Language Watchdog is the journal of language-risk notes. Each one is optional."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #FFFFFB;
+      --ink: #000000;
+      --surface: #FFFFFF;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+      --tool-max: 1600px;
+      --border: #000000;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    input { font: inherit; color: inherit; }
+
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      column-gap: 16px;
+      row-gap: 8px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(255, 255, 251, 0.92);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    @media (min-width: 1280px) {
+      nav.topnav .topnav__bar { max-width: var(--tool-max); }
+    }
+
+    .topnav__brand {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .topnav__brand img {
+      display: block;
+      height: 36px;
+      width: auto;
+    }
+
+    .topnav__links {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Brand + Engage on the first row. Tools, including Language Watchdog,
+       take the full second row so Watchdog is not orphaned under Engage. */
+    @media (min-width: 900px) {
+      nav.topnav .topnav__bar > .topnav__links {
+        display: flex;
+        flex: 1 1 100%;
+        order: 3;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        row-gap: 4px;
+        column-gap: 4px;
+        min-width: 100%;
+        padding-top: 6px;
+        border-top: 2px solid var(--ink);
+      }
+      nav.topnav .topnav__cta { margin-left: auto; }
+    }
+
+    nav.topnav .topnav__links > a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 10px;
+      border: 2px solid transparent;
+      white-space: nowrap;
+      transition:
+        background-color 300ms var(--ease),
+        border-color 300ms var(--ease),
+        transform 300ms var(--ease);
+    }
+
+    nav.topnav .topnav__links > a:hover {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    nav.topnav .topnav__links > a:active { transform: scale(0.98); }
+
+    nav.topnav .topnav__links > a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .btn--ghost { background: var(--surface); }
+    .btn--accent { background: var(--accent); color: #fff; }
+    .btn--sm { font-size: 14px; line-height: 20px; padding: 6px 10px; }
+
+    .btn:disabled,
+    .btn[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .tool > .wrap { max-width: var(--tool-max); }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    @media (min-width: 1280px) {
+      .tool > .wrap { padding: 0 24px; }
+    }
+
+    .tool { padding: 16px 0 48px; }
+
+    @media (min-width: 768px) {
+      .tool { padding: 24px 0 64px; }
+    }
+
+    .tool-intro__title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 0;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .tool h1 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 768px) {
+      .tool h1 {
+        font-size: 36px;
+        line-height: 40px;
+      }
+    }
+
+    .beta {
+      display: inline-flex;
+      align-items: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 78ch;
+      margin-top: 8px;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .subtitle + .subtitle { margin-top: 8px; }
+
+    .tool-notes {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 900px) {
+      .subtitle { max-width: 104ch; }
+      .tool-notes {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .disclaimer {
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    .disclaimer__label {
+      display: inline;
+      margin-right: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .privacy-note {
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .privacy-note a {
+      font-weight: 800;
+      border-bottom: 2px solid currentColor;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 12px;
+      margin: 24px 0 16px;
+    }
+
+    #title-toolbar { margin: 16px 0 8px; }
+    #title-toolbar .btn { margin-bottom: 2px; min-height: 48px; }
+
+    .search-field {
+      flex: 1 1 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .search-field label {
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .search-field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 14px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .panel {
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 3px solid var(--ink);
+      background: #F7F7F2;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .result-meta strong { color: var(--ink); font-weight: 800; }
+
+    .issuer-list { display: flex; flex-direction: column; }
+
+    .issuer-row {
+      display: grid;
+      grid-template-columns: 88px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 2px solid #e0e0d8;
+      text-align: left;
+      width: 100%;
+      transition: background-color 300ms var(--ease);
+    }
+
+    .issuer-row:last-child { border-bottom: none; }
+    .issuer-row:hover { background: #FFFDF0; }
+    .issuer-row:active { background: var(--yellow); }
+
+    .issuer-code {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      border: 2px solid var(--ink);
+      background: var(--yellow);
+      padding: 4px 8px;
+      text-align: center;
+    }
+
+    .issuer-names { min-width: 0; }
+    .issuer-names .en,
+    .issuer-names .tc { display: block; }
+    .issuer-names .en { font-size: 15px; font-weight: 800; line-height: 22px; }
+    .issuer-names .tc { font-size: 13px; font-weight: 600; color: var(--muted); line-height: 18px; }
+
+    .cache-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 2px solid var(--ink);
+      padding: 2px 6px;
+      background: var(--surface);
+      white-space: nowrap;
+    }
+
+    .cache-pill.is-live-cache { background: var(--yellow); }
+
+    .empty-state {
+      padding: 32px 16px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .back-link:hover { background: var(--yellow); }
+
+    .issuer-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .issuer-head__code {
+      font-size: 20px;
+      font-weight: 800;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      padding: 8px 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .issuer-head__text h2 {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 32px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    .issuer-head__text .tc {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .issuer-head__text .meta {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid var(--ink);
+      background: var(--surface);
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 18px;
+      box-shadow: 2px 2px 0 #000;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .chip:hover {
+      background: #FFFDF0;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .chip[aria-pressed="true"] { background: var(--yellow); }
+
+    .chip .count {
+      font-size: 11px;
+      font-weight: 800;
+      border: 2px solid var(--ink);
+      padding: 0 4px;
+      background: var(--surface);
+    }
+
+    .chip-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 16px 0 8px;
+    }
+
+    .filing-list { display: flex; flex-direction: column; }
+
+    .filing {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 12px 16px;
+      padding: 16px;
+      border-bottom: 2px solid #e0e0d8;
+      align-items: start;
+    }
+
+    .filing:last-child { border-bottom: none; }
+    .filing:hover { background: #FFFDF0; }
+
+    .filing__when {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 18px;
+    }
+
+    .filing__cat {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 2px solid var(--ink);
+      padding: 2px 6px;
+      background: #F7F7F2;
+    }
+
+    .filing__titles { min-width: 0; }
+    .filing__titles .en {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 22px;
+      text-wrap: pretty;
+    }
+    .filing__titles .tc {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--muted);
+      margin-top: 4px;
+      text-wrap: pretty;
+    }
+
+    .filing__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      min-width: 168px;
+    }
+
+    .filing__links {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filing__links a {
+      font-size: 12px;
+      font-weight: 700;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .filing__links a:hover { background: var(--yellow); }
+
+    .filing__glossary-note {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 15px;
+      color: var(--muted);
+      max-width: 168px;
+      text-wrap: pretty;
+    }
+
+    .soft-cta {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .soft-cta__card {
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .soft-cta__card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 24px;
+    }
+
+    .soft-cta__card p {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--muted);
+      flex: 1;
+      text-wrap: pretty;
+    }
+
+    .soft-cta__card .btn {
+      align-self: flex-start;
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+
+    .faq {
+      margin-top: 28px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      padding: 16px;
+    }
+
+    .faq h2 {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 28px;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .faq-item {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 2px solid #e0e0d8;
+    }
+
+    .faq h3 {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 24px;
+      margin-bottom: 4px;
+    }
+
+    .faq p {
+      font-size: 15px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      margin-bottom: 12px;
+      line-height: 0;
+    }
+
+    .site-footer .brand img {
+      display: block;
+      height: 44px;
+      width: auto;
+      margin: 0 auto;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 251, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 1000px) {
+      .soft-cta { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 820px) {
+      .issuer-row { grid-template-columns: 72px 1fr; }
+      .issuer-row .cache-pill { grid-column: 2; justify-self: start; }
+      .filing { grid-template-columns: 1fr; }
+      .filing__actions { align-items: flex-start; min-width: 0; }
+      .filing__links { justify-content: flex-start; }
+      .filing__glossary-note { max-width: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .btn:hover, .btn:active, .chip:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
+
+      <div class="topnav__links" role="list">
+        <a href="figure-checker.html" role="listitem">Call the Ledger <span class="nav-beta">Beta</span></a>
+        <a href="call-the-gaps.html" role="listitem">Call the Gaps <span class="nav-beta">Beta</span></a>
+        <a href="board-meeting-heatmap.html" role="listitem">Board meeting heat map <span class="nav-beta">Beta</span></a>
+        <a href="printer-index.html" role="listitem">Printer index <span class="nav-beta">Beta</span></a>
+        <a href="bilingual-hkex-filings.html" role="listitem" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+        <a href="language-watchdog.html" role="listitem">Language Watchdog</a>
+      </div>
+
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+
+      <button
+        class="topnav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+        id="nav-toggle"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Home</p>
+        <a href="index.html#hero">Home</a>
+        <a href="index.html#benefits">Benefits</a>
+        <a href="index.html#coverage">Coverage</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#case-study">Case study</a>
+        <a href="index.html#language-watchdog">Language Watchdog</a>
+        <a href="index.html#call-the-ledger">Call the Ledger</a>
+        <a href="index.html#call-the-gaps">Call the Gaps</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#engage">Engage the Studio</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Tools</p>
+        <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+        <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+        <a href="board-meeting-heatmap.html">Board meeting heat map <span class="nav-beta">Beta</span></a>
+        <a href="printer-index.html">Printer index <span class="nav-beta">Beta</span></a>
+        <a href="bilingual-hkex-filings.html" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Journal</p>
+        <a href="language-watchdog.html">Language Watchdog</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Desk</p>
+        <a href="trainee.html">Trainee</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Legal</p>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="tool">
+      <div class="wrap">
+        <section id="view-hub">
+          <header class="tool-intro">
+            <div class="tool-intro__title">
+              <p class="eyebrow">Tools</p>
+              <h1>Bilingual filings <span class="beta">Beta</span></h1>
+            </div>
+            <p class="subtitle">Search a Hong Kong issuer, open its 披露易 headline types, and launch the English and Traditional Chinese announcement PDFs together when both exist.</p>
+            <p class="subtitle">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 9 November 2026 (Asia/Hong_Kong).</p>
+            <div class="tool-notes">
+              <p class="disclaimer"><span class="disclaimer__label">Sample cache</span> Offline feed for three issuers (00700, 00005, and 09988). Search covers a SEHK subset. This page does not call HKEXnews on every click. Monthly Returns, and Next Day Disclosure Returns for share buybacks, are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Glossary export is at most ten candidate pairs, and it is not publish-ready translation memory. Confirm against 披露易 before you rely on a filing.</p>
+              <p class="privacy-note">This page shows a published snapshot dated 9 November 2026. It reads filings-cache.json, stocks.json, and tiers.json beside this page. It does not upload files. A glossary download stays in the browser. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+            </div>
+          </header>
+
+          <noscript>
+            <p class="disclaimer">This tool needs JavaScript to read the sample cache in the browser. It does not call HKEXnews.</p>
+          </noscript>
+
+          <div class="toolbar">
+            <div class="search-field">
+              <label for="issuer-search">Search by stock code or name</label>
+              <input id="issuer-search" type="search" placeholder="e.g. 00700, Tencent, 騰訊, HSBC" autocomplete="off" spellcheck="false" aria-controls="issuer-results">
+            </div>
+          </div>
+
+          <div class="panel" id="issuer-results">
+            <div class="result-meta" id="hub-meta" aria-live="polite">Loading the sample cache…</div>
+            <div class="issuer-list" id="issuer-list"></div>
+            <div class="empty-state" id="hub-empty" hidden>No issuers match that search in this sample. Try 00700, 00005, or 09988.</div>
+          </div>
+
+          <section class="soft-cta" aria-label="Related tools">
+            <article class="soft-cta__card">
+              <h2>Printer index</h2>
+              <p>Working list of Hong Kong financial printers, with website and telephone — a soft companion when a bilingual pack is heading to print.</p>
+              <a class="btn btn--ghost" href="printer-index.html">Open Printer index</a>
+            </article>
+            <article class="soft-cta__card">
+              <h2>Board meeting heat map</h2>
+              <p>Calendar of upcoming board meetings from HKEX — useful when you are watching results windows beside filings.</p>
+              <a class="btn btn--ghost" href="board-meeting-heatmap.html">Open Board meeting heat map</a>
+            </article>
+          </section>
+        </section>
+
+        <section id="view-issuer" hidden>
+          <a class="back-link" href="#/" id="back-hub">← Back to issuer search</a>
+          <div class="issuer-head" id="issuer-head"></div>
+          <p class="chip-label">披露易 headline type (Tier 1)</p>
+          <div class="chips" id="tier1-chips" role="toolbar" aria-label="Tier 1 headline filters"></div>
+          <p class="chip-label">Useful detail (Tier 2)</p>
+          <div class="chips" id="tier2-chips" role="toolbar" aria-label="Tier 2 detail filters"></div>
+
+          <div class="toolbar" id="title-toolbar">
+            <div class="search-field">
+              <label for="title-search">Search by title</label>
+              <input id="title-search" type="search" placeholder="e.g. interim report, 中期業績, senior notes" autocomplete="off" spellcheck="false" aria-controls="filing-list">
+            </div>
+            <button type="button" class="btn btn--ghost btn--sm" id="title-search-clear" hidden>Clear title</button>
+          </div>
+
+          <div class="panel">
+            <div class="result-meta" id="issuer-meta" aria-live="polite"></div>
+            <div class="filing-list" id="filing-list"></div>
+            <div class="empty-state" id="issuer-empty" hidden></div>
+          </div>
+
+          <section class="soft-cta" aria-label="Related tools">
+            <article class="soft-cta__card">
+              <h2>Call the Ledger</h2>
+              <p>Figure and consistency checks once the bilingual PDFs are on the desk.</p>
+              <a class="btn btn--ghost" href="figure-checker.html">Open Call the Ledger</a>
+            </article>
+            <article class="soft-cta__card">
+              <h2>Printer index</h2>
+              <p>Keep printer contacts to hand when the filing pack is ready for production.</p>
+              <a class="btn btn--ghost" href="printer-index.html">Open Printer index</a>
+            </article>
+          </section>
+        </section>
+
+        <section class="faq" id="bilingual-faq" aria-labelledby="bilingual-faq-title">
+          <h2 id="bilingual-faq-title">Questions about this cache</h2>
+          <div class="faq-item">
+            <h3>What is Bilingual filings?</h3>
+            <p>Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does the page query HKEXnews while I search?</h3>
+            <p>No. The page reads a published sample cache beside this page. It does not call HKEXnews on every click. Confirm a filing on 披露易 before you rely on it.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Which filings are left out of the cache?</h3>
+            <p>Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What does Export glossary produce?</h3>
+            <p>A light TSV of at most ten English–Traditional Chinese candidate pairs for that filing, marked candidate. It is not publish-ready translation memory, and it is not for unsupervised publication.</p>
+          </div>
+          <div class="faq-item">
+            <h3>How does Bilingual filings sit with the other Tools?</h3>
+            <p>Call the Ledger checks figures once the PDFs are on the desk. The Printer index is a working list of Hong Kong financial printers. The Board meeting heat map shows which days look busy. Language Watchdog is the journal of language-risk notes. Each one is optional.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <nav class="site-footer__map" aria-label="Site map">
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Home</p>
+          <div class="site-footer__map-links">
+            <a href="index.html#hero">Home</a>
+            <a href="index.html#benefits">Benefits</a>
+            <a href="index.html#coverage">Coverage</a>
+            <a href="index.html#how">How it works</a>
+            <a href="index.html#case-study">Case study</a>
+            <a href="index.html#language-watchdog">Language Watchdog</a>
+            <a href="index.html#call-the-ledger">Call the Ledger</a>
+            <a href="index.html#call-the-gaps">Call the Gaps</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="index.html#engage">Engage the Studio</a>
+          </div>
+        </div>
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Tools</p>
+          <div class="site-footer__map-links">
+            <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+            <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+            <a href="board-meeting-heatmap.html">Board meeting heat map <span class="nav-beta">Beta</span></a>
+            <a href="printer-index.html">Printer index <span class="nav-beta">Beta</span></a>
+            <a href="bilingual-hkex-filings.html" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+          </div>
+        </div>
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Journal</p>
+          <div class="site-footer__map-links">
+            <a href="language-watchdog.html">Language Watchdog</a>
+          </div>
+        </div>
+      </nav>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trainee.html">Trainee</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+/* Sibling cache: filings-cache.json, stocks.json, tiers.json.
+   Monthly Returns and NDR Share Buybacks are removed before publish.
+   isExcludedFiling stays as a second check if a later refresh leaves a row in. */
+var STOCKS = null;
+var FILINGS = null;
+var TIERS = null;
+var hubQuery = "";
+var titleQuery = "";
+var activeTier1 = new Set();
+var activeTier2 = new Set();
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function padCode(q) {
+  var digits = String(q).replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.length >= 5) return digits.slice(-5).padStart(5, "0");
+  return digits.padStart(5, "0");
+}
+
+function parseRoute() {
+  var h = (location.hash || "#/").replace(/^#/, "") || "/";
+  var parts = h.split("/").filter(Boolean);
+  if (parts[0] === "issuer" && parts[1]) {
+    return { view: "issuer", code: padCode(parts[1]) || parts[1] };
+  }
+  return { view: "hub" };
+}
+
+function setRoute(path) {
+  if ((location.hash || "#") === "#" + path) render();
+  else location.hash = path;
+}
+
+function filterStocks(q) {
+  var raw = String(q || "").trim();
+  /* Blank field: the three cached issuers. A typed query that matches nothing stays empty. */
+  if (!raw) return STOCKS.stocks.filter(function (s) { return s.hasCache; });
+  var digits = raw.replace(/\D/g, "");
+  /* Code match only when the query has digits. Never indexOf("") — that matches every code. */
+  if (digits) {
+    var codeGuess = padCode(digits);
+    if (!codeGuess) return [];
+    return STOCKS.stocks.filter(function (s) { return s.c === codeGuess; }).slice(0, 40);
+  }
+  var needle = raw.toLowerCase();
+  if (!needle) return [];
+  return STOCKS.stocks.filter(function (s) {
+    var en = String(s.n || s.nameEn || "");
+    var tc = String(s.nt || s.nameTc || "");
+    var enHit = en.toLowerCase().indexOf(needle) !== -1;
+    var tcHit = tc.indexOf(raw) !== -1;
+    return enHit || tcHit;
+  }).slice(0, 40);
+}
+
+function renderHub() {
+  document.getElementById("view-hub").hidden = false;
+  document.getElementById("view-issuer").hidden = true;
+  var list = filterStocks(hubQuery);
+  var host = document.getElementById("issuer-list");
+  var empty = document.getElementById("hub-empty");
+  var meta = document.getElementById("hub-meta");
+  if (!list.length) {
+    host.innerHTML = "";
+    empty.hidden = false;
+    meta.textContent = "0 issuers";
+    return;
+  }
+  empty.hidden = true;
+  var cached = list.filter(function (s) { return s.hasCache; }).length;
+  meta.innerHTML = "<strong>" + list.length + "</strong> issuer" + (list.length === 1 ? "" : "s") +
+    (hubQuery.trim() ? "" : " with offline bilingual cache") +
+    (cached && hubQuery.trim() ? " · <strong>" + cached + "</strong> with cache" : "");
+  host.innerHTML = list.map(function (s) {
+    return (
+      '<button type="button" class="issuer-row" data-code="' + escapeHtml(s.c) + '">' +
+        '<span class="issuer-code">' + escapeHtml(s.c) + "</span>" +
+        '<span class="issuer-names"><span class="en">' + escapeHtml(s.n) + "</span>" +
+        (s.nt ? '<span class="tc">' + escapeHtml(s.nt) + "</span>" : "") +
+        "</span>" +
+        '<span class="cache-pill' + (s.hasCache ? " is-live-cache" : "") + '">' +
+          (s.hasCache ? "Bilingual cache" : "No cache yet") +
+        "</span>" +
+      "</button>"
+    );
+  }).join("");
+  host.querySelectorAll(".issuer-row").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setRoute("/issuer/" + btn.getAttribute("data-code"));
+    });
+  });
+}
+
+/* Two link clicks in the same gesture. TC then EN, so EN lands in front.
+   A second window.open is often blocked, even after about:blank. */
+function openViaLink(url) {
+  var a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function openBilingual(en, tc) {
+  openViaLink(tc);
+  openViaLink(en);
+}
+
+function splitTitleSegments(s) {
+  return String(s || "")
+    .split(/[;\/·；／]+/)
+    .map(function (p) { return p.trim(); })
+    .filter(Boolean);
+}
+
+function glossaryCandidates(f) {
+  var pairs = [];
+  var seen = {};
+  function add(en, tc) {
+    en = String(en || "").trim();
+    tc = String(tc || "").trim();
+    if (!en || !tc || pairs.length >= 10) return;
+    var key = en.toLowerCase() + "\0" + tc;
+    if (seen[key]) return;
+    seen[key] = true;
+    pairs.push({ en: en, tc: tc });
+  }
+  add(f.titleEn, f.titleTc);
+  add(f.categoryEn, f.categoryTc);
+  add(f.tier1En, f.tier1Tc);
+  var enSegs = splitTitleSegments(f.titleEn);
+  var tcSegs = splitTitleSegments(f.titleTc);
+  if (enSegs.length > 1 && enSegs.length === tcSegs.length) {
+    for (var i = 0; i < enSegs.length && pairs.length < 10; i++) add(enSegs[i], tcSegs[i]);
+  }
+  return pairs;
+}
+
+function downloadGlossaryCandidates(f, stockCode) {
+  var pairs = glossaryCandidates(f);
+  if (!pairs.length) return;
+  var rows = ["en\ttc\tnote"];
+  pairs.forEach(function (p) {
+    rows.push(
+      p.en.replace(/\t/g, " ").replace(/\r?\n/g, " ") + "\t" +
+      p.tc.replace(/\t/g, " ").replace(/\r?\n/g, " ") + "\tcandidate"
+    );
+  });
+  var blob = new Blob([rows.join("\n") + "\n"], { type: "text/tab-separated-values;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "glossary-candidates-" + stockCode + "-" + (f.newsIdEn || "entry") + ".tsv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+}
+
+function isExcludedFiling(f) {
+  var t1 = f.tier1En || "";
+  var t1Tc = f.tier1Tc || "";
+  var t2 = f.tier2En || "";
+  var cat = f.categoryEn || "";
+  if (t1 === "Monthly Returns" || t1Tc === "月報表" || f.tier1Code === "51500") return true;
+  var isNdr = t1 === "Next Day Disclosure Returns" || cat.indexOf("Next Day Disclosure Returns") === 0;
+  if (isNdr && (t2.indexOf("Share Buyback") !== -1 || cat.indexOf("Share Buyback") !== -1)) return true;
+  return false;
+}
+
+function renderIssuer(code) {
+  document.getElementById("view-hub").hidden = true;
+  document.getElementById("view-issuer").hidden = false;
+  var pack = FILINGS.issuers[code];
+  var stock = STOCKS.stocks.find(function (s) { return s.c === code; });
+  var head = document.getElementById("issuer-head");
+  var nameEn = (pack && pack.nameEn) || (stock && stock.n) || code;
+  var nameTc = (pack && pack.nameTc) || (stock && stock.nt) || "";
+  var listHost = document.getElementById("filing-list");
+  var empty = document.getElementById("issuer-empty");
+  var meta = document.getElementById("issuer-meta");
+  var t1Host = document.getElementById("tier1-chips");
+  var t2Host = document.getElementById("tier2-chips");
+
+  if (!pack || !pack.filings.length) {
+    head.innerHTML =
+      '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+      '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
+      (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
+      '<p class="meta">No offline bilingual cache for this issuer in this Beta sample. Pick 00700, 00005, or 09988.</p></div>';
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = pack
+      ? "No paired bilingual PDFs in this sample cache."
+      : "This issuer is in the search universe, and this sample has no filing feed for it yet. Try Tencent (00700), HSBC (00005), or Alibaba (09988).";
+    meta.textContent = "0 paired filings";
+    return;
+  }
+
+  var visibleFilings = pack.filings.filter(function (f) { return !isExcludedFiling(f); });
+  head.innerHTML =
+    '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+    '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
+    (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
+    '<p class="meta">' + visibleFilings.length + " paired bilingual filing" + (visibleFilings.length === 1 ? "" : "s") +
+    " in this Beta cache. Monthly Returns and NDR Share Buybacks are excluded. Unpaired English-only rows are not listed.</p></div>";
+
+  if (!visibleFilings.length) {
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = "No paired filings left after exclusions. Monthly Returns and Next Day Disclosure share buybacks are left out. Other next-day disclosure returns stay.";
+    meta.textContent = "0 of " + pack.filings.length + " paired filings in this cache";
+    return;
+  }
+
+  var t1Counts = {};
+  var t2Counts = {};
+  visibleFilings.forEach(function (f) {
+    var k1 = f.tier1Code || f.tier1En || "other";
+    t1Counts[k1] = t1Counts[k1] || { code: f.tier1Code, en: f.tier1En, tc: f.tier1Tc, n: 0 };
+    t1Counts[k1].n += 1;
+    if (f.tier2En) {
+      t2Counts[f.tier2En] = t2Counts[f.tier2En] || { en: f.tier2En, tc: f.tier2Tc, n: 0 };
+      t2Counts[f.tier2En].n += 1;
+    }
+  });
+
+  var t1Order = (TIERS.tier1 || []).map(function (t) { return t.code; });
+  var t1List = Object.keys(t1Counts).map(function (k) { return t1Counts[k]; });
+  t1List.sort(function (a, b) {
+    var ia = t1Order.indexOf(a.code);
+    var ib = t1Order.indexOf(b.code);
+    if (ia === -1 && ib === -1) return b.n - a.n;
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+
+  var t2List = Object.keys(t2Counts).map(function (k) { return t2Counts[k]; });
+  t2List.sort(function (a, b) { return b.n - a.n; });
+  t2List = t2List.filter(function (t, i) { return t.n >= 2 || i < 8; }).slice(0, 14);
+
+  activeTier1.forEach(function (k) { if (!t1Counts[k]) activeTier1.delete(k); });
+  activeTier2.forEach(function (k) { if (!t2Counts[k]) activeTier2.delete(k); });
+
+  t1Host.innerHTML =
+    '<button type="button" class="chip" data-tier1="__all" aria-pressed="' + (activeTier1.size === 0 ? "true" : "false") + '">All <span class="count">' + visibleFilings.length + "</span></button>" +
+    t1List.map(function (t) {
+      var key = t.code || t.en;
+      var on = activeTier1.has(key);
+      return '<button type="button" class="chip" data-tier1="' + escapeHtml(key) + '" aria-pressed="' + (on ? "true" : "false") + '">' +
+        escapeHtml(t.en) + ' <span class="count">' + t.n + "</span></button>";
+    }).join("");
+
+  t2Host.innerHTML =
+    '<button type="button" class="chip" data-tier2="__all" aria-pressed="' + (activeTier2.size === 0 ? "true" : "false") + '">All detail</button>' +
+    t2List.map(function (t) {
+      var on = activeTier2.has(t.en);
+      return '<button type="button" class="chip" data-tier2="' + escapeHtml(t.en) + '" aria-pressed="' + (on ? "true" : "false") + '" title="' + escapeHtml(t.tc || t.en) + '">' +
+        escapeHtml(t.en) + ' <span class="count">' + t.n + "</span></button>";
+    }).join("");
+
+  t1Host.querySelectorAll("[data-tier1]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-tier1");
+      if (key === "__all") activeTier1.clear();
+      else if (activeTier1.has(key)) activeTier1.delete(key);
+      else activeTier1.add(key);
+      renderIssuer(code);
+    });
+  });
+  t2Host.querySelectorAll("[data-tier2]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-tier2");
+      if (key === "__all") activeTier2.clear();
+      else if (activeTier2.has(key)) activeTier2.delete(key);
+      else activeTier2.add(key);
+      renderIssuer(code);
+    });
+  });
+
+  var titleNeedle = titleQuery.trim().toLowerCase();
+  var clearBtn = document.getElementById("title-search-clear");
+  var titleInput = document.getElementById("title-search");
+  if (titleInput && titleInput.value !== titleQuery) titleInput.value = titleQuery;
+  if (clearBtn) clearBtn.hidden = !titleNeedle;
+
+  var filtered = visibleFilings.filter(function (f) {
+    var k1 = f.tier1Code || f.tier1En || "other";
+    if (activeTier1.size && !activeTier1.has(k1)) return false;
+    if (activeTier2.size && !activeTier2.has(f.tier2En)) return false;
+    if (titleNeedle) {
+      var en = (f.titleEn || "").toLowerCase();
+      var tc = f.titleTc || "";
+      if (en.indexOf(titleNeedle) === -1 && tc.toLowerCase().indexOf(titleNeedle) === -1 && tc.indexOf(titleQuery.trim()) === -1) return false;
+    }
+    return true;
+  });
+
+  if (!filtered.length) {
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = titleNeedle
+      ? "No paired filings match that title in this cache. Monthly Returns and NDR Share Buybacks are not in the file. Clear the title, or a Tier chip, to widen the list."
+      : "No paired filings match these headline chips. Clear a Tier 1 or Tier 2 chip to widen the list.";
+    meta.innerHTML = "0 of " + visibleFilings.length + " filings in this cache";
+    return;
+  }
+  empty.hidden = true;
+  var filterNote = [];
+  if (activeTier1.size || activeTier2.size) filterNote.push("chips");
+  if (titleNeedle) filterNote.push("title");
+  meta.innerHTML = "<strong>" + filtered.length + "</strong> paired bilingual filing" + (filtered.length === 1 ? "" : "s") +
+    (filterNote.length ? " after " + filterNote.join(" + ") + " · " + visibleFilings.length + " in this cache" : " in this cache") +
+    " · Monthly Returns and NDR Share Buybacks excluded";
+
+  listHost.innerHTML = filtered.map(function (f, idx) {
+    var cat = f.tier2En ? (f.tier1En + " · " + f.tier2En) : f.tier1En;
+    var glossN = glossaryCandidates(f).length;
+    var glossDisabled = glossN < 1;
+    return (
+      '<article class="filing">' +
+        '<div class="filing__when">' + escapeHtml(f.dateTime) +
+          '<div class="filing__cat">' + escapeHtml(cat) + "</div></div>" +
+        '<div class="filing__titles">' +
+          '<div class="en">' + escapeHtml(f.titleEn) + "</div>" +
+          '<div class="tc">' + escapeHtml(f.titleTc) + "</div>" +
+        "</div>" +
+        '<div class="filing__actions">' +
+          '<button type="button" class="btn btn--accent btn--sm" data-open="' + idx + '">Open bilingual</button>' +
+          '<div class="filing__links">' +
+            '<a href="' + escapeHtml(f.pdfEn) + '" target="_blank" rel="noopener noreferrer">EN PDF</a>' +
+            '<a href="' + escapeHtml(f.pdfTc) + '" target="_blank" rel="noopener noreferrer">TC PDF</a>' +
+          "</div>" +
+          '<button type="button" class="btn btn--ghost btn--sm" data-glossary="' + idx + '"' +
+            (glossDisabled ? ' disabled aria-disabled="true"' : "") +
+            ' title="Candidate pairs only — not publish-ready TM">Export glossary</button>' +
+          '<p class="filing__glossary-note">Candidate pairs only — not publish-ready TM</p>' +
+        "</div>" +
+      "</article>"
+    );
+  }).join("");
+
+  listHost.querySelectorAll("[data-open]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var f = filtered[Number(btn.getAttribute("data-open"))];
+      if (f) openBilingual(f.pdfEn, f.pdfTc);
+    });
+  });
+  listHost.querySelectorAll("[data-glossary]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.disabled) return;
+      var f = filtered[Number(btn.getAttribute("data-glossary"))];
+      if (f) downloadGlossaryCandidates(f, code);
+    });
+  });
+}
+
+function render() {
+  if (!STOCKS || !FILINGS || !TIERS) return;
+  var route = parseRoute();
+  if (route.view === "issuer") {
+    activeTier1 = new Set();
+    activeTier2 = new Set();
+    titleQuery = "";
+    var titleInputReset = document.getElementById("title-search");
+    if (titleInputReset) titleInputReset.value = "";
+    var clearReset = document.getElementById("title-search-clear");
+    if (clearReset) clearReset.hidden = true;
+    renderIssuer(route.code);
+    window.scrollTo(0, 0);
+  } else {
+    renderHub();
+  }
+}
+
+function showCacheError() {
+  var meta = document.getElementById("hub-meta");
+  var empty = document.getElementById("hub-empty");
+  if (meta) meta.textContent = "The sample cache did not load. Refresh the page. This tool reads filings-cache.json, stocks.json, and tiers.json next to this page. It does not call HKEXnews.";
+  if (empty) {
+    empty.hidden = false;
+    empty.textContent = "Cache files were not found beside this page.";
+  }
+}
+
+function loadJson(name) {
+  return fetch(name, { credentials: "same-origin" }).then(function (res) {
+    if (!res.ok) throw new Error(name);
+    return res.json();
+  });
+}
+
+(function init() {
+  var input = document.getElementById("issuer-search");
+  input.addEventListener("input", function () {
+    hubQuery = input.value;
+    if (STOCKS && parseRoute().view === "hub") renderHub();
+  });
+
+  var titleInput = document.getElementById("title-search");
+  var titleClear = document.getElementById("title-search-clear");
+  function applyTitleFilter() {
+    titleQuery = titleInput ? titleInput.value : "";
+    var route = parseRoute();
+    if (STOCKS && route.view === "issuer") renderIssuer(route.code);
+  }
+  if (titleInput) titleInput.addEventListener("input", applyTitleFilter);
+  if (titleClear) {
+    titleClear.addEventListener("click", function () {
+      titleQuery = "";
+      if (titleInput) titleInput.value = "";
+      titleClear.hidden = true;
+      var route = parseRoute();
+      if (STOCKS && route.view === "issuer") renderIssuer(route.code);
+      if (titleInput) titleInput.focus();
+    });
+  }
+
+  document.getElementById("back-hub").addEventListener("click", function (e) {
+    e.preventDefault();
+    setRoute("/");
+  });
+
+  window.addEventListener("hashchange", render);
+
+  Promise.all([
+    loadJson("stocks.json"),
+    loadJson("filings-cache.json"),
+    loadJson("tiers.json")
+  ]).then(function (parts) {
+    STOCKS = parts[0];
+    FILINGS = parts[1];
+    TIERS = parts[2];
+    if (!location.hash) location.replace("#/");
+    render();
+  }).catch(showCacheError);
+})();
+  </script>
+  <script src="/assets/nav-menu.js"></script>
+</body>
+</html>

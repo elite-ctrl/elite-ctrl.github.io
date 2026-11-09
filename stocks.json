@@ -1,0 +1,993 @@
+{
+  "snapshot": "9 November 2026 (Asia/Hong_Kong)",
+  "note": "Beta search universe (SEHK subset). Only hasCache issuers open the bilingual feed.",
+  "stocks": [
+    {
+      "c": "00001",
+      "i": 1,
+      "n": "CKH HOLDINGS",
+      "nt": "長和",
+      "hasCache": false
+    },
+    {
+      "c": "00002",
+      "i": 2,
+      "n": "CLP HOLDINGS",
+      "nt": "中電控股",
+      "hasCache": false
+    },
+    {
+      "c": "00003",
+      "i": 3,
+      "n": "HK & CHINA GAS",
+      "nt": "香港中華煤氣",
+      "hasCache": false
+    },
+    {
+      "c": "00005",
+      "i": 5,
+      "n": "HSBC HOLDINGS",
+      "nt": "匯豐控股",
+      "hasCache": true
+    },
+    {
+      "c": "00006",
+      "i": 6,
+      "n": "POWER ASSETS",
+      "nt": "電能實業",
+      "hasCache": false
+    },
+    {
+      "c": "00012",
+      "i": 19,
+      "n": "HENDERSON LAND",
+      "nt": "恒基地產",
+      "hasCache": false
+    },
+    {
+      "c": "00016",
+      "i": 25,
+      "n": "SHK PPT",
+      "nt": "新鴻基地產",
+      "hasCache": false
+    },
+    {
+      "c": "00017",
+      "i": 27,
+      "n": "NEW WORLD DEV",
+      "nt": "新世界發展",
+      "hasCache": false
+    },
+    {
+      "c": "00020",
+      "i": 1000127397,
+      "n": "SENSETIME-W",
+      "nt": "商湯－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "00027",
+      "i": 38,
+      "n": "GALAXY ENT",
+      "nt": "銀河娛樂",
+      "hasCache": false
+    },
+    {
+      "c": "00066",
+      "i": 111,
+      "n": "MTR CORPORATION",
+      "nt": "港鐵公司",
+      "hasCache": false
+    },
+    {
+      "c": "00101",
+      "i": 162,
+      "n": "HANG LUNG PPT",
+      "nt": "恒隆地產",
+      "hasCache": false
+    },
+    {
+      "c": "00135",
+      "i": 229,
+      "n": "KUNLUN ENERGY",
+      "nt": "昆侖能源",
+      "hasCache": false
+    },
+    {
+      "c": "00151",
+      "i": 22458,
+      "n": "WANT WANT CHINA",
+      "nt": "中國旺旺",
+      "hasCache": false
+    },
+    {
+      "c": "00175",
+      "i": 312,
+      "n": "GEELY AUTO",
+      "nt": "吉利汽車",
+      "hasCache": false
+    },
+    {
+      "c": "00267",
+      "i": 473,
+      "n": "CITIC",
+      "nt": "中信股份",
+      "hasCache": false
+    },
+    {
+      "c": "00288",
+      "i": 105112,
+      "n": "WH GROUP",
+      "nt": "萬洲國際",
+      "hasCache": false
+    },
+    {
+      "c": "00291",
+      "i": 513,
+      "n": "CHINA RES BEER",
+      "nt": "華潤啤酒",
+      "hasCache": false
+    },
+    {
+      "c": "00322",
+      "i": 576,
+      "n": "TINGYI",
+      "nt": "康師傅控股",
+      "hasCache": false
+    },
+    {
+      "c": "00354",
+      "i": 30083,
+      "n": "CHINASOFT INT'L",
+      "nt": "中國軟件國際",
+      "hasCache": false
+    },
+    {
+      "c": "00386",
+      "i": 775,
+      "n": "SINOPEC CORP",
+      "nt": "中國石油化工股份",
+      "hasCache": false
+    },
+    {
+      "c": "00388",
+      "i": 781,
+      "n": "HKEX",
+      "nt": "香港交易所",
+      "hasCache": false
+    },
+    {
+      "c": "00551",
+      "i": 1172,
+      "n": "YUE YUEN IND",
+      "nt": "裕元集團",
+      "hasCache": false
+    },
+    {
+      "c": "00586",
+      "i": 98241,
+      "n": "CONCH VENTURE",
+      "nt": "海螺創業",
+      "hasCache": false
+    },
+    {
+      "c": "00656",
+      "i": 16381,
+      "n": "FOSUN INTL",
+      "nt": "復星國際",
+      "hasCache": false
+    },
+    {
+      "c": "00669",
+      "i": 1557,
+      "n": "TECHTRONIC IND",
+      "nt": "創科實業",
+      "hasCache": false
+    },
+    {
+      "c": "00688",
+      "i": 1599,
+      "n": "CHINA OVERSEAS",
+      "nt": "中國海外發展",
+      "hasCache": false
+    },
+    {
+      "c": "00700",
+      "i": 7609,
+      "n": "TENCENT",
+      "nt": "騰訊控股",
+      "hasCache": true
+    },
+    {
+      "c": "00728",
+      "i": 1708,
+      "n": "CHINA TELECOM",
+      "nt": "中國電信",
+      "hasCache": false
+    },
+    {
+      "c": "00762",
+      "i": 1896,
+      "n": "CHINA UNICOM",
+      "nt": "中國聯通",
+      "hasCache": false
+    },
+    {
+      "c": "00823",
+      "i": 10148,
+      "n": "LINK REIT",
+      "nt": "領展房產基金",
+      "hasCache": false
+    },
+    {
+      "c": "00836",
+      "i": 6732,
+      "n": "CHINA RES POWER",
+      "nt": "華潤電力",
+      "hasCache": false
+    },
+    {
+      "c": "00857",
+      "i": 2038,
+      "n": "PETROCHINA",
+      "nt": "中國石油股份",
+      "hasCache": false
+    },
+    {
+      "c": "00868",
+      "i": 8582,
+      "n": "XINYI GLASS",
+      "nt": "信義玻璃",
+      "hasCache": false
+    },
+    {
+      "c": "00883",
+      "i": 2088,
+      "n": "CNOOC",
+      "nt": "中國海洋石油",
+      "hasCache": false
+    },
+    {
+      "c": "00902",
+      "i": 2131,
+      "n": "HUANENG POWER",
+      "nt": "華能國際電力股份",
+      "hasCache": false
+    },
+    {
+      "c": "00914",
+      "i": 2170,
+      "n": "CONCH CEMENT",
+      "nt": "海螺水泥",
+      "hasCache": false
+    },
+    {
+      "c": "00916",
+      "i": 41318,
+      "n": "CHINA LONGYUAN",
+      "nt": "龍源電力",
+      "hasCache": false
+    },
+    {
+      "c": "00939",
+      "i": 9970,
+      "n": "CCB",
+      "nt": "建設銀行",
+      "hasCache": false
+    },
+    {
+      "c": "00941",
+      "i": 2247,
+      "n": "CHINA MOBILE",
+      "nt": "中國移動",
+      "hasCache": false
+    },
+    {
+      "c": "00966",
+      "i": 2282,
+      "n": "CHINA TAIPING",
+      "nt": "中國太平",
+      "hasCache": false
+    },
+    {
+      "c": "00968",
+      "i": 97365,
+      "n": "XINYI SOLAR",
+      "nt": "信義光能",
+      "hasCache": false
+    },
+    {
+      "c": "00981",
+      "i": 7249,
+      "n": "SMIC",
+      "nt": "中芯國際",
+      "hasCache": false
+    },
+    {
+      "c": "00992",
+      "i": 2325,
+      "n": "LENOVO GROUP",
+      "nt": "聯想集團",
+      "hasCache": false
+    },
+    {
+      "c": "01024",
+      "i": 1000077859,
+      "n": "KUAISHOU-W",
+      "nt": "快手－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "01038",
+      "i": 2373,
+      "n": "CKI HOLDINGS",
+      "nt": "長江基建集團",
+      "hasCache": false
+    },
+    {
+      "c": "01070",
+      "i": 2427,
+      "n": "TCL ELECTRONICS",
+      "nt": "ＴＣＬ電子",
+      "hasCache": false
+    },
+    {
+      "c": "01088",
+      "i": 9124,
+      "n": "CHINA SHENHUA",
+      "nt": "中國神華",
+      "hasCache": false
+    },
+    {
+      "c": "01093",
+      "i": 2467,
+      "n": "CSPC PHARMA",
+      "nt": "石藥集團",
+      "hasCache": false
+    },
+    {
+      "c": "01109",
+      "i": 2499,
+      "n": "CHINA RES LAND",
+      "nt": "華潤置地",
+      "hasCache": false
+    },
+    {
+      "c": "01113",
+      "i": 124341,
+      "n": "CK ASSET",
+      "nt": "長實集團",
+      "hasCache": false
+    },
+    {
+      "c": "01114",
+      "i": 2506,
+      "n": "BRILLIANCE CHI",
+      "nt": "BRILLIANCE CHI",
+      "hasCache": false
+    },
+    {
+      "c": "01177",
+      "i": 6833,
+      "n": "SBP GROUP",
+      "nt": "中國生物製藥",
+      "hasCache": false
+    },
+    {
+      "c": "01186",
+      "i": 22226,
+      "n": "CHINA RAIL CONS",
+      "nt": "中國鐵建",
+      "hasCache": false
+    },
+    {
+      "c": "01193",
+      "i": 2663,
+      "n": "CHINA RES GAS",
+      "nt": "華潤燃氣",
+      "hasCache": false
+    },
+    {
+      "c": "01209",
+      "i": 1000066369,
+      "n": "CHINA RES MIXC",
+      "nt": "華潤萬象生活",
+      "hasCache": false
+    },
+    {
+      "c": "01211",
+      "i": 2696,
+      "n": "BYD COMPANY",
+      "nt": "比亞迪股份",
+      "hasCache": false
+    },
+    {
+      "c": "01288",
+      "i": 49784,
+      "n": "ABC",
+      "nt": "農業銀行",
+      "hasCache": false
+    },
+    {
+      "c": "01299",
+      "i": 54299,
+      "n": "AIA",
+      "nt": "友邦保險",
+      "hasCache": false
+    },
+    {
+      "c": "01308",
+      "i": 52746,
+      "n": "SITC",
+      "nt": "海豐國際",
+      "hasCache": false
+    },
+    {
+      "c": "01336",
+      "i": 69598,
+      "n": "NCI",
+      "nt": "新華保險",
+      "hasCache": false
+    },
+    {
+      "c": "01359",
+      "i": 97518,
+      "n": "CHINA CINDA",
+      "nt": "中國信達",
+      "hasCache": false
+    },
+    {
+      "c": "01378",
+      "i": 58953,
+      "n": "CHINAHONGQIAO",
+      "nt": "中國宏橋",
+      "hasCache": false
+    },
+    {
+      "c": "01398",
+      "i": 12593,
+      "n": "ICBC",
+      "nt": "工商銀行",
+      "hasCache": false
+    },
+    {
+      "c": "01658",
+      "i": 145447,
+      "n": "PSBC",
+      "nt": "郵儲銀行",
+      "hasCache": false
+    },
+    {
+      "c": "01766",
+      "i": 25561,
+      "n": "CRRC",
+      "nt": "中國中車",
+      "hasCache": false
+    },
+    {
+      "c": "01787",
+      "i": 198899,
+      "n": "SD GOLD",
+      "nt": "山東黃金",
+      "hasCache": false
+    },
+    {
+      "c": "01797",
+      "i": 219115,
+      "n": "EAST BUY",
+      "nt": "東方甄選",
+      "hasCache": false
+    },
+    {
+      "c": "01800",
+      "i": 13273,
+      "n": "CHINA COMM CONS",
+      "nt": "中國交通建設",
+      "hasCache": false
+    },
+    {
+      "c": "01801",
+      "i": 202911,
+      "n": "INNOVENT BIO",
+      "nt": "信達生物",
+      "hasCache": false
+    },
+    {
+      "c": "01810",
+      "i": 190371,
+      "n": "XIAOMI-W",
+      "nt": "小米集團－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "01816",
+      "i": 115406,
+      "n": "CGN POWER",
+      "nt": "中廣核電力",
+      "hasCache": false
+    },
+    {
+      "c": "01876",
+      "i": 1000002234,
+      "n": "BUD APAC",
+      "nt": "百威亞太",
+      "hasCache": false
+    },
+    {
+      "c": "01918",
+      "i": 41506,
+      "n": "SUNAC",
+      "nt": "融創中國",
+      "hasCache": false
+    },
+    {
+      "c": "01919",
+      "i": 9217,
+      "n": "COSCO SHIP HOLD",
+      "nt": "中遠海控",
+      "hasCache": false
+    },
+    {
+      "c": "01928",
+      "i": 40743,
+      "n": "SANDS CHINA LTD",
+      "nt": "金沙中國有限公司",
+      "hasCache": false
+    },
+    {
+      "c": "02007",
+      "i": 15008,
+      "n": "COUNTRY GARDEN",
+      "nt": "碧桂園",
+      "hasCache": false
+    },
+    {
+      "c": "02015",
+      "i": 1000108505,
+      "n": "LI AUTO-W",
+      "nt": "理想汽車－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "02018",
+      "i": 9512,
+      "n": "AAC TECH",
+      "nt": "瑞聲科技",
+      "hasCache": false
+    },
+    {
+      "c": "02020",
+      "i": 16111,
+      "n": "ANTA SPORTS",
+      "nt": "安踏體育",
+      "hasCache": false
+    },
+    {
+      "c": "02057",
+      "i": 1000057949,
+      "n": "ZTO EXPRESS-W",
+      "nt": "中通快遞－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "02238",
+      "i": 49316,
+      "n": "GAC GROUP",
+      "nt": "廣汽集團",
+      "hasCache": false
+    },
+    {
+      "c": "02269",
+      "i": 156537,
+      "n": "WUXI BIO",
+      "nt": "藥明生物",
+      "hasCache": false
+    },
+    {
+      "c": "02313",
+      "i": 10132,
+      "n": "SHENZHOU INTL",
+      "nt": "申洲國際",
+      "hasCache": false
+    },
+    {
+      "c": "02318",
+      "i": 7641,
+      "n": "PING AN",
+      "nt": "中國平安",
+      "hasCache": false
+    },
+    {
+      "c": "02319",
+      "i": 7578,
+      "n": "MENGNIU DAIRY",
+      "nt": "蒙牛乳業",
+      "hasCache": false
+    },
+    {
+      "c": "02328",
+      "i": 6714,
+      "n": "PICC P&C",
+      "nt": "中國財險",
+      "hasCache": false
+    },
+    {
+      "c": "02331",
+      "i": 7647,
+      "n": "LI NING",
+      "nt": "李寧",
+      "hasCache": false
+    },
+    {
+      "c": "02333",
+      "i": 6871,
+      "n": "GWMOTOR",
+      "nt": "長城汽車",
+      "hasCache": false
+    },
+    {
+      "c": "02382",
+      "i": 15785,
+      "n": "SUNNY OPTICAL",
+      "nt": "舜宇光學科技",
+      "hasCache": false
+    },
+    {
+      "c": "02388",
+      "i": 4551,
+      "n": "BOC HONG KONG",
+      "nt": "中銀香港",
+      "hasCache": false
+    },
+    {
+      "c": "02601",
+      "i": 41955,
+      "n": "CPIC",
+      "nt": "中國太保",
+      "hasCache": false
+    },
+    {
+      "c": "02628",
+      "i": 6882,
+      "n": "CHINA LIFE",
+      "nt": "中國人壽",
+      "hasCache": false
+    },
+    {
+      "c": "02688",
+      "i": 4648,
+      "n": "ENN ENERGY",
+      "nt": "新奧能源",
+      "hasCache": false
+    },
+    {
+      "c": "02727",
+      "i": 8916,
+      "n": "SH ELECTRIC",
+      "nt": "上海電氣",
+      "hasCache": false
+    },
+    {
+      "c": "02899",
+      "i": 6898,
+      "n": "ZIJIN MINING",
+      "nt": "紫金礦業",
+      "hasCache": false
+    },
+    {
+      "c": "03328",
+      "i": 9178,
+      "n": "BANKCOMM",
+      "nt": "交通銀行",
+      "hasCache": false
+    },
+    {
+      "c": "03360",
+      "i": 60838,
+      "n": "FE HORIZON",
+      "nt": "遠東宏信",
+      "hasCache": false
+    },
+    {
+      "c": "03618",
+      "i": 56657,
+      "n": "CQRC BANK",
+      "nt": "重慶農村商業銀行",
+      "hasCache": false
+    },
+    {
+      "c": "03690",
+      "i": 198419,
+      "n": "MEITUAN-W",
+      "nt": "美團－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "03750",
+      "i": 1000259940,
+      "n": "CATL",
+      "nt": "寧德時代",
+      "hasCache": false
+    },
+    {
+      "c": "03888",
+      "i": 17422,
+      "n": "KINGSOFT",
+      "nt": "金山軟件",
+      "hasCache": false
+    },
+    {
+      "c": "03908",
+      "i": 132638,
+      "n": "CICC",
+      "nt": "中金公司",
+      "hasCache": false
+    },
+    {
+      "c": "03968",
+      "i": 12208,
+      "n": "CM BANK",
+      "nt": "招商銀行",
+      "hasCache": false
+    },
+    {
+      "c": "03988",
+      "i": 11465,
+      "n": "BANK OF CHINA",
+      "nt": "中國銀行",
+      "hasCache": false
+    },
+    {
+      "c": "06030",
+      "i": 67019,
+      "n": "CITIC SEC",
+      "nt": "中信証券",
+      "hasCache": false
+    },
+    {
+      "c": "06060",
+      "i": 163544,
+      "n": "ZA ONLINE",
+      "nt": "眾安在綫",
+      "hasCache": false
+    },
+    {
+      "c": "06098",
+      "i": 188592,
+      "n": "CG SERVICES",
+      "nt": "碧桂園服務",
+      "hasCache": false
+    },
+    {
+      "c": "06110",
+      "i": 1000010460,
+      "n": "TOPSPORTS",
+      "nt": "滔搏",
+      "hasCache": false
+    },
+    {
+      "c": "06160",
+      "i": 194142,
+      "n": "BEONE MEDICINES",
+      "nt": "百濟神州",
+      "hasCache": false
+    },
+    {
+      "c": "06186",
+      "i": 1000013128,
+      "n": "CHINA FEIHE",
+      "nt": "中國飛鶴",
+      "hasCache": false
+    },
+    {
+      "c": "06196",
+      "i": 134836,
+      "n": "BANKOFZHENGZHOU",
+      "nt": "鄭州銀行",
+      "hasCache": false
+    },
+    {
+      "c": "06618",
+      "i": 1000067385,
+      "n": "JD HEALTH",
+      "nt": "京東健康",
+      "hasCache": false
+    },
+    {
+      "c": "06680",
+      "i": 1000129956,
+      "n": "JLMAG",
+      "nt": "金力永磁",
+      "hasCache": false
+    },
+    {
+      "c": "06690",
+      "i": 1000066160,
+      "n": "HAIER SMARTHOME",
+      "nt": "海爾智家",
+      "hasCache": false
+    },
+    {
+      "c": "06808",
+      "i": 64061,
+      "n": "SUNART RETAIL",
+      "nt": "高鑫零售",
+      "hasCache": false
+    },
+    {
+      "c": "06862",
+      "i": 199151,
+      "n": "HAIDILAO",
+      "nt": "海底撈",
+      "hasCache": false
+    },
+    {
+      "c": "06881",
+      "i": 87849,
+      "n": "CGS",
+      "nt": "中國銀河",
+      "hasCache": false
+    },
+    {
+      "c": "06886",
+      "i": 124855,
+      "n": "HTSC",
+      "nt": "HTSC",
+      "hasCache": false
+    },
+    {
+      "c": "09618",
+      "i": 1000042149,
+      "n": "JD-SW",
+      "nt": "京東集團－ＳＷ",
+      "hasCache": false
+    },
+    {
+      "c": "09626",
+      "i": 1000087784,
+      "n": "BILIBILI-W",
+      "nt": "嗶哩嗶哩－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "09633",
+      "i": 1000054238,
+      "n": "NONGFU SPRING",
+      "nt": "農夫山泉",
+      "hasCache": false
+    },
+    {
+      "c": "09660",
+      "i": 1000238030,
+      "n": "HORIZONROBOT-W",
+      "nt": "地平線機器人－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "09688",
+      "i": 1000057951,
+      "n": "ZAI LAB",
+      "nt": "再鼎醫藥",
+      "hasCache": false
+    },
+    {
+      "c": "09866",
+      "i": 1000141956,
+      "n": "NIO-SW",
+      "nt": "蔚來－ＳＷ",
+      "hasCache": false
+    },
+    {
+      "c": "09868",
+      "i": 1000101487,
+      "n": "XPENG-W",
+      "nt": "小鵬集團－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "09880",
+      "i": 1000208870,
+      "n": "UBTECH ROBOTICS",
+      "nt": "優必選",
+      "hasCache": false
+    },
+    {
+      "c": "09888",
+      "i": 1000086901,
+      "n": "BIDU-W",
+      "nt": "百度集團－Ｗ",
+      "hasCache": false
+    },
+    {
+      "c": "09899",
+      "i": 1000109694,
+      "n": "NETEASE MUSIC",
+      "nt": "網易雲音樂",
+      "hasCache": false
+    },
+    {
+      "c": "09901",
+      "i": 1000062749,
+      "n": "NEW ORIENTAL-S",
+      "nt": "新東方－Ｓ",
+      "hasCache": false
+    },
+    {
+      "c": "09916",
+      "i": 1000025232,
+      "n": "XINGYE WULIAN",
+      "nt": "興業物聯",
+      "hasCache": false
+    },
+    {
+      "c": "09919",
+      "i": 1000019990,
+      "n": "ACTIVATION GP",
+      "nt": "艾德韋宣集團",
+      "hasCache": false
+    },
+    {
+      "c": "09922",
+      "i": 1000018449,
+      "n": "JIUMAOJIU",
+      "nt": "九毛九",
+      "hasCache": false
+    },
+    {
+      "c": "09923",
+      "i": 1000038180,
+      "n": "YEAHKA",
+      "nt": "移卡",
+      "hasCache": false
+    },
+    {
+      "c": "09926",
+      "i": 1000035461,
+      "n": "AKESO",
+      "nt": "康方生物",
+      "hasCache": false
+    },
+    {
+      "c": "09929",
+      "i": 1000023993,
+      "n": "YAOPOP",
+      "nt": "耀寶",
+      "hasCache": false
+    },
+    {
+      "c": "09961",
+      "i": 1000090312,
+      "n": "TRIP.COM-S",
+      "nt": "攜程集團－Ｓ",
+      "hasCache": false
+    },
+    {
+      "c": "09966",
+      "i": 1000016741,
+      "n": "ALPHAMAB-B",
+      "nt": "康寧傑瑞製藥－Ｂ",
+      "hasCache": false
+    },
+    {
+      "c": "09987",
+      "i": 1000055939,
+      "n": "YUM CHINA",
+      "nt": "百勝中國",
+      "hasCache": false
+    },
+    {
+      "c": "09988",
+      "i": 1000015694,
+      "n": "BABA-W",
+      "nt": "阿里巴巴－Ｗ",
+      "hasCache": true
+    },
+    {
+      "c": "09999",
+      "i": 1000041666,
+      "n": "NTES",
+      "nt": "網易",
+      "hasCache": false
+    }
+  ]
+}
