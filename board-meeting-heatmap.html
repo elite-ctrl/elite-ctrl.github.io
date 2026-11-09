@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YMJ8X3SVM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6YMJ8X3SVM');
+  </script>
+  <title>Board meeting heat map | LedgerLex Language Studio</title>
+  <meta name="description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+  <meta name="theme-color" content="#FFFFFB">
+  <link rel="canonical" href="https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html">
+  <meta property="og:title" content="Board meeting heat map | LedgerLex Language Studio">
+  <meta property="og:description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html">
+  <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Board meeting heat map | LedgerLex Language Studio">
+  <meta name="twitter:description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+  <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <link rel="stylesheet" href="/assets/nav-menu.css">
+  <style>
+    :root {
+      --bg: #FFFFFB;
+      --ink: #000000;
+      --surface: #FFFFFF;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --shadow-lg: 8px 8px 0 #000;
+      --max: 1160px;
+      --tool-max: 1600px;
+      --border: #000000;
+      --heat-0: #F0F0EC;
+      --heat-1: #FFF8D6;
+      --heat-1-border: #D4C070;
+      --heat-2: #FFE566;
+      --heat-2-border: #000000;
+      --heat-3: #FF4D1A;
+      --heat-3-border: #000000;
+      --weekend: #F5F5F0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      font-style: normal;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    em, i, cite, address { font-style: normal; }
+    img, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    input { font: inherit; color: inherit; }
+
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(255, 255, 251, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .topnav__brand {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+    }
+
+    .topnav__brand img {
+      display: block;
+      height: 36px;
+      width: auto;
+    }
+
+    .topnav__links {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .topnav__links a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 12px;
+      border: 2px solid transparent;
+      transition:
+        background-color 300ms var(--ease),
+        border-color 300ms var(--ease),
+        transform 300ms var(--ease);
+    }
+
+    .topnav__links a:hover {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .topnav__links a:active { transform: scale(0.98); }
+
+    .topnav__cta {
+      display: none !important;
+    }
+
+    .topnav__toggle {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: var(--shadow-sm);
+      transition: transform 300ms var(--ease), box-shadow 300ms var(--ease);
+      flex-shrink: 0;
+    }
+
+    .topnav__toggle:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0 #000;
+    }
+
+    .topnav__toggle:active {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .topnav__toggle span {
+      display: block;
+      height: 3px;
+      background: var(--ink);
+      transition: transform 300ms var(--ease), opacity 300ms var(--ease);
+      transform-origin: center;
+    }
+
+    .topnav.is-open .topnav__toggle span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .topnav.is-open .topnav__toggle span:nth-child(2) { opacity: 0; }
+    .topnav.is-open .topnav__toggle span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .topnav__panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: rgba(255, 255, 251, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 96px 24px 48px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .topnav.is-open .topnav__panel {
+      display: flex;
+      pointer-events: auto;
+    }
+
+    .topnav__panel a {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 32px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 400ms var(--ease),
+        transform 400ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .topnav.is-open .topnav__panel a {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .topnav.is-open .topnav__panel a:nth-child(1) { transition-delay: 0ms; }
+    .topnav.is-open .topnav__panel a:nth-child(2) { transition-delay: 60ms; }
+    .topnav.is-open .topnav__panel a:nth-child(3) { transition-delay: 120ms; }
+    .topnav.is-open .topnav__panel a:nth-child(4) { transition-delay: 180ms; }
+    .topnav.is-open .topnav__panel a:nth-child(5) { transition-delay: 240ms; }
+    .topnav.is-open .topnav__panel a:nth-child(6) { transition-delay: 300ms; }
+    .topnav.is-open .topnav__panel a:nth-child(7) { transition-delay: 360ms; }
+    .topnav.is-open .topnav__panel a:nth-child(8) { transition-delay: 400ms; }
+    .topnav.is-open .topnav__panel a:nth-child(9) { transition-delay: 440ms; }
+
+    .topnav__panel a:hover { background: var(--yellow); }
+
+    @media (min-width: 900px) {
+      .topnav__links { display: flex; }
+      .topnav__cta { display: inline-flex !important; }
+      .topnav__toggle { display: none; }
+      .topnav__panel { display: none !important; }
+      .topnav__brand img { height: 32px; }
+    }
+
+    .topnav__links a[aria-current="page"],
+    .topnav__panel a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    @media (min-width: 1280px) {
+      .topnav__bar { max-width: var(--tool-max); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+      transition:
+        transform 300ms var(--ease),
+        box-shadow 300ms var(--ease),
+        background-color 300ms var(--ease);
+    }
+
+    .btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .tool > .wrap {
+      max-width: var(--tool-max);
+    }
+
+    @media (min-width: 768px) {
+      .wrap { padding: 0 40px; }
+    }
+
+    @media (min-width: 1280px) {
+      .tool > .wrap { padding: 0 24px; }
+    }
+
+    .tool {
+      padding: 16px 0 48px;
+    }
+
+    @media (min-width: 768px) {
+      .tool { padding: 24px 0 64px; }
+    }
+
+    .tool-intro__title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 4px 8px;
+      margin-bottom: 0;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .tool h1 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 36px;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 768px) {
+      .tool h1 {
+        font-size: 36px;
+        line-height: 40px;
+      }
+    }
+
+    .beta {
+      display: inline-flex;
+      align-items: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: 3px 3px 0 #000;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 78ch;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .tool-notes {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 900px) {
+      .subtitle {
+        max-width: 104ch;
+      }
+      .tool-notes {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .disclaimer {
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+      text-wrap: pretty;
+    }
+
+    .disclaimer__label {
+      display: inline;
+      margin-right: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .privacy-note {
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 13px;
+      line-height: 20px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .privacy-note a {
+      font-weight: 800;
+      border-bottom: 2px solid currentColor;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 24px 0 16px;
+    }
+
+    .stat {
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      padding: 12px;
+      min-height: 72px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat .label {
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stat .value {
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .stat .hint { font-size: 14px; line-height: 20px; color: var(--muted); }
+    .stat.hot .value { color: var(--accent); }
+    .stat.yellow .value { color: #9a7a00; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1.35fr) minmax(280px, 0.85fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      padding: 12px;
+    }
+
+    .panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 28px;
+      font-weight: 800;
+    }
+
+    .filter-stack { display: flex; flex-direction: column; gap: 16px; }
+    .filter-row { display: flex; flex-direction: column; gap: 8px; }
+
+    .filter-label {
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip-row.vertical { flex-direction: column; }
+
+    .chip {
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      text-align: left;
+      box-shadow: 2px 2px 0 #000;
+      transition: transform 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease);
+    }
+
+    .chip:hover:not(:disabled) {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .chip[aria-pressed="true"] {
+      background: var(--yellow);
+    }
+
+    .chip.board-main[aria-pressed="true"] {
+      background: #55B9EA;
+    }
+
+    .chip.board-gem[aria-pressed="true"] {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .chip:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+    .watch-row { display: flex; flex-direction: column; gap: 8px; }
+    .watch-row input {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 3px solid var(--ink);
+      background: var(--bg);
+      color: var(--muted);
+      opacity: 0.7;
+    }
+
+    .coming {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 2px dashed var(--ink);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .cal-nav { display: flex; align-items: center; gap: 8px; }
+    .cal-nav button {
+      width: 44px; height: 44px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      box-shadow: 2px 2px 0 #000;
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .cal-nav button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .month-label {
+      min-width: 160px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .weekday-row, .day-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .weekday {
+      text-align: center;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 0 6px;
+    }
+
+    .day {
+      position: relative;
+      min-height: 58px;
+      border: 2px solid #ccc;
+      background: var(--heat-0);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      text-align: left;
+      transition: border-color 200ms var(--ease), background-color 200ms var(--ease), box-shadow 200ms var(--ease);
+    }
+
+    .day:hover:not(:disabled) { border-color: var(--ink); box-shadow: 2px 2px 0 #000; }
+    .day:disabled { opacity: 0.28; cursor: default; }
+    .day.weekend { background: var(--weekend); }
+    .day.heat-0 { background: var(--heat-0); border-color: #ccc; }
+    .day.heat-1 { background: var(--heat-1); border-color: var(--heat-1-border); }
+    .day.heat-2 { background: var(--heat-2); border-color: var(--heat-2-border); }
+    .day.heat-3 { background: var(--heat-3); border-color: var(--heat-3-border); color: #fff; }
+    .day.heat-3 .num,
+    .day.heat-3 .count { color: #fff; }
+
+    .day.selected {
+      border-color: var(--ink);
+      box-shadow: inset 0 0 0 3px var(--ink);
+    }
+
+    .day.today::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 2px solid var(--accent);
+      pointer-events: none;
+    }
+
+    .day .num {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 700;
+    }
+
+    .day .count {
+      align-self: flex-end;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .day .count-zero { min-height: 28px; }
+    .day.heat-1 .count { color: #7a5f00; }
+    .day.heat-2 .count { color: var(--ink); }
+    .day.heat-3 .count { color: #fff; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid var(--ink);
+      align-items: center;
+    }
+
+    .legend-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .swatch {
+      width: 16px; height: 16px;
+      border: 2px solid var(--ink);
+    }
+    .swatch.h0 { background: var(--heat-0); border-color: #ccc; }
+    .swatch.h1 { background: var(--heat-1); border-color: var(--heat-1-border); }
+    .swatch.h2 { background: var(--heat-2); }
+    .swatch.h3 { background: var(--heat-3); }
+
+    .week-bar {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .week-bar-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .weeks {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .week {
+      border: 2px solid var(--ink);
+      background: var(--bg);
+      padding: 6px 8px;
+      min-height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2px;
+    }
+
+    .week .w-label { font-size: 12px; color: var(--muted); font-weight: 700; }
+    .week .w-count { font-size: 18px; font-weight: 800; }
+    .week .meter {
+      height: 8px;
+      background: #e8e8e0;
+      border: 1px solid var(--ink);
+    }
+    .week .meter > span { display: block; height: 100%; background: var(--yellow); }
+    .week.peak .meter > span { background: var(--accent); }
+    .week.peak .w-count { color: var(--accent); }
+
+    .detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: min(68vh, 640px);
+      overflow: auto;
+    }
+
+    .meeting {
+      border: 2px solid var(--ink);
+      background: var(--bg);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 12px;
+    }
+
+    .meeting .code {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #9a7a00;
+    }
+
+    .meeting .name { font-size: 16px; font-weight: 700; grid-column: 2; }
+    .meeting .meta {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 2px solid var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      background: var(--surface);
+    }
+
+    .tag.main { background: #D6F0FA; }
+    .tag.gem { background: #FFD6C8; }
+    .tag.purpose { background: var(--yellow); }
+
+    .period {
+      font-size: 14px;
+      color: var(--muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty {
+      border: 2px dashed var(--ink);
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .empty-month {
+      margin-top: 12px;
+      padding: 12px;
+      border: 2px dashed var(--ink);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .zero-filter {
+      margin-bottom: 12px;
+      padding: 12px;
+      border: 3px solid var(--accent);
+      background: #FFE8E0;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .detail-date { font-size: 14px; color: var(--muted); font-weight: 600; }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand {
+      margin-bottom: 12px;
+      line-height: 0;
+    }
+
+    .site-footer .brand img {
+      display: block;
+      height: 44px;
+      width: auto;
+      margin: 0 auto;
+    }
+
+    .site-footer .tag {
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: 24px;
+    }
+
+    .site-footer a {
+      font-weight: 700;
+      border-bottom: 2px solid currentColor;
+      transition: color 300ms var(--ease), border-color 300ms var(--ease);
+    }
+
+    .site-footer a:hover {
+      color: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 251, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+    }
+
+    .site-footer__copy {
+      margin-top: 16px;
+      font-size: 12px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace { grid-template-columns: 200px minmax(0, 1fr); }
+      .panel-detail { grid-column: 1 / -1; }
+      .detail-list { max-height: none; }
+    }
+
+    @media (max-width: 820px) {
+      .workspace { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .weeks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .chip-row.vertical { flex-direction: row; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 560px) {
+      .summary { grid-template-columns: 1fr; }
+      .chip, .cal-nav button, .watch-row input { min-height: 44px; }
+      .day { min-height: 52px; padding: 4px; }
+      .day .count { font-size: 16px; line-height: 24px; }
+      .weeks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .weekday-row, .day-grid { gap: 4px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .btn:hover, .btn:active,
+      .topnav__toggle:hover, .topnav__toggle:active,
+      .chip:hover:not(:disabled) {
+        transform: none;
+      }
+      .topnav__panel a {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
+
+      <div class="topnav__links" role="list">
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-page-btn" aria-expanded="false" aria-controls="topnav-page-menu" aria-haspopup="true">On this page</button>
+          <div class="topnav__menu" id="topnav-page-menu" role="group" aria-labelledby="topnav-page-btn" hidden>
+            <a href="index.html#hero">Home</a>
+            <a href="index.html#benefits">Benefits</a>
+            <a href="index.html#coverage">Coverage</a>
+            <a href="index.html#how">How it works</a>
+            <a href="index.html#case-study">Case study</a>
+            <a href="index.html#language-watchdog">Language Watchdog</a>
+            <a href="index.html#call-the-ledger">Call the Ledger</a>
+            <a href="index.html#call-the-gaps">Call the Gaps</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="index.html#engage">Engage the Studio</a>
+          </div>
+        </div>
+        <div class="topnav__item topnav__item--current" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-tools-btn" aria-expanded="false" aria-controls="topnav-tools-menu" aria-haspopup="true">Tools</button>
+          <div class="topnav__menu" id="topnav-tools-menu" role="group" aria-labelledby="topnav-tools-btn" hidden>
+            <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+            <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+            <a href="board-meeting-heatmap.html" aria-current="page">Board meeting heat map <span class="nav-beta">Beta</span></a>
+          </div>
+        </div>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-journal-btn" aria-expanded="false" aria-controls="topnav-journal-menu" aria-haspopup="true">Journal</button>
+          <div class="topnav__menu" id="topnav-journal-menu" role="group" aria-labelledby="topnav-journal-btn" hidden>
+            <a href="language-watchdog.html">Language Watchdog</a>
+          </div>
+        </div>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-desk-btn" aria-expanded="false" aria-controls="topnav-desk-menu" aria-haspopup="true">Desk</button>
+          <div class="topnav__menu" id="topnav-desk-menu" role="group" aria-labelledby="topnav-desk-btn" hidden>
+            <a href="trainee.html">Trainee</a>
+          </div>
+        </div>
+      </div>
+
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+
+      <button
+        class="topnav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-panel"
+        aria-label="Open menu"
+        id="nav-toggle"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Home</p>
+        <a href="index.html#hero">Home</a>
+        <a href="index.html#benefits">Benefits</a>
+        <a href="index.html#coverage">Coverage</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#case-study">Case study</a>
+        <a href="index.html#language-watchdog">Language Watchdog</a>
+        <a href="index.html#call-the-ledger">Call the Ledger</a>
+        <a href="index.html#call-the-gaps">Call the Gaps</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#engage">Engage the Studio</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Tools</p>
+        <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+        <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+        <a href="board-meeting-heatmap.html" aria-current="page">Board meeting heat map <span class="nav-beta">Beta</span></a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Journal</p>
+        <a href="language-watchdog.html">Language Watchdog</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Desk</p>
+        <a href="trainee.html">Trainee</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Legal</p>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <div class="tool">
+      <div class="wrap">
+        <header class="tool-intro">
+          <div class="tool-intro__title">
+            <p class="eyebrow">Tools</p>
+            <h1>Board meeting heat map <span class="beta">Beta</span></h1>
+          </div>
+          <p class="subtitle">Printer and ops view of upcoming HKEX board meeting intensity. Spot busy days across Main and GEM at a glance — same Tools family as Call the Ledger. Snapshot 6 November 2026.</p>
+          <div class="tool-notes">
+            <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. The HKEX board meeting notice list is for reference only; issuers may change dates. Always check issuer announcements yourself. This tool is not a substitute for checking the Exchange’s published notices.</p>
+            <p class="privacy-note">This page shows a published snapshot dated 6 November 2026. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+          </div>
+        </header>
+
+        <section class="summary" aria-label="Workload summary" id="summary">
+          <div class="stat yellow">
+            <span class="label">Meetings in view</span>
+            <span class="value" id="stat-total">0</span>
+            <span class="hint" id="stat-total-hint">After filters</span>
+          </div>
+          <div class="stat hot">
+            <span class="label">Peak day</span>
+            <span class="value" id="stat-peak">—</span>
+            <span class="hint" id="stat-peak-hint">No meetings</span>
+          </div>
+          <div class="stat">
+            <span class="label">Main / GEM</span>
+            <span class="value" id="stat-split">0 / 0</span>
+            <span class="hint">Board split in filter</span>
+          </div>
+          <div class="stat">
+            <span class="label">Busiest week</span>
+            <span class="value" id="stat-week">—</span>
+            <span class="hint" id="stat-week-hint">Calendar weeks Mon–Sun</span>
+          </div>
+        </section>
+
+        <div class="workspace">
+          <aside class="panel panel-filters" aria-label="Filters">
+            <div class="panel-head"><h2>Filters</h2></div>
+            <div class="filter-stack">
+              <div class="filter-row">
+                <div class="filter-label" id="board-label">Board</div>
+                <div class="chip-row vertical" role="group" aria-labelledby="board-label">
+                  <button type="button" class="chip" data-board="all" aria-pressed="true">All</button>
+                  <button type="button" class="chip board-main" data-board="Main" aria-pressed="false">Main</button>
+                  <button type="button" class="chip board-gem" data-board="GEM" aria-pressed="false">GEM</button>
+                </div>
+              </div>
+              <div class="filter-row">
+                <div class="filter-label" id="purpose-label">Purpose</div>
+                <div class="chip-row vertical" id="purpose-chips" role="group" aria-labelledby="purpose-label"></div>
+              </div>
+              <div class="filter-row">
+                <div class="filter-label">Stock code watchlist</div>
+                <div class="watch-row">
+                  <input type="text" disabled placeholder="e.g. 0700, 9988" aria-label="Stock code watchlist (coming later)">
+                  <span class="coming">Coming later</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="panel panel-calendar" aria-labelledby="cal-heading">
+            <div class="panel-head">
+              <h2 id="cal-heading">Calendar</h2>
+              <div class="cal-nav">
+                <button type="button" id="prev-month" aria-label="Previous month">‹</button>
+                <div class="month-label" id="month-label">November 2026</div>
+                <button type="button" id="next-month" aria-label="Next month">›</button>
+              </div>
+            </div>
+
+            <div id="zero-msg" class="zero-filter" hidden>No meetings match these filters. Clear a purpose chip or switch board to All.</div>
+
+            <div class="weekday-row" aria-hidden="true">
+              <div class="weekday">Mon</div>
+              <div class="weekday">Tue</div>
+              <div class="weekday">Wed</div>
+              <div class="weekday">Thu</div>
+              <div class="weekday">Fri</div>
+              <div class="weekday">Sat</div>
+              <div class="weekday">Sun</div>
+            </div>
+            <div class="day-grid" id="day-grid" role="grid" aria-labelledby="month-label"></div>
+            <div id="empty-month" class="empty-month" hidden></div>
+
+            <div class="legend" aria-label="Heat legend">
+              <span class="legend-title">Intensity</span>
+              <span class="legend-item"><span class="swatch h0"></span> 0 quiet</span>
+              <span class="legend-item"><span class="swatch h1"></span> 1–2 soft</span>
+              <span class="legend-item"><span class="swatch h2"></span> 3–5 busy</span>
+              <span class="legend-item"><span class="swatch h3"></span> 6+ hot</span>
+            </div>
+
+            <div class="week-bar" aria-label="Week intensity">
+              <div class="week-bar-title">Week intensity (this month)</div>
+              <div class="weeks" id="week-bars"></div>
+            </div>
+          </section>
+
+          <aside class="panel panel-detail" aria-labelledby="detail-heading">
+            <div class="panel-head">
+              <h2 id="detail-heading">Day detail</h2>
+              <div class="detail-date" id="detail-date">Select a day</div>
+            </div>
+            <div class="detail-list" id="detail-list">
+              <div class="empty">Pick a day on the calendar to list meetings for that date.</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <p>
+        <a href="mailto:elite@ledgerlexlanguagestudio.com">elite@ledgerlexlanguagestudio.com</a>
+      </p>
+      <nav class="site-footer__map" aria-label="Site map">
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Home</p>
+          <div class="site-footer__map-links">
+          <a href="index.html#hero">Home</a>
+          <a href="index.html#benefits">Benefits</a>
+          <a href="index.html#coverage">Coverage</a>
+          <a href="index.html#how">How it works</a>
+          <a href="index.html#case-study">Case study</a>
+          <a href="index.html#language-watchdog">Language Watchdog</a>
+          <a href="index.html#call-the-ledger">Call the Ledger</a>
+          <a href="index.html#call-the-gaps">Call the Gaps</a>
+          <a href="index.html#pricing">Pricing</a>
+          <a href="index.html#faq">FAQ</a>
+          <a href="index.html#engage">Engage the Studio</a>
+          </div>
+        </div>
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Tools</p>
+          <div class="site-footer__map-links">
+            <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+            <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+            <a href="board-meeting-heatmap.html">Board meeting heat map <span class="nav-beta">Beta</span></a>
+          </div>
+        </div>
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Journal</p>
+          <div class="site-footer__map-links">
+            <a href="language-watchdog.html">Language Watchdog</a>
+          </div>
+        </div>
+      </nav>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trainee.html">Trainee</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+const DATA = {"sourceDate":"2026-11-06","sources":{"Main":"https://www3.hkexnews.hk/reports/bmn/ebmn_c.htm","GEM":"https://www3.hkexnews.hk/reports/bmn/cbmngem.htm"},"meetings":[{"date":"2026-11-09","dateDisplay":"09/11/2026","name":"俄鋁","code":"486","purposeZh":"股息","purposeEn":"Dividend","purposeBucket":"Dividend","period":"","board":"Main"},{"date":"2026-11-09","dateDisplay":"09/11/2026","name":"偉工控股","code":"1793","purposeZh":"特別股息","purposeEn":"Special dividend","purposeBucket":"Special dividend","period":"","board":"Main"},{"date":"2026-11-10","dateDisplay":"10/11/2026","name":"大成食品","code":"3999","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-10","dateDisplay":"10/11/2026","name":"禾賽－Ｗ","code":"2525","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-11","dateDisplay":"11/11/2026","name":"正大生物","code":"3839","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-11","dateDisplay":"11/11/2026","name":"日清食品","code":"1475","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-11","dateDisplay":"11/11/2026","name":"陽光油砂","code":"2012","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-11","dateDisplay":"11/11/2026","name":"德永佳集團","code":"321","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"中國黃金國際","code":"2099","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"鷹美","code":"2368","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"Period ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"吉星新能源","code":"3395","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"領展房產基金","code":"823","purposeZh":"中期業績/分派","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"大洋環球控股","code":"9876","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"寶勝國際","code":"3813","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"新秀麗","code":"1910","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"中芯國際","code":"981","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"津上機床中國","code":"1651","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"越南製造加工出口","code":"422","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"VTECH HOLDINGS","code":"303","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"裕元集團","code":"551","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"興勝創建","code":"896","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"利記","code":"637","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"美亨實業","code":"1897","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"元力控股","code":"1933","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"南戈壁","code":"1878","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"ＴＣＬ電子","code":"1070","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"瑋俊生物科技","code":"660","purposeZh":"末期業績/股息","purposeEn":"Final results / dividend","purposeBucket":"Final results","period":"Year ended 30/06/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"貝殼－Ｗ","code":"2423","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"百度集團－Ｗ","code":"9888","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"百度集團－ＷＲ","code":"89888","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"中國投融資","code":"1226","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"華住集團－Ｓ","code":"1179","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"敏華控股","code":"1999","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"完美醫療","code":"1830","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"騰訊音樂－ＳＷ","code":"1698","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-16","dateDisplay":"16/11/2026","name":"小鵬集團－Ｗ","code":"9868","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"耀才證券金融","code":"1428","purposeZh":"中期業績","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"京東物流","code":"2618","purposeZh":"季度業績","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"京東集團－ＳＷ","code":"9618","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"京東集團－ＳＷＲ","code":"89618","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"名創優品","code":"9896","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"微博－ＳＷ","code":"9898","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"中加國信","code":"899","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-17","dateDisplay":"17/11/2026","name":"中通快遞－Ｗ","code":"2057","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"Quarter ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"震雄集團","code":"57","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"香港興業國際","code":"480","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"杭品生活科技","code":"1682","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"德昌電機控股","code":"179","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"嘉創地產","code":"2421","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"東方表行集團","code":"398","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"小馬智行－Ｗ","code":"2026","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"高鑫零售","code":"6808","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"騰訊控股","code":"700","purposeZh":"第三季業績/股息","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"騰訊控股－Ｒ","code":"80700","purposeZh":"第三季業績/股息","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-18","dateDisplay":"18/11/2026","name":"開明投資","code":"768","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"金山科技工業","code":"40","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"聯想集團","code":"992","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"聯想集團－Ｒ","code":"80992","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"網易","code":"9999","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"百盛集團","code":"3368","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"Quarter ended 30/09/26","board":"Main"},{"date":"2026-11-19","dateDisplay":"19/11/2026","name":"汛和集團","code":"1591","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"域能控股","code":"442","purposeZh":"中期業績","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"萬嘉集團","code":"401","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"榮智控股","code":"6080","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"億都（國際控股）","code":"259","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-23","dateDisplay":"23/11/2026","name":"經濟日報集團","code":"423","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-23","dateDisplay":"23/11/2026","name":"龍翼航空科技","code":"918","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-23","dateDisplay":"23/11/2026","name":"中國旺旺","code":"151","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"嗶哩嗶哩－Ｗ","code":"9626","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"Quarter ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"雅各臣科研製藥","code":"2633","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"ＫＦＭ金德","code":"3816","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"金山雲","code":"3896","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"3 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"寶光實業","code":"84","purposeZh":"中期業績","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"同程旅行","code":"780","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"小米集團－Ｗ","code":"1810","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"小米集團－ＷＲ","code":"81810","purposeZh":"第三季業績","purposeEn":"Q3 results","purposeBucket":"Q3 results","period":"9 months ended 30/09/26","board":"Main"},{"date":"2026-11-25","dateDisplay":"25/11/2026","name":"亞積邦租賃","code":"1496","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-25","dateDisplay":"25/11/2026","name":"宏基資本","code":"2288","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-26","dateDisplay":"26/11/2026","name":"中國智能科技","code":"464","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-26","dateDisplay":"26/11/2026","name":"DYNAM JAPAN","code":"6889","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-26","dateDisplay":"26/11/2026","name":"互太紡織","code":"1382","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-27","dateDisplay":"27/11/2026","name":"富石金融","code":"2263","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-27","dateDisplay":"27/11/2026","name":"STYLAND HOLD","code":"211","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-27","dateDisplay":"27/11/2026","name":"有利集團","code":"406","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-30","dateDisplay":"30/11/2026","name":"優越集團控股","code":"1841","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-30","dateDisplay":"30/11/2026","name":"中國健康科技集團","code":"1069","purposeZh":"末期業績/股息","purposeEn":"Final results / dividend","purposeBucket":"Final results","period":"Year ended 30/06/26","board":"Main"},{"date":"2026-11-30","dateDisplay":"30/11/2026","name":"雄岸科技","code":"1647","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"Main"},{"date":"2026-11-09","dateDisplay":"09/11/2026","name":"海王英特龍","code":"8329","purposeZh":"特別股息","purposeEn":"Special dividend","purposeBucket":"Special dividend","period":"","board":"GEM"},{"date":"2026-11-10","dateDisplay":"10/11/2026","name":"朗華國際集團","code":"8026","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-11","dateDisplay":"11/11/2026","name":"衍匯亞洲","code":"8210","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"佰悅集團","code":"8545","purposeZh":"業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"大唐黃金","code":"8299","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"國恩控股","code":"8121","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-12","dateDisplay":"12/11/2026","name":"天時資源","code":"8028","purposeZh":"業績","purposeEn":"Results","purposeBucket":"Results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-13","dateDisplay":"13/11/2026","name":"清大東方","code":"8115","purposeZh":"季度業績/股息","purposeEn":"Quarterly results","purposeBucket":"Quarterly results","period":"9 months ended 30/09/26","board":"GEM"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"金慧科技","code":"8295","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"高萌科技","code":"8065","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"萬成環球控股","code":"8309","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-20","dateDisplay":"20/11/2026","name":"新威工程集團","code":"8616","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-24","dateDisplay":"24/11/2026","name":"密迪斯肌","code":"8307","purposeZh":"業績/中期股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-25","dateDisplay":"25/11/2026","name":"毅高國際控股","code":"8218","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-27","dateDisplay":"27/11/2026","name":"傳承教育集團","code":"8195","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"},{"date":"2026-11-30","dateDisplay":"30/11/2026","name":"ＨＭＶＯＤ視頻","code":"8103","purposeZh":"中期業績/股息","purposeEn":"Interim results / dividend","purposeBucket":"Interim results","period":"6 months ended 30/09/26","board":"GEM"}]};
+
+const BUCKETS = [
+  "Interim results",
+  "Q3 results",
+  "Results",
+  "Quarterly results",
+  "Special dividend",
+  "Final results",
+  "Dividend"
+];
+
+const MONTH_NAMES = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+
+const state = {
+  year: 2026,
+  month: 10,
+  board: "all",
+  purposes: new Set(BUCKETS),
+  selected: null,
+};
+
+function pad(n){ return String(n).padStart(2,"0"); }
+function iso(y,m,d){ return y + "-" + pad(m+1) + "-" + pad(d); }
+function parseISO(s){
+  const [y,m,d] = s.split("-").map(Number);
+  return new Date(y, m-1, d);
+}
+function fmtDay(isoStr){
+  const dt = parseISO(isoStr);
+  return MONTH_NAMES[dt.getMonth()].slice(0,3) + " " + pad(dt.getDate());
+}
+function fmtLong(isoStr){
+  const dt = parseISO(isoStr);
+  return MONTH_NAMES[dt.getMonth()] + " " + dt.getDate() + ", " + dt.getFullYear();
+}
+function heatClass(n){
+  if (n <= 0) return "heat-0";
+  if (n <= 2) return "heat-1";
+  if (n <= 5) return "heat-2";
+  return "heat-3";
+}
+function todayISO(){
+  const t = new Date();
+  return iso(t.getFullYear(), t.getMonth(), t.getDate());
+}
+function filteredMeetings(){
+  return DATA.meetings.filter(m => {
+    if (state.board !== "all" && m.board !== state.board) return false;
+    if (!state.purposes.has(m.purposeBucket)) return false;
+    return true;
+  });
+}
+function countsByDate(list){
+  const map = Object.create(null);
+  for (const m of list) map[m.date] = (map[m.date] || 0) + 1;
+  return map;
+}
+function mondayWeekKey(isoStr){
+  const dt = parseISO(isoStr);
+  const day = (dt.getDay() + 6) % 7;
+  const mon = new Date(dt);
+  mon.setDate(dt.getDate() - day);
+  return iso(mon.getFullYear(), mon.getMonth(), mon.getDate());
+}
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function renderPurposeChips(){
+  const host = document.getElementById("purpose-chips");
+  host.innerHTML = "";
+  const allBtn = document.createElement("button");
+  allBtn.type = "button";
+  allBtn.className = "chip";
+  allBtn.textContent = "All";
+  allBtn.setAttribute("aria-pressed", state.purposes.size === BUCKETS.length ? "true" : "false");
+  allBtn.addEventListener("click", () => {
+    if (state.purposes.size === BUCKETS.length) state.purposes.clear();
+    else state.purposes = new Set(BUCKETS);
+    render();
+  });
+  host.appendChild(allBtn);
+  for (const b of BUCKETS){
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "chip";
+    btn.textContent = b;
+    btn.setAttribute("aria-pressed", state.purposes.has(b) ? "true" : "false");
+    btn.addEventListener("click", () => {
+      if (state.purposes.has(b)) state.purposes.delete(b);
+      else state.purposes.add(b);
+      render();
+    });
+    host.appendChild(btn);
+  }
+}
+
+function renderBoardChips(){
+  document.querySelectorAll("[data-board]").forEach(btn => {
+    btn.setAttribute("aria-pressed", state.board === btn.getAttribute("data-board") ? "true" : "false");
+  });
+}
+
+function renderSummary(list){
+  const counts = countsByDate(list);
+  const total = list.length;
+  document.getElementById("stat-total").textContent = String(total);
+  document.getElementById("stat-total-hint").textContent =
+    total === DATA.meetings.length ? "Full snapshot" : "After filters";
+
+  let peakDate = null, peakN = 0;
+  for (const [d,n] of Object.entries(counts)){
+    if (n > peakN){ peakN = n; peakDate = d; }
+  }
+  document.getElementById("stat-peak").textContent = peakDate ? fmtDay(peakDate) : "—";
+  document.getElementById("stat-peak-hint").textContent =
+    peakDate ? (peakN + " meeting" + (peakN===1?"":"s")) : "No meetings";
+
+  const mainN = list.filter(m => m.board === "Main").length;
+  const gemN = list.filter(m => m.board === "GEM").length;
+  document.getElementById("stat-split").textContent = mainN + " / " + gemN;
+
+  const weekMap = Object.create(null);
+  for (const m of list){
+    const k = mondayWeekKey(m.date);
+    weekMap[k] = (weekMap[k] || 0) + 1;
+  }
+  let bestW = null, bestC = 0;
+  for (const [k,c] of Object.entries(weekMap)){
+    if (c > bestC){ bestC = c; bestW = k; }
+  }
+  if (bestW){
+    const end = parseISO(bestW);
+    end.setDate(end.getDate() + 6);
+    const endIso = iso(end.getFullYear(), end.getMonth(), end.getDate());
+    document.getElementById("stat-week").textContent = fmtDay(bestW);
+    document.getElementById("stat-week-hint").textContent =
+      fmtDay(bestW) + "–" + fmtDay(endIso) + " · " + bestC + " meetings";
+  } else {
+    document.getElementById("stat-week").textContent = "—";
+    document.getElementById("stat-week-hint").textContent = "Calendar weeks Mon–Sun";
+  }
+  document.getElementById("zero-msg").hidden = total > 0;
+}
+
+function renderWeekBars(counts, daysInMonth){
+  const host = document.getElementById("week-bars");
+  host.innerHTML = "";
+  const weeks = [];
+  let cur = null;
+  for (let d = 1; d <= daysInMonth; d++){
+    const id = iso(state.year, state.month, d);
+    const key = mondayWeekKey(id);
+    if (!cur || cur.key !== key){
+      cur = { key, count: 0 };
+      weeks.push(cur);
+    }
+    cur.count += (counts[id] || 0);
+  }
+  const max = Math.max(1, ...weeks.map(w => w.count));
+  let peak = 0;
+  for (const w of weeks) if (w.count > peak) peak = w.count;
+  for (let i = 0; i < weeks.length; i++){
+    const w = weeks[i];
+    const el = document.createElement("div");
+    el.className = "week" + (w.count === peak && peak > 0 ? " peak" : "");
+    const pct = Math.round((w.count / max) * 100);
+    el.innerHTML =
+      '<div class="w-label">W' + (i+1) + '</div>' +
+      '<div class="w-count">' + w.count + '</div>' +
+      '<div class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></div>';
+    host.appendChild(el);
+  }
+}
+
+function renderCalendar(list){
+  const counts = countsByDate(list);
+  document.getElementById("month-label").textContent =
+    MONTH_NAMES[state.month] + " " + state.year;
+
+  const grid = document.getElementById("day-grid");
+  grid.innerHTML = "";
+  const first = new Date(state.year, state.month, 1);
+  const startPad = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
+  const today = todayISO();
+  let monthTotal = 0;
+
+  for (let i = 0; i < startPad; i++){
+    const blank = document.createElement("button");
+    blank.type = "button";
+    blank.className = "day";
+    blank.disabled = true;
+    blank.setAttribute("aria-hidden", "true");
+    blank.tabIndex = -1;
+    grid.appendChild(blank);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++){
+    const id = iso(state.year, state.month, d);
+    const n = counts[id] || 0;
+    monthTotal += n;
+    const dt = new Date(state.year, state.month, d);
+    const dow = dt.getDay();
+    const weekend = dow === 0 || dow === 6;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "day " + heatClass(n) + (weekend ? " weekend" : "");
+    if (id === today) btn.classList.add("today");
+    if (state.selected === id) btn.classList.add("selected");
+    btn.setAttribute("role", "gridcell");
+    btn.setAttribute("aria-label",
+      fmtLong(id) + ", " + n + " meeting" + (n===1?"":"s"));
+    if (state.selected === id) btn.setAttribute("aria-selected", "true");
+    btn.innerHTML = '<span class="num">' + d + '</span>' +
+      (n > 0
+        ? '<span class="count">' + n + '</span>'
+        : '<span class="count count-zero" aria-hidden="true"></span>');
+    btn.addEventListener("click", () => {
+      state.selected = id;
+      render();
+    });
+    grid.appendChild(btn);
+  }
+
+  renderWeekBars(counts, daysInMonth);
+  const note = document.getElementById("empty-month");
+  if (monthTotal === 0) {
+    note.hidden = false;
+    note.textContent = "No board meetings in this month for the current filters. Try November 2026 or clear filters.";
+  } else {
+    note.hidden = true;
+  }
+  return monthTotal;
+}
+
+function renderDetail(list){
+  const host = document.getElementById("detail-list");
+  const dateEl = document.getElementById("detail-date");
+  if (!state.selected){
+    dateEl.textContent = "Select a day";
+    host.innerHTML = '<div class="empty">Pick a day on the calendar to list meetings for that date.</div>';
+    return;
+  }
+  dateEl.textContent = fmtLong(state.selected);
+  const dayMeetings = list
+    .filter(m => m.date === state.selected)
+    .slice()
+    .sort((a,b) => {
+      if (a.board !== b.board) return a.board === "Main" ? -1 : 1;
+      return Number(a.code) - Number(b.code) || String(a.code).localeCompare(String(b.code));
+    });
+  if (!dayMeetings.length){
+    host.innerHTML = '<div class="empty">No meetings on this day for the current filters.</div>';
+    return;
+  }
+  host.innerHTML = "";
+  for (const m of dayMeetings){
+    const card = document.createElement("article");
+    card.className = "meeting";
+    const boardClass = m.board === "Main" ? "main" : "gem";
+    card.innerHTML =
+      '<div class="code">' + escapeHtml(String(m.code)) + '</div>' +
+      '<div class="name">' + escapeHtml(m.name) + '</div>' +
+      '<div class="meta">' +
+        '<span class="tag ' + boardClass + '">' + escapeHtml(m.board) + '</span>' +
+        '<span class="tag purpose">' + escapeHtml(m.purposeEn || m.purposeBucket) + '</span>' +
+      '</div>' +
+      (m.period ? '<div class="period">' + escapeHtml(m.period) + '</div>' : '');
+    host.appendChild(card);
+  }
+}
+
+function render(){
+  renderPurposeChips();
+  renderBoardChips();
+  const list = filteredMeetings();
+  renderSummary(list);
+  renderCalendar(list);
+  renderDetail(list);
+}
+
+
+document.querySelectorAll("[data-board]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.board = btn.getAttribute("data-board");
+    render();
+  });
+});
+document.getElementById("prev-month").addEventListener("click", () => {
+  state.month -= 1;
+  if (state.month < 0){ state.month = 11; state.year -= 1; }
+  state.selected = null;
+  render();
+});
+document.getElementById("next-month").addEventListener("click", () => {
+  state.month += 1;
+  if (state.month > 11){ state.month = 0; state.year += 1; }
+  state.selected = null;
+  render();
+});
+
+(function init(){
+  const all = DATA.meetings;
+  const counts = countsByDate(all);
+  let peakDate = null, peakN = 0;
+  for (const [d,n] of Object.entries(counts)){
+    if (n > peakN){ peakN = n; peakDate = d; }
+  }
+  const params = new URLSearchParams(location.search);
+  const qDay = params.get("day");
+  const t = todayISO();
+  state.selected = (qDay && counts[qDay] !== undefined) ? qDay : (counts[t] ? t : peakDate);
+  if (all.length){
+    const first = all.slice().sort((a,b)=>a.date.localeCompare(b.date))[0].date;
+    const dt = parseISO(first);
+    state.year = dt.getFullYear();
+    state.month = dt.getMonth();
+  }
+  render();
+})();
+
+  </script>
+  <script src="/assets/nav-menu.js"></script>
+</body>
+</html>
