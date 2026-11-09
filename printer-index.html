@@ -450,19 +450,6 @@
       box-shadow: 2px 2px 0 #000;
     }
 
-    .count-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 40px;
-      padding: 8px 12px;
-      border: 3px solid var(--ink);
-      background: var(--surface);
-      box-shadow: 2px 2px 0 #000;
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
     .roster-panel {
       border: 3px solid var(--ink);
       background: var(--surface);
@@ -806,7 +793,7 @@
             <h1>Printer index <span class="beta">Beta</span></h1>
           </div>
           <p class="subtitle">Named roster of Hong Kong financial printers for HK IPO prospectus work — name, website, and phone. Same Tools family as Call the Ledger, Call the Gaps, and the Board meeting heat map. Snapshot 9 November 2026 (Asia/Hong_Kong).</p>
-          <p class="subtitle">The list is in no particular order.</p>
+          <p class="subtitle">The list is in no particular order. It is not an exhaustive list of Hong Kong financial printers.</p>
           <div class="tool-notes">
             <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> Roster for reference only. Contact details change. Confirm with each printer before you rely on a number or site. This page is not an endorsement, ranking, or introduction service.</p>
             <p class="privacy-note">This page shows a published snapshot dated 9 November 2026. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
@@ -825,7 +812,6 @@
               aria-controls="printer-roster"
             >
           </div>
-          <div class="count-chip" id="result-count" aria-live="polite">13 printers</div>
         </div>
 
         <div class="roster-panel">
@@ -1111,7 +1097,9 @@ function renderRows(list) {
   const count = document.getElementById("result-count");
   const table = document.getElementById("printer-roster");
 
-  count.textContent = list.length === 1 ? "1 printer" : list.length + " printers";
+  if (count) {
+    count.textContent = list.length === 1 ? "1 printer" : list.length + " printers";
+  }
 
   if (!list.length) {
     body.innerHTML = "";
