@@ -46,7 +46,7 @@
         "name": "What is the Printer index?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The Printer index is a named roster of Hong Kong financial printers used on HK IPO prospectus and other listing work. Each row gives the printer’s name, website, and phone. It is a Beta tool in the same family as Call the Ledger, Call the Gaps, and the Board meeting heat map. Snapshot 9 November 2026 (Asia/Hong_Kong). The list is in no particular order."
+          "text": "The Printer index is a named roster of Hong Kong financial printers used on HK IPO prospectus and other listing work. Each row gives the printer’s name, website, and phone. It is a Beta tool in the same family as Call the Ledger, Call the Gaps, and the Board meeting heat map. Snapshot 9 November 2026 (Asia/Hong_Kong). The list is in no particular order. It is not an exhaustive list of Hong Kong financial printers."
         }
       },
       {
@@ -917,7 +917,7 @@
           <h2 id="printer-faq-title">Questions about this roster</h2>
           <div class="faq-item">
             <h3>What is the Printer index?</h3>
-            <p>The Printer index is a named roster of Hong Kong financial printers used on HK IPO prospectus and other listing work. Each row gives the printer’s name, website, and phone. It is a Beta tool in the same family as Call the Ledger, Call the Gaps, and the Board meeting heat map. Snapshot 9 November 2026 (Asia/Hong_Kong). The list is in no particular order.</p>
+            <p>The Printer index is a named roster of Hong Kong financial printers used on HK IPO prospectus and other listing work. Each row gives the printer’s name, website, and phone. It is a Beta tool in the same family as Call the Ledger, Call the Gaps, and the Board meeting heat map. Snapshot 9 November 2026 (Asia/Hong_Kong). The list is in no particular order. It is not an exhaustive list of Hong Kong financial printers.</p>
           </div>
           <div class="faq-item">
             <h3>Is the Printer index a ranking or an endorsement?</h3>
@@ -1094,12 +1094,8 @@ function escapeHtml(s) {
 function renderRows(list) {
   const body = document.getElementById("printer-body");
   const empty = document.getElementById("empty-state");
-  const count = document.getElementById("result-count");
   const table = document.getElementById("printer-roster");
-
-  if (count) {
-    count.textContent = list.length === 1 ? "1 printer" : list.length + " printers";
-  }
+  if (!body || !empty || !table) return;
 
   if (!list.length) {
     body.innerHTML = "";
