@@ -583,7 +583,7 @@
 
     .chip.board-gem[aria-pressed="true"] {
       background: var(--accent);
-      color: #fff;
+      color: var(--ink);
     }
 
     .chip:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
@@ -635,9 +635,15 @@
       font-weight: 800;
     }
 
-    .weekday-row, .day-grid {
+    .weekday-row, .day-row {
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .day-grid {
+      display: flex;
+      flex-direction: column;
       gap: 6px;
     }
 
@@ -672,9 +678,9 @@
     .day.heat-0 { background: var(--heat-0); border-color: #ccc; }
     .day.heat-1 { background: var(--heat-1); border-color: var(--heat-1-border); }
     .day.heat-2 { background: var(--heat-2); border-color: var(--heat-2-border); }
-    .day.heat-3 { background: var(--heat-3); border-color: var(--heat-3-border); color: #fff; }
+    .day.heat-3 { background: var(--heat-3); border-color: var(--heat-3-border); color: var(--ink); }
     .day.heat-3 .num,
-    .day.heat-3 .count { color: #fff; }
+    .day.heat-3 .count { color: var(--ink); }
 
     .day.selected {
       border-color: var(--ink);
@@ -687,6 +693,11 @@
       inset: 3px;
       border: 2px solid var(--accent);
       pointer-events: none;
+    }
+
+    /* Hot cells use the accent fill, so an accent ring disappears on them. */
+    .day.heat-3.today::after {
+      border-color: var(--ink);
     }
 
     .day .num {
@@ -704,9 +715,14 @@
     }
 
     .day .count-zero { min-height: 28px; }
+    .day-pad {
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
     .day.heat-1 .count { color: #7a5f00; }
     .day.heat-2 .count { color: var(--ink); }
-    .day.heat-3 .count { color: #fff; }
+    .day.heat-3 .count { color: var(--ink); }
 
     .legend {
       display: flex;
@@ -949,7 +965,7 @@
       .day { min-height: 52px; padding: 4px; }
       .day .count { font-size: 16px; line-height: 24px; }
       .weeks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .weekday-row, .day-grid { gap: 4px; }
+      .weekday-row, .day-row, .day-grid { gap: 4px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1138,12 +1154,12 @@
               <h2 id="cal-heading">Calendar</h2>
               <div class="cal-nav">
                 <button type="button" id="prev-month" aria-label="Previous month">‹</button>
-                <div class="month-label" id="month-label">November 2026</div>
+                <div class="month-label" id="month-label" aria-live="polite">November 2026</div>
                 <button type="button" id="next-month" aria-label="Next month">›</button>
               </div>
             </div>
 
-            <div id="zero-msg" class="zero-filter" hidden>No meetings match these filters. Clear a purpose chip or switch board to All.</div>
+            <div id="zero-msg" class="zero-filter" hidden aria-live="polite">No meetings match these filters. Press All under Purpose, or switch board to All.</div>
 
             <div class="weekday-row" aria-hidden="true">
               <div class="weekday">Mon</div>
@@ -1155,7 +1171,7 @@
               <div class="weekday">Sun</div>
             </div>
             <div class="day-grid" id="day-grid" role="grid" aria-labelledby="month-label"></div>
-            <div id="empty-month" class="empty-month" hidden></div>
+            <div id="empty-month" class="empty-month" hidden aria-live="polite"></div>
 
             <div class="legend" aria-label="Heat legend">
               <span class="legend-title">Intensity</span>
@@ -1174,7 +1190,7 @@
           <aside class="panel panel-detail" aria-labelledby="detail-heading">
             <div class="panel-head">
               <h2 id="detail-heading">Day detail</h2>
-              <div class="detail-date" id="detail-date">Select a day</div>
+              <div class="detail-date" id="detail-date" aria-live="polite">Select a day</div>
             </div>
             <div class="detail-list" id="detail-list">
               <div class="empty">Pick a day on the calendar to list meetings for that date.</div>
@@ -1283,9 +1299,96 @@ function heatClass(n){
   return "heat-3";
 }
 function todayISO(){
+  // Desk "today" is Asia/Hong_Kong, not the browser zone. HK printers may
+  // open this page from elsewhere; the highlight and default day stay on HKT.
+  try {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Hong_Kong",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(new Date());
+    const pick = (type) => {
+      const part = parts.find((item) => item.type === type);
+      return part ? part.value : "";
+    };
+    const result = pick("year") + "-" + pick("month").padStart(2, "0") + "-" + pick("day").padStart(2, "0");
+    if (/^\d{4}-\d{2}-\d{2}$/.test(result)) return result;
+  } catch (err) { /* very old runtimes: use the clock's local day */ }
   const t = new Date();
   return iso(t.getFullYear(), t.getMonth(), t.getDate());
 }
+function showMonth(isoStr){
+  if (!isoStr) return false;
+  const dt = parseISO(isoStr);
+  if (Number.isNaN(dt.getTime())) return false;
+  state.year = dt.getFullYear();
+  state.month = dt.getMonth();
+  return true;
+}
+function monthsPresent(list){
+  const seen = [];
+  const keys = new Set();
+  const sorted = list.slice().sort((a, b) => a.date.localeCompare(b.date));
+  for (const meeting of sorted){
+    const dt = parseISO(meeting.date);
+    const key = dt.getFullYear() + "-" + dt.getMonth();
+    if (keys.has(key)) continue;
+    keys.add(key);
+    seen.push(MONTH_NAMES[dt.getMonth()] + " " + dt.getFullYear());
+  }
+  return seen;
+}
+function formatMonthList(names){
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return names[0] + " and " + names[1];
+  return names.slice(0, -1).join(", ") + ", and " + names[names.length - 1];
+}
+function emptyMonthCopy(list){
+  const source = list.length ? list : DATA.meetings;
+  const names = monthsPresent(source);
+  const sentence = "No board meetings in this month for the current filters.";
+  if (!names.length) return sentence;
+  const scope = list.length ? "the current filters" : "this snapshot";
+  return sentence + " Meetings in " + scope + " fall in " + formatMonthList(names) + ".";
+}
+function zeroFilterCopy(){
+  const noPurpose = state.purposes.size === 0;
+  const narrowBoard = state.board !== "all";
+  if (noPurpose && narrowBoard) {
+    return "No meetings match these filters. Press All under Purpose, and switch board to All.";
+  }
+  if (noPurpose) {
+    return "No purpose is selected. Press All under Purpose to show meetings again.";
+  }
+  if (narrowBoard) {
+    return "No meetings match this board. Switch board to All, or turn purpose chips back on.";
+  }
+  if (state.purposes.size === BUCKETS.length) return "No meetings in this snapshot.";
+  return "No meetings match these purpose chips. Press All under Purpose to show every purpose.";
+}
+function syncDayParam(){
+  try {
+    const url = new URL(location.href);
+    if (state.selected) url.searchParams.set("day", state.selected);
+    else url.searchParams.delete("day");
+    const next = url.pathname + url.search + url.hash;
+    const current = location.pathname + location.search + location.hash;
+    if (next !== current) history.replaceState({ day: state.selected }, "", next);
+  } catch (err) {
+    /* file:// previews can reject replaceState; the calendar still works. */
+  }
+}
+function focusByKey(key){
+  if (!key) return null;
+  const nodes = document.querySelectorAll("[data-focus-key]");
+  for (const node of nodes){
+    if (node.dataset.focusKey === key) return node;
+  }
+  return null;
+}
+let pendingFocusKey = "";
 function filteredMeetings(){
   return DATA.meetings.filter(m => {
     if (state.board !== "all" && m.board !== state.board) return false;
@@ -1320,10 +1423,11 @@ function renderPurposeChips(){
   allBtn.type = "button";
   allBtn.className = "chip";
   allBtn.textContent = "All";
+  allBtn.dataset.focusKey = "purpose:All";
   allBtn.setAttribute("aria-pressed", state.purposes.size === BUCKETS.length ? "true" : "false");
   allBtn.addEventListener("click", () => {
-    if (state.purposes.size === BUCKETS.length) state.purposes.clear();
-    else state.purposes = new Set(BUCKETS);
+    if (state.purposes.size === BUCKETS.length) return;
+    state.purposes = new Set(BUCKETS);
     render();
   });
   host.appendChild(allBtn);
@@ -1332,6 +1436,7 @@ function renderPurposeChips(){
     btn.type = "button";
     btn.className = "chip";
     btn.textContent = b;
+    btn.dataset.focusKey = "purpose:" + b;
     btn.setAttribute("aria-pressed", state.purposes.has(b) ? "true" : "false");
     btn.addEventListener("click", () => {
       if (state.purposes.has(b)) state.purposes.delete(b);
@@ -1387,7 +1492,9 @@ function renderSummary(list){
     document.getElementById("stat-week").textContent = "—";
     document.getElementById("stat-week-hint").textContent = "Calendar weeks Mon–Sun";
   }
-  document.getElementById("zero-msg").hidden = total > 0;
+  const zero = document.getElementById("zero-msg");
+  zero.hidden = total > 0;
+  if (total === 0) zero.textContent = zeroFilterCopy();
 }
 
 function renderWeekBars(counts, daysInMonth){
@@ -1432,15 +1539,26 @@ function renderCalendar(list){
   const daysInMonth = new Date(state.year, state.month + 1, 0).getDate();
   const today = todayISO();
   let monthTotal = 0;
+  let row = null;
+  let rowCount = 0;
+  const pushCell = (node) => {
+    if (!row || rowCount === 7){
+      row = document.createElement("div");
+      row.className = "day-row";
+      row.setAttribute("role", "row");
+      grid.appendChild(row);
+      rowCount = 0;
+    }
+    row.appendChild(node);
+    rowCount += 1;
+  };
 
   for (let i = 0; i < startPad; i++){
-    const blank = document.createElement("button");
-    blank.type = "button";
-    blank.className = "day";
-    blank.disabled = true;
+    const blank = document.createElement("span");
+    blank.className = "day day-pad";
+    blank.setAttribute("role", "gridcell");
     blank.setAttribute("aria-hidden", "true");
-    blank.tabIndex = -1;
-    grid.appendChild(blank);
+    pushCell(blank);
   }
 
   for (let d = 1; d <= daysInMonth; d++){
@@ -1455,10 +1573,14 @@ function renderCalendar(list){
     btn.className = "day " + heatClass(n) + (weekend ? " weekend" : "");
     if (id === today) btn.classList.add("today");
     if (state.selected === id) btn.classList.add("selected");
+    btn.dataset.date = id;
+    btn.dataset.focusKey = "day:" + id;
+    btn.tabIndex = -1;
     btn.setAttribute("role", "gridcell");
+    btn.setAttribute("aria-selected", state.selected === id ? "true" : "false");
     btn.setAttribute("aria-label",
       fmtLong(id) + ", " + n + " meeting" + (n===1?"":"s"));
-    if (state.selected === id) btn.setAttribute("aria-selected", "true");
+    if (id === today) btn.setAttribute("aria-current", "date");
     btn.innerHTML = '<span class="num">' + d + '</span>' +
       (n > 0
         ? '<span class="count">' + n + '</span>'
@@ -1467,14 +1589,25 @@ function renderCalendar(list){
       state.selected = id;
       render();
     });
-    grid.appendChild(btn);
+    pushCell(btn);
+  }
+
+  const dayButtons = [...grid.querySelectorAll("[data-date]")];
+  const wanted = pendingFocusKey.indexOf("day:") === 0 ? pendingFocusKey.slice(4) : "";
+  let tabDay = "";
+  if (wanted && dayButtons.some((button) => button.dataset.date === wanted)) tabDay = wanted;
+  else if (state.selected && dayButtons.some((button) => button.dataset.date === state.selected)) tabDay = state.selected;
+  else if (dayButtons.some((button) => button.dataset.date === today)) tabDay = today;
+  else if (dayButtons[0]) tabDay = dayButtons[0].dataset.date;
+  for (const button of dayButtons){
+    button.tabIndex = button.dataset.date === tabDay ? 0 : -1;
   }
 
   renderWeekBars(counts, daysInMonth);
   const note = document.getElementById("empty-month");
   if (monthTotal === 0) {
     note.hidden = false;
-    note.textContent = "No board meetings in this month for the current filters. Try November 2026 or clear filters.";
+    note.textContent = emptyMonthCopy(list);
   } else {
     note.hidden = true;
   }
@@ -1519,13 +1652,61 @@ function renderDetail(list){
 }
 
 function render(){
+  const active = document.activeElement;
+  pendingFocusKey = active && active.dataset ? (active.dataset.focusKey || "") : "";
   renderPurposeChips();
   renderBoardChips();
   const list = filteredMeetings();
   renderSummary(list);
   renderCalendar(list);
   renderDetail(list);
+  const restore = focusByKey(pendingFocusKey);
+  if (restore) restore.focus();
+  syncDayParam();
 }
+
+function shiftDay(isoStr, days){
+  const dt = parseISO(isoStr);
+  dt.setDate(dt.getDate() + days);
+  return iso(dt.getFullYear(), dt.getMonth(), dt.getDate());
+}
+function dayButton(isoStr){
+  return document.querySelector('#day-grid [data-date="' + isoStr + '"]');
+}
+function dayFromKey(current, key){
+  const id = current.dataset.date;
+  if (key === "ArrowLeft") return dayButton(shiftDay(id, -1));
+  if (key === "ArrowRight") return dayButton(shiftDay(id, 1));
+  if (key === "ArrowUp") return dayButton(shiftDay(id, -7));
+  if (key === "ArrowDown") return dayButton(shiftDay(id, 7));
+  const mondayIndex = (parseISO(id).getDay() + 6) % 7;
+  if (key === "Home"){
+    for (let back = mondayIndex; back >= 0; back--){
+      const button = dayButton(shiftDay(id, -back));
+      if (button) return button;
+    }
+  }
+  if (key === "End"){
+    for (let forward = 6 - mondayIndex; forward >= 0; forward--){
+      const button = dayButton(shiftDay(id, forward));
+      if (button) return button;
+    }
+  }
+  return null;
+}
+document.getElementById("day-grid").addEventListener("keydown", (event) => {
+  const current = event.target.closest("[data-date]");
+  if (!current) return;
+  const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
+  if (keys.indexOf(event.key) === -1) return;
+  event.preventDefault();
+  const target = dayFromKey(current, event.key);
+  if (!target || target === current) return;
+  document.querySelectorAll("#day-grid [data-date]").forEach((button) => {
+    button.tabIndex = button === target ? 0 : -1;
+  });
+  target.focus();
+});
 
 
 document.querySelectorAll("[data-board]").forEach(btn => {
@@ -1557,12 +1738,10 @@ document.getElementById("next-month").addEventListener("click", () => {
   const params = new URLSearchParams(location.search);
   const qDay = params.get("day");
   const t = todayISO();
-  state.selected = (qDay && counts[qDay] !== undefined) ? qDay : (counts[t] ? t : peakDate);
-  if (all.length){
-    const first = all.slice().sort((a,b)=>a.date.localeCompare(b.date))[0].date;
-    const dt = parseISO(first);
-    state.year = dt.getFullYear();
-    state.month = dt.getMonth();
+  state.selected = (qDay && Object.prototype.hasOwnProperty.call(counts, qDay)) ? qDay : (counts[t] ? t : peakDate);
+  if (!showMonth(state.selected) && !showMonth(peakDate) && all.length){
+    const earliest = all.slice().sort((a, b) => a.date.localeCompare(b.date))[0].date;
+    showMonth(earliest);
   }
   render();
 })();
