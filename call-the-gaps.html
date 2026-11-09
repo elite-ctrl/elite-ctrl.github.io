@@ -340,11 +340,19 @@
     }
 
     .tool {
-      padding: 32px 0 64px;
+      padding: 16px 0 48px;
     }
 
     @media (min-width: 768px) {
-      .tool { padding: 48px 0 80px; }
+      .tool { padding: 24px 0 64px; }
+    }
+
+    .tool-intro__title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      margin-bottom: 8px;
     }
 
     .eyebrow {
@@ -357,7 +365,7 @@
       background: var(--yellow);
       border: 2px solid var(--ink);
       padding: 4px 8px;
-      margin-bottom: 16px;
+      margin-bottom: 0;
       box-shadow: 3px 3px 0 #000;
     }
 
@@ -365,13 +373,13 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px 12px;
+      gap: 8px 10px;
       font-size: 30px;
       font-weight: 800;
       line-height: 36px;
       letter-spacing: -0.02em;
       text-wrap: balance;
-      margin-bottom: 12px;
+      margin-bottom: 0;
     }
 
     @media (min-width: 768px) {
@@ -396,22 +404,47 @@
       text-transform: uppercase;
     }
 
-    .disclaimer {
+    .subtitle {
       max-width: 78ch;
-      margin-top: 16px;
-      padding: 12px 16px;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      text-wrap: pretty;
+    }
+
+    .tool-notes {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 900px) {
+      .subtitle {
+        max-width: 104ch;
+      }
+      .tool-notes {
+        grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .disclaimer {
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
       background: var(--yellow);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
-      font-size: 15px;
-      line-height: 22px;
+      font-size: 14px;
+      line-height: 20px;
       font-weight: 700;
       text-wrap: pretty;
     }
 
     .disclaimer__label {
-      display: block;
-      margin-bottom: 4px;
+      display: inline;
+      margin-right: 8px;
       font-size: 12px;
       font-weight: 800;
       line-height: 16px;
@@ -419,23 +452,15 @@
       text-transform: uppercase;
     }
 
-    .subtitle {
-      max-width: 78ch;
-      font-size: 16px;
-      line-height: 24px;
-      font-weight: 600;
-      text-wrap: pretty;
-    }
-
     .privacy-note {
-      max-width: 78ch;
-      margin-top: 16px;
-      padding: 12px 16px;
+      margin: 0;
+      height: 100%;
+      padding: 8px 12px;
       background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
-      font-size: 14px;
-      line-height: 22px;
+      font-size: 13px;
+      line-height: 20px;
       font-weight: 600;
       text-wrap: pretty;
     }
@@ -452,13 +477,13 @@
 
     .structure-note {
       max-width: 78ch;
-      margin: 0 0 16px;
-      padding: 12px 16px;
+      margin: 0 0 12px;
+      padding: 8px 12px;
       background: var(--yellow);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow-sm);
-      font-size: 14px;
-      line-height: 22px;
+      font-size: 13px;
+      line-height: 20px;
       font-weight: 600;
       text-wrap: pretty;
     }
@@ -475,7 +500,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin: 24px 0 16px;
+      margin: 16px 0 12px;
     }
 
     .pane {
@@ -572,10 +597,14 @@
     }
 
     .file-status {
-      min-height: 22px;
+      min-height: 20px;
       font-size: 13px;
       line-height: 20px;
       font-weight: 700;
+    }
+
+    .file-status:empty {
+      min-height: 0;
     }
 
     .file-status.is-error {
@@ -588,21 +617,22 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .results {
       background: var(--surface);
       border: 3px solid var(--ink);
       box-shadow: var(--shadow);
-      padding: 16px;
+      padding: 10px 12px;
     }
 
     .summary {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
+      margin-bottom: 4px;
     }
 
     .chip {
@@ -777,9 +807,9 @@
     .chip--delete { background: var(--accent); color: var(--bg); }
     .chip--move { background: var(--surface); border: 2px dashed var(--ink); }
     .chip--ok { background: var(--surface); }
-    .gap-layout { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 16px; margin-top: 16px; min-width: 0; }
+    .gap-layout { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 16px; margin-top: 12px; min-width: 0; }
     .change-rail { border: 3px solid var(--ink); background: var(--bg); box-shadow: var(--shadow-sm); max-height: 560px; overflow: auto; min-width: 0; }
-    .rail-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 3px solid var(--ink); background: var(--surface); position: sticky; top: 0; z-index: 1; }
+    .rail-filters { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 8px; border-bottom: 3px solid var(--ink); background: var(--surface); position: sticky; top: 0; z-index: 1; }
     .rail-filter { cursor: pointer; min-height: 36px; }
     .rail-filter.is-on { box-shadow: inset 0 0 0 3px var(--ink); }
     .rail-list { list-style: none; }
@@ -791,7 +821,7 @@
     .rail-empty { padding: 12px; }
     .diff-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; min-width: 0; scroll-margin-top: 88px; }
     .diff-pane { border: 3px solid var(--ink); background: var(--surface); box-shadow: var(--shadow); min-width: 0; display: flex; flex-direction: column; min-height: 280px; }
-    .diff-pane__title { font-size: 13px; font-weight: 800; padding: 10px 12px; border-bottom: 3px solid var(--ink); background: var(--yellow); }
+    .diff-pane__title { font-size: 13px; font-weight: 800; padding: 8px 10px; border-bottom: 3px solid var(--ink); background: var(--yellow); }
     .diff-pane__body { flex: 1; max-height: 520px; overflow: auto; padding: 12px; font-size: 14px; line-height: 22px; overflow-wrap: anywhere; }
     .diff-block { margin: 0 0 12px; white-space: pre-wrap; }
     .mark-insert { background: var(--yellow); padding: 0 2px; border: 2px solid var(--ink); }
@@ -803,8 +833,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 16px;
-      padding: 12px;
+      margin-top: 12px;
+      padding: 8px 10px;
       border: 3px solid var(--ink);
       background: var(--bg);
       box-shadow: var(--shadow-sm);
@@ -1021,11 +1051,15 @@
   <main id="main">
     <div class="tool">
       <div class="wrap">
-        <header>
-          <h1>Call the Gaps <span class="beta">Beta</span></h1>
+        <header class="tool-intro">
+          <div class="tool-intro__title">
+            <h1>Call the Gaps <span class="beta">Beta</span></h1>
+          </div>
           <p class="subtitle">Call text gaps on a bilingual pack before it leaves the desk. Drop the precedent and the newer one as PDF or Word (.docx); inserts, deletes, and moves are typed across the whole document in this browser — not by page number. Unequal page counts, or PDF pages beside Word paragraphs, are expected and fine. All data stays on your machine — nothing is uploaded for the check.</p>
-          <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Extracted text can miss scan-only PDF content, embedded images, and text boxes the reader skips. Complex layouts and other edge cases apply on both formats. Check both files yourself. Call the Gaps is not a substitute for professional review.</p>
-          <p class="privacy-note">Your pack files stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+          <div class="tool-notes">
+            <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Extracted text can miss scan-only PDF content, embedded images, and text boxes the reader skips. Complex layouts and other edge cases apply on both formats. Check both files yourself. Call the Gaps is not a substitute for professional review.</p>
+            <p class="privacy-note">Your pack files stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+          </div>
         </header>
 
         <div class="panes">
