@@ -46,7 +46,7 @@
         "name": "What is Bilingual filings?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba."
+          "text": "Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba."
         }
       },
       {
@@ -1017,7 +1017,7 @@
           <div class="toolbar" id="title-toolbar">
             <div class="search-field">
               <label for="title-search">Search by title</label>
-              <input id="title-search" type="search" placeholder="e.g. interim report, 中期業績, senior notes" autocomplete="off" spellcheck="false" aria-controls="filing-list">
+              <input id="title-search" type="search" placeholder="e.g. interim report, circular, annual results" autocomplete="off" spellcheck="false" aria-controls="filing-list">
             </div>
             <button type="button" class="btn btn--ghost btn--sm" id="title-search-clear" hidden>Clear title</button>
           </div>
@@ -1046,7 +1046,7 @@
           <h2 id="bilingual-faq-title">Questions about this cache</h2>
           <div class="faq-item">
             <h3>What is Bilingual filings?</h3>
-            <p>Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba.</p>
+            <p>Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter 披露易 headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 9 November 2026 (Asia/Hong_Kong). The first public cut is a sample cache for 00700 Tencent, 00005 HSBC Holdings, and 09988 Alibaba.</p>
           </div>
           <div class="faq-item">
             <h3>Does the page query HKEXnews while I search?</h3>
@@ -1165,23 +1165,18 @@ function setRoute(path) {
 
 function filterStocks(q) {
   var raw = String(q || "").trim();
-  /* Blank field: the three cached issuers. A typed query that matches nothing stays empty. */
   if (!raw) return STOCKS.stocks.filter(function (s) { return s.hasCache; });
-  var digits = raw.replace(/\D/g, "");
-  /* Code match only when the query has digits. Never indexOf("") — that matches every code. */
-  if (digits) {
-    var codeGuess = padCode(digits);
-    if (!codeGuess) return [];
-    return STOCKS.stocks.filter(function (s) { return s.c === codeGuess; }).slice(0, 40);
-  }
   var needle = raw.toLowerCase();
-  if (!needle) return [];
+  var digits = raw.replace(/\D/g, "");
+  /* Never indexOf(""). An empty code guess matches every stock. */
+  var codeGuess = digits ? padCode(raw) : "";
   return STOCKS.stocks.filter(function (s) {
+    var codeHit = false;
+    if (codeGuess) codeHit = s.c.indexOf(codeGuess) !== -1 || s.c === codeGuess;
     var en = String(s.n || s.nameEn || "");
     var tc = String(s.nt || s.nameTc || "");
-    var enHit = en.toLowerCase().indexOf(needle) !== -1;
-    var tcHit = tc.indexOf(raw) !== -1;
-    return enHit || tcHit;
+    var nameHit = (needle && en.toLowerCase().indexOf(needle) !== -1) || (raw && tc.indexOf(raw) !== -1);
+    return codeHit || nameHit;
   }).slice(0, 40);
 }
 
@@ -1223,21 +1218,21 @@ function renderHub() {
   });
 }
 
-/* Two link clicks in the same gesture. TC then EN, so EN lands in front.
-   A second window.open is often blocked, even after about:blank. */
-function openViaLink(url) {
+/* One new tab per click. Chrome will not open two PDF tabs from one gesture.
+   The viewer shows EN and TC together, with a link for each file. */
+function openBilingual(en, tc, title, code) {
+  var params = new URLSearchParams();
+  params.set("en", en);
+  params.set("tc", tc);
+  if (title) params.set("title", title);
+  if (code) params.set("code", code);
   var a = document.createElement("a");
-  a.href = url;
+  a.href = "bilingual-hkex-viewer.html?" + params.toString();
   a.target = "_blank";
   a.rel = "noopener";
   document.body.appendChild(a);
   a.click();
   a.remove();
-}
-
-function openBilingual(en, tc) {
-  openViaLink(tc);
-  openViaLink(en);
 }
 
 function splitTitleSegments(s) {
@@ -1482,7 +1477,7 @@ function renderIssuer(code) {
   listHost.querySelectorAll("[data-open]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var f = filtered[Number(btn.getAttribute("data-open"))];
-      if (f) openBilingual(f.pdfEn, f.pdfTc);
+      if (f) openBilingual(f.pdfEn, f.pdfTc, f.titleEn, code);
     });
   });
   listHost.querySelectorAll("[data-glossary]").forEach(function (btn) {

@@ -28,8 +28,7 @@
         "unpaired": 0,
         "rawEn": 190,
         "rawTc": 190,
-        "excludedMonthlyReturns": 30,
-        "excludedNdrShareBuyback": 75
+        "excludedMonthlyOrNdrBuyback": 105
       },
       "filings": [
         {
@@ -1580,8 +1579,7 @@
         "unpaired": 50,
         "rawEn": 171,
         "rawTc": 121,
-        "excludedMonthlyReturns": 30,
-        "excludedNdrShareBuyback": 27
+        "excludedMonthlyOrNdrBuyback": 57
       },
       "filings": [
         {
@@ -2754,8 +2752,7 @@
         "unpaired": 11,
         "rawEn": 131,
         "rawTc": 120,
-        "excludedMonthlyReturns": 27,
-        "excludedNdrShareBuyback": 22
+        "excludedMonthlyOrNdrBuyback": 49
       },
       "filings": [
         {
@@ -4039,10 +4036,10 @@
       ]
     }
   },
-  "publicStamp": "Beta",
-  "exclusionsApplied": {
-    "monthlyReturns": "Removed before publish: Tier 1 Monthly Returns / 月報表 / code 51500.",
-    "ndrShareBuyback": "Removed before publish: Next Day Disclosure Returns whose Tier 2 or category is Share Buyback.",
-    "kept": "Other Next Day Disclosure Returns stay. AGM circulars and announcements about share repurchase stay."
-  }
+  "exclusions": {
+    "monthlyReturns": "tier1 Monthly Returns / 月報表 / code 51500",
+    "ndrShareBuyback": "Next Day Disclosure Returns with Share Buyback in tier2/category; AGM repurchase circulars kept",
+    "strippedAtBuild": true
+  },
+  "publicStamp": "Beta"
 }
