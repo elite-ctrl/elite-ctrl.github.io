@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en-HK" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6YMJ8X3SVM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6YMJ8X3SVM');
+  </script>
+  <title>Bilingual view | LedgerLex Language Studio</title>
+  <meta name="description" content="English and Traditional Chinese announcement PDFs side by side. Opened from Bilingual filings on LedgerLex Language Studio.">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#FFFFFB">
+  <link rel="canonical" href="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
+  <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
+  <link rel="stylesheet" href="/assets/nav-menu.css">
+  <style>
+    :root {
+      --bg: #FFFFFB;
+      --ink: #000000;
+      --surface: #FFFFFF;
+      --yellow: #FFE566;
+      --accent: #FF4D1A;
+      --muted: #666666;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --font: "JetBrains Mono", "Consolas", "Cascadia Code", "Menlo", "Monaco", "Liberation Mono", "Courier New", monospace;
+      --shadow: 6px 6px 0 #000;
+      --shadow-sm: 4px 4px 0 #000;
+      --max: 1160px;
+      --tool-max: 1600px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font);
+      font-weight: 600;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    :focus { outline: none; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 200;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .skip:focus { top: 16px; }
+
+    .topnav {
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      pointer-events: none;
+    }
+
+    .topnav__bar {
+      pointer-events: auto;
+      width: 100%;
+      max-width: var(--max);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      column-gap: 16px;
+      row-gap: 8px;
+      padding: 8px 8px 8px 16px;
+      background: rgba(255, 255, 251, 0.92);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    @media (min-width: 1280px) {
+      nav.topnav .topnav__bar { max-width: var(--tool-max); }
+    }
+
+    .topnav__brand { display: inline-flex; align-items: center; line-height: 0; }
+    .topnav__brand img { display: block; height: 36px; width: auto; }
+    .topnav__links { display: none; align-items: center; gap: 4px; }
+
+    @media (min-width: 900px) {
+      nav.topnav .topnav__bar > .topnav__links {
+        display: flex;
+        flex: 1 1 100%;
+        order: 3;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        row-gap: 4px;
+        column-gap: 4px;
+        min-width: 100%;
+        padding-top: 6px;
+        border-top: 2px solid var(--ink);
+      }
+      nav.topnav .topnav__cta { margin-left: auto; }
+    }
+
+    nav.topnav .topnav__links > a {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+      padding: 8px 10px;
+      border: 2px solid transparent;
+      white-space: nowrap;
+    }
+
+    nav.topnav .topnav__links > a:hover,
+    nav.topnav .topnav__links > a[aria-current="page"] {
+      background: var(--yellow);
+      border-color: var(--ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 8px 12px;
+    }
+
+    .btn--ghost { background: var(--surface); }
+    .btn--accent { background: var(--accent); color: #fff; }
+    .btn--sm { font-size: 14px; line-height: 20px; padding: 6px 10px; }
+
+    .viewer {
+      width: 100%;
+      max-width: var(--tool-max);
+      margin: 0 auto;
+      padding: 16px 16px 28px;
+    }
+
+    .bilingual-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      padding: 10px 12px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bilingual-bar__mark {
+      display: inline-flex;
+      align-items: center;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 20px;
+      text-transform: uppercase;
+    }
+
+    .bilingual-bar__pair {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .bilingual-bar__title {
+      flex: 1 1 240px;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+
+    .bilingual-bar__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .bilingual-note {
+      margin-top: 12px;
+      max-width: 78ch;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+      color: var(--muted);
+    }
+
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .pane {
+      display: flex;
+      flex-direction: column;
+      min-height: 72vh;
+      background: var(--surface);
+      border: 3px solid var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pane__label {
+      padding: 6px 10px;
+      border-bottom: 3px solid var(--ink);
+      background: #F7F7F2;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+
+    .pane iframe {
+      flex: 1;
+      width: 100%;
+      min-height: 64vh;
+      border: 0;
+      background: var(--surface);
+    }
+
+    .pane__fallback {
+      padding: 10px 12px;
+      border-top: 3px solid var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 18px;
+    }
+
+    .pane__fallback a {
+      font-weight: 800;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .viewer-empty {
+      margin-top: 12px;
+      padding: 24px 16px;
+      border: 3px solid var(--ink);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .viewer-empty a { border-bottom: 2px solid var(--ink); }
+
+    .site-footer {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    .site-footer .brand { margin-bottom: 12px; line-height: 0; }
+    .site-footer .brand img { display: block; height: 44px; width: auto; margin: 0 auto; }
+    .site-footer .tag { font-size: 14px; line-height: 20px; font-weight: 600; opacity: 0.8; margin-bottom: 24px; }
+    .site-footer a { font-weight: 700; border-bottom: 2px solid currentColor; }
+    .site-footer a:hover { color: var(--yellow); border-color: var(--yellow); }
+    .site-footer__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 251, 0.25);
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .site-footer__copy { margin-top: 16px; font-size: 12px; line-height: 16px; opacity: 0.6; }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 820px) {
+      .pair { grid-template-columns: 1fr; }
+      .pane, .pane iframe { min-height: 70vh; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#viewer">Skip to bilingual view</a>
+
+  <nav class="topnav" id="topnav" aria-label="Primary">
+    <div class="topnav__bar">
+      <a class="topnav__brand" href="index.html"><img src="/brand/logo-nav.png" width="215" height="80" alt="LedgerLex Language Studio"></a>
+      <div class="topnav__links" role="list">
+        <a href="figure-checker.html" role="listitem">Call the Ledger <span class="nav-beta">Beta</span></a>
+        <a href="call-the-gaps.html" role="listitem">Call the Gaps <span class="nav-beta">Beta</span></a>
+        <a href="board-meeting-heatmap.html" role="listitem">Board meeting heat map <span class="nav-beta">Beta</span></a>
+        <a href="printer-index.html" role="listitem">Printer index <span class="nav-beta">Beta</span></a>
+        <a href="bilingual-hkex-filings.html" role="listitem" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+        <a href="language-watchdog.html" role="listitem">Language Watchdog</a>
+      </div>
+      <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+      <button class="topnav__toggle" type="button" aria-expanded="false" aria-controls="mobile-panel" aria-label="Open menu" id="nav-toggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="topnav__panel" id="mobile-panel" hidden>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Home</p>
+        <a href="index.html#hero">Home</a>
+        <a href="index.html#benefits">Benefits</a>
+        <a href="index.html#coverage">Coverage</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#case-study">Case study</a>
+        <a href="index.html#language-watchdog">Language Watchdog</a>
+        <a href="index.html#call-the-ledger">Call the Ledger</a>
+        <a href="index.html#call-the-gaps">Call the Gaps</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#engage">Engage the Studio</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Tools</p>
+        <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+        <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+        <a href="board-meeting-heatmap.html">Board meeting heat map <span class="nav-beta">Beta</span></a>
+        <a href="printer-index.html">Printer index <span class="nav-beta">Beta</span></a>
+        <a href="bilingual-hkex-filings.html" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Journal</p>
+        <a href="language-watchdog.html">Language Watchdog</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Desk</p>
+        <a href="trainee.html">Trainee</a>
+        <a href="financial-translation.html">Finance</a>
+        <a href="trade-in-words.html">Trade in Words</a>
+      </div>
+      <div class="sitemap-group">
+        <p class="sitemap-label">Legal</p>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="viewer" class="viewer">
+    <div class="bilingual-bar" id="bilingual-bar">
+      <span class="bilingual-bar__mark">Bilingual</span>
+      <span class="bilingual-bar__pair">EN | TC</span>
+      <p class="bilingual-bar__title" id="viewer-title"></p>
+      <div class="bilingual-bar__actions">
+        <button type="button" class="btn btn--accent btn--sm" id="open-both" hidden>Open both PDFs</button>
+        <a class="btn btn--ghost btn--sm" id="open-en" href="#" target="_blank" rel="noopener noreferrer" hidden>EN PDF</a>
+        <a class="btn btn--ghost btn--sm" id="open-tc" href="#" target="_blank" rel="noopener noreferrer" hidden>TC PDF</a>
+      </div>
+    </div>
+    <div class="pair" id="viewer-pair" hidden>
+      <section class="pane" aria-label="English PDF">
+        <p class="pane__label">EN</p>
+        <iframe id="frame-en" title="English PDF" referrerpolicy="no-referrer"></iframe>
+        <p class="pane__fallback">If the preview is blank, HKEX blocked embedding. <a id="fallback-en" href="#" target="_blank" rel="noopener noreferrer">Open EN PDF</a></p>
+      </section>
+      <section class="pane" aria-label="Traditional Chinese PDF">
+        <p class="pane__label">TC</p>
+        <iframe id="frame-tc" title="Traditional Chinese PDF" referrerpolicy="no-referrer"></iframe>
+        <p class="pane__fallback">If the preview is blank, HKEX blocked embedding. <a id="fallback-tc" href="#" target="_blank" rel="noopener noreferrer">Open TC PDF</a></p>
+      </section>
+    </div>
+    <p class="bilingual-note" id="viewer-note" hidden>If a pane stays blank, the exchange has blocked embedding. Open both PDFs from the yellow bar, or use the EN PDF and TC PDF links.</p>
+    <p class="viewer-empty" id="viewer-empty" hidden>This view needs a paired filing from <a href="bilingual-hkex-filings.html">Bilingual filings</a>.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="brand"><img src="/brand/logo-footer.png" width="258" height="96" alt="LedgerLex Language Studio"></p>
+      <p class="tag">Where the ledger meets the lexicon.</p>
+      <nav class="site-footer__map" aria-label="Site map">
+        <div class="site-footer__map-group">
+          <p class="site-footer__map-label">Tools</p>
+          <div class="site-footer__map-links">
+            <a href="figure-checker.html">Call the Ledger <span class="nav-beta">Beta</span></a>
+            <a href="call-the-gaps.html">Call the Gaps <span class="nav-beta">Beta</span></a>
+            <a href="board-meeting-heatmap.html">Board meeting heat map <span class="nav-beta">Beta</span></a>
+            <a href="printer-index.html">Printer index <span class="nav-beta">Beta</span></a>
+            <a href="bilingual-hkex-filings.html" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
+          </div>
+        </div>
+      </nav>
+      <div class="site-footer__legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <span>Hong Kong</span>
+      </div>
+      <p class="site-footer__copy">© LedgerLex Language Studio. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+(function () {
+  var ALLOWED = { "www1.hkexnews.hk": true, "www.hkexnews.hk": true };
+
+  function allowedPdf(raw) {
+    if (!raw) return "";
+    try {
+      var url = new URL(raw);
+      if (url.protocol !== "https:") return "";
+      if (!ALLOWED[url.hostname]) return "";
+      if (!/\.pdf$/i.test(url.pathname)) return "";
+      return url.href;
+    } catch (err) {
+      return "";
+    }
+  }
+
+  var params = new URLSearchParams(location.search);
+  var en = allowedPdf(params.get("en"));
+  var tc = allowedPdf(params.get("tc"));
+  var title = params.get("title") || "";
+  var code = params.get("code") || "";
+  var pair = document.getElementById("viewer-pair");
+  var empty = document.getElementById("viewer-empty");
+  var note = document.getElementById("viewer-note");
+  var titleEl = document.getElementById("viewer-title");
+  var openBoth = document.getElementById("open-both");
+  var openEn = document.getElementById("open-en");
+  var openTc = document.getElementById("open-tc");
+
+  if (!en || !tc) {
+    empty.hidden = false;
+    return;
+  }
+
+  var label = (code ? code + " · " : "") + title;
+  titleEl.textContent = label.trim();
+  if (title) document.title = title + " | Bilingual view | LedgerLex";
+
+  openEn.href = en;
+  openTc.href = tc;
+  document.getElementById("fallback-en").href = en;
+  document.getElementById("fallback-tc").href = tc;
+  openBoth.hidden = false;
+  openEn.hidden = false;
+  openTc.hidden = false;
+  note.hidden = false;
+  pair.hidden = false;
+  document.getElementById("frame-en").src = en;
+  document.getElementById("frame-tc").src = tc;
+
+  /* Second gesture in this tab. TC first, then EN, so the English file lands in front. */
+  openBoth.addEventListener("click", function () {
+    window.open(tc, "_blank", "noopener,noreferrer");
+    window.open(en, "_blank", "noopener,noreferrer");
+  });
+})();
+  </script>
+  <script src="/assets/nav-menu.js"></script>
+</body>
+</html>
