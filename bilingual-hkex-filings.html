@@ -1184,13 +1184,22 @@ function filterStocks(q) {
 function renderHub() {
   document.getElementById("view-hub").hidden = false;
   document.getElementById("view-issuer").hidden = true;
-  var list = filterStocks(hubQuery);
   var host = document.getElementById("issuer-list");
   var empty = document.getElementById("hub-empty");
   var meta = document.getElementById("hub-meta");
+  var cachedTotal = STOCKS.stocks.filter(function (s) { return s.hasCache; }).length;
+  if (!String(hubQuery || "").trim()) {
+    host.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = "Type a stock code or issuer name to find a listing. This Beta cache has " + cachedTotal.toLocaleString("en-HK") + " issuers with paired bilingual filings.";
+    meta.innerHTML = "<strong>" + cachedTotal.toLocaleString("en-HK") + "</strong> issuers with offline bilingual cache — type a name or code to search";
+    return;
+  }
+  var list = filterStocks(hubQuery);
   if (!list.length) {
     host.innerHTML = "";
     empty.hidden = false;
+    empty.textContent = "No issuers match that search.";
     meta.textContent = "0 issuers";
     return;
   }
@@ -1287,15 +1296,56 @@ function downloadGlossaryCandidates(f, stockCode) {
   setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
 }
 
+function decodeEntities(s) {
+  if (!s || s.indexOf("&") === -1) return s || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = s;
+  return ta.value;
+}
+
+function decodeFiling(f) {
+  ["titleEn","titleTc","tier1En","tier1Tc","tier2En","tier2Tc","categoryEn","categoryTc"].forEach(function (k) {
+    if (typeof f[k] === "string") f[k] = decodeEntities(f[k]);
+  });
+  return f;
+}
+
 function isExcludedFiling(f) {
+  /* Contains, not exact: cancelled / reissued Monthly Returns and NDRs used a prefix
+     and an empty tier1Code, so they slipped the published strip and the old UI check. */
   var t1 = f.tier1En || "";
   var t1Tc = f.tier1Tc || "";
   var t2 = f.tier2En || "";
+  var t2Tc = f.tier2Tc || "";
   var cat = f.categoryEn || "";
-  if (t1 === "Monthly Returns" || t1Tc === "月報表" || f.tier1Code === "51500") return true;
-  var isNdr = t1 === "Next Day Disclosure Returns" || cat.indexOf("Next Day Disclosure Returns") === 0;
-  if (isNdr && (t2.indexOf("Share Buyback") !== -1 || cat.indexOf("Share Buyback") !== -1)) return true;
-  return false;
+  var catTc = f.categoryTc || "";
+  var title = f.titleEn || "";
+  var titleTc = f.titleTc || "";
+  if (
+    f.tier1Code === "51500" ||
+    t1.indexOf("Monthly Returns") !== -1 ||
+    cat.indexOf("Monthly Returns") !== -1 ||
+    t1Tc.indexOf("月報表") !== -1 ||
+    catTc.indexOf("月報表") !== -1
+  ) return true;
+  var isNdr =
+    f.tier1Code === "50000" ||
+    t1.indexOf("Next Day Disclosure") !== -1 ||
+    cat.indexOf("Next Day Disclosure") !== -1 ||
+    t1Tc.indexOf("翌日披露") !== -1 ||
+    catTc.indexOf("翌日披露") !== -1;
+  if (!isNdr) return false;
+  var buybackChip =
+    t2.indexOf("Share Buyback") !== -1 || t2.indexOf("Share Buy-back") !== -1 ||
+    cat.indexOf("Share Buyback") !== -1 || cat.indexOf("Share Buy-back") !== -1 ||
+    t2Tc.indexOf("股份購回") !== -1 || catTc.indexOf("股份購回") !== -1;
+  if (buybackChip) return true;
+  var buybackTitle = /Share Buy-?backs?/i.test(title) || titleTc.indexOf("股份購回") !== -1;
+  if (!buybackTitle) return false;
+  /* Keep the standard NDR form title (capital changes and/or share buybacks). */
+  var boilerplate = /changes in issued share(?:s| capital)|issued shares or treasury shares|已發行股本|已發行股份或庫存股份/i.test(title) ||
+    /已發行股本|已發行股份或庫存股份/.test(titleTc);
+  return !boilerplate;
 }
 
 function renderIssuer(code) {
@@ -1592,6 +1642,12 @@ function loadGzipJson(name) {
     STOCKS = parts[0];
     FILINGS = parts[1];
     TIERS = parts[2];
+    if (FILINGS && FILINGS.issuers) {
+      Object.keys(FILINGS.issuers).forEach(function (code) {
+        var pack = FILINGS.issuers[code];
+        if (pack && pack.filings) pack.filings.forEach(decodeFiling);
+      });
+    }
     if (!location.hash) location.replace("#/");
     render();
   }).catch(function (err) { showCacheError(err); });
