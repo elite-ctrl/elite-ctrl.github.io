@@ -955,11 +955,11 @@
               <h1>Bilingual filings <span class="beta">Beta</span></h1>
             </div>
             <p class="subtitle">Search a Hong Kong issuer, open its HKEXnews headline types, and launch the English and Traditional Chinese announcement PDFs together when both exist.</p>
-            <p class="subtitle">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
+            <p class="subtitle" data-cache-dates="cutoff">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
             <div class="tool-notes">
-              <p class="disclaimer"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
-              <p class="privacy-note">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
-              <p class="disclaimer disclaimer--legal"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
+              <p class="disclaimer" data-cache-dates="from to"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
+              <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+              <p class="disclaimer disclaimer--legal" data-cache-dates="cutoff"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
             </div>
           </header>
 
@@ -1034,7 +1034,7 @@
           <h2 id="bilingual-faq-title">Questions about this cache</h2>
           <div class="faq-item">
             <h3>What is Bilingual filings?</h3>
-            <p>Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 10 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 10 November 2023 through 10 November 2026.</p>
+            <p data-cache-dates="cutoff from to">Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 10 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 10 November 2023 through 10 November 2026.</p>
           </div>
           <div class="faq-item">
             <h3>Does the page query HKEXnews while I search?</h3>
@@ -1501,6 +1501,197 @@ function render() {
   }
 }
 
+/* Snapshot cutoff and the three-year window.
+   Prefer an explicit cutoff, then snapshot, on the filings cache and then stocks.json:
+   cutoff, cutoffDate, asOf, snapshotDate, or snapshot (string or {date,cutoff,asOf}).
+   Prefer an explicit window when one is published at the top level (or under snapshot):
+   window, dateWindow, coverage, sourceWindow, from/to, windowFrom/windowTo,
+   coverageFrom/coverageTo, or start/end. Otherwise the window is the cutoff minus
+   three calendar years through the cutoff. 29 February falls back to 28 February
+   when the start year is not a leap year. Per-issuer sourceWindow is not a page-level
+   field. Static copy stays in place until this runs, and if no date parses. */
+var CACHE_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var CACHE_MONTH_INDEX = {};
+CACHE_MONTHS.forEach(function (name, index) { CACHE_MONTH_INDEX[name.toLowerCase()] = index + 1; });
+
+function isLeapYear(year) {
+  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+}
+
+function daysInMonth(year, month) {
+  if (month === 2) return isLeapYear(year) ? 29 : 28;
+  return [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+}
+
+function makeCacheDate(year, month, day) {
+  if (year < 1990 || year > 2100) return null;
+  if (month < 1 || month > 12) return null;
+  if (day < 1 || day > daysInMonth(year, month)) return null;
+  return { y: year, m: month, d: day };
+}
+
+function formatCacheDate(date) {
+  return date.d + " " + CACHE_MONTHS[date.m - 1] + " " + date.y;
+}
+
+function minusCacheYears(date, years) {
+  var year = date.y - years;
+  var day = date.d;
+  if (date.m === 2 && day === 29 && !isLeapYear(year)) day = 28;
+  return makeCacheDate(year, date.m, day);
+}
+
+function parseCacheDate(value) {
+  if (typeof value === "number" && isFinite(value)) value = String(Math.trunc(value));
+  if (typeof value !== "string") return null;
+  var text = value.trim();
+  var compact = text.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (compact) return makeCacheDate(Number(compact[1]), Number(compact[2]), Number(compact[3]));
+  var iso = text.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s].*)?$/);
+  if (iso) return makeCacheDate(Number(iso[1]), Number(iso[2]), Number(iso[3]));
+  var longForm = text.match(/(\d{1,2})\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/i);
+  if (!longForm) return null;
+  return makeCacheDate(Number(longForm[3]), CACHE_MONTH_INDEX[longForm[2].toLowerCase()], Number(longForm[1]));
+}
+
+function cacheDatePattern() {
+  return /\d{1,2} (?:January|February|March|April|May|June|July|August|September|October|November|December) \d{4}/g;
+}
+
+function readExplicitCutoff(obj) {
+  if (!obj || typeof obj !== "object") return null;
+  var keys = ["cutoff", "cutoffDate", "asOf", "snapshotDate"];
+  var i;
+  for (i = 0; i < keys.length; i++) {
+    var parsed = parseCacheDate(obj[keys[i]]);
+    if (parsed) return parsed;
+  }
+  if (obj.snapshot && typeof obj.snapshot === "object") {
+    var nested = ["cutoff", "cutoffDate", "date", "asOf", "snapshotDate"];
+    for (i = 0; i < nested.length; i++) {
+      parsed = parseCacheDate(obj.snapshot[nested[i]]);
+      if (parsed) return parsed;
+    }
+  }
+  return parseCacheDate(obj.snapshot);
+}
+
+function pairCacheWindow(fromValue, toValue) {
+  var from = parseCacheDate(fromValue);
+  var to = parseCacheDate(toValue);
+  if (!from || !to) return null;
+  return { from: from, to: to };
+}
+
+function readWindowObject(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return pairCacheWindow(
+    value.from || value.fromDate || value.start || value.windowFrom || value.coverageFrom,
+    value.to || value.toDate || value.end || value.windowTo || value.coverageTo || value.cutoff
+  );
+}
+
+function readExplicitWindow(obj) {
+  if (!obj || typeof obj !== "object") return null;
+  var direct = pairCacheWindow(obj.from, obj.to) ||
+    pairCacheWindow(obj.windowFrom, obj.windowTo) ||
+    pairCacheWindow(obj.fromDate, obj.toDate) ||
+    pairCacheWindow(obj.coverageFrom, obj.coverageTo) ||
+    pairCacheWindow(obj.start, obj.end);
+  if (direct) return direct;
+  var keys = ["window", "dateWindow", "coverage", "sourceWindow"];
+  var i;
+  for (i = 0; i < keys.length; i++) {
+    var parsed = readWindowObject(obj[keys[i]]);
+    if (parsed) return parsed;
+  }
+  if (!obj.snapshot || typeof obj.snapshot !== "object") return null;
+  return pairCacheWindow(obj.snapshot.from, obj.snapshot.to) ||
+    readWindowObject(obj.snapshot.window) ||
+    readWindowObject(obj.snapshot.dateWindow) ||
+    readWindowObject(obj.snapshot.coverage) ||
+    readWindowObject(obj.snapshot.sourceWindow);
+}
+
+function firstParsed(reader, sources) {
+  var i;
+  for (i = 0; i < sources.length; i++) {
+    var parsed = reader(sources[i]);
+    if (parsed) return parsed;
+  }
+  return null;
+}
+
+function resolvePublishedDates(filings, stocks) {
+  var sources = [filings, stocks];
+  var publishedWindow = firstParsed(readExplicitWindow, sources);
+  var cutoff = firstParsed(readExplicitCutoff, sources) || (publishedWindow && publishedWindow.to);
+  if (!cutoff) return null;
+  if (!publishedWindow) {
+    var from = minusCacheYears(cutoff, 3);
+    if (!from) return null;
+    publishedWindow = { from: from, to: cutoff };
+  }
+  return { cutoff: cutoff, from: publishedWindow.from, to: publishedWindow.to };
+}
+
+function rewriteCacheDateText(text, roles, dates) {
+  var index = 0;
+  return String(text).replace(cacheDatePattern(), function (found) {
+    if (index >= roles.length) return found;
+    var picked = dates[roles[index]];
+    index += 1;
+    return picked ? formatCacheDate(picked) : found;
+  });
+}
+
+function rewriteCacheDateAttr(selector, attr, roles, dates) {
+  var el = document.querySelector(selector);
+  if (!el) return;
+  var current = el.getAttribute(attr) || "";
+  var next = rewriteCacheDateText(current, roles, dates);
+  if (next !== current) el.setAttribute(attr, next);
+}
+
+function rewriteElementCacheDates(el, dates) {
+  var roles = (el.getAttribute("data-cache-dates") || "").split(/\s+/).filter(Boolean);
+  if (!roles.length) return;
+  var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  var roleIndex = 0;
+  var node;
+  while ((node = walker.nextNode())) {
+    if (roleIndex >= roles.length) break;
+    var seen = 0;
+    var next = node.nodeValue.replace(cacheDatePattern(), function (found) {
+      if (roleIndex >= roles.length) return found;
+      var picked = dates[roles[roleIndex]];
+      if (!picked) return found;
+      roleIndex += 1;
+      seen += 1;
+      return formatCacheDate(picked);
+    });
+    if (seen) node.nodeValue = next;
+  }
+}
+
+function applyPublishedDates(filings, stocks) {
+  try {
+    var dates = resolvePublishedDates(filings, stocks);
+    if (!dates) return;
+    var metaRoles = ["cutoff", "from", "to"];
+    rewriteCacheDateAttr('meta[name="description"]', "content", metaRoles, dates);
+    rewriteCacheDateAttr('meta[property="og:description"]', "content", metaRoles, dates);
+    rewriteCacheDateAttr('meta[name="twitter:description"]', "content", metaRoles, dates);
+    var ld = document.querySelector('script[type="application/ld+json"]');
+    if (ld) ld.textContent = rewriteCacheDateText(ld.textContent, metaRoles, dates);
+    document.querySelectorAll("[data-cache-dates]").forEach(function (el) {
+      rewriteElementCacheDates(el, dates);
+    });
+  } catch (err) {
+    /* Leave the static snapshot copy in place. */
+  }
+}
+
 function showCacheError(err) {
   var meta = document.getElementById("hub-meta");
   var empty = document.getElementById("hub-empty");
@@ -1585,6 +1776,7 @@ function loadGzipJson(name) {
     STOCKS = parts[0];
     FILINGS = parts[1];
     TIERS = parts[2];
+    applyPublishedDates(FILINGS, STOCKS);
     if (FILINGS && FILINGS.issuers) {
       Object.keys(FILINGS.issuers).forEach(function (code) {
         var pack = FILINGS.issuers[code];
