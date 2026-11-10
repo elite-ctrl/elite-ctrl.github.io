@@ -14,14 +14,19 @@ If that payload matches what is already on the page, the file is left untouched
 purpose/period, or an empty list exits before any write so the page cannot be
 wiped to zero meetings.
 
+The privacy-note frequency sentence ("It is updated every two weeks around
+08:30 (Hong Kong time).") is not a snapshot date. A write that changes it,
+or any other copy outside DATA and the two snapshot phrases, is refused.
+
 Local use:
   python3 scripts/refresh-board-meeting-heatmap.py
   python3 scripts/refresh-board-meeting-heatmap.py --dry-run
   python3 scripts/refresh-board-meeting-heatmap.py --self-test
 
-The weekday job that calls this script is
+The fortnightly job that calls this script is
 .github/workflows/refresh-board-meeting-heatmap.yml
-(00:30 UTC = 08:30 Asia/Hong_Kong, Monday–Friday, plus workflow_dispatch).
+(Tuesday 00:30 UTC = 08:30 Asia/Hong_Kong on even ISO weeks, plus
+workflow_dispatch, which always refreshes).
 """
 
 from __future__ import annotations
@@ -650,7 +655,8 @@ def _sample_heatmap(meetings: list[dict], long_date: str) -> str:
         f"Snapshot {long_date}.</p>\n"
         "<p>Stock code watchlist</p>\n"
         "<p>Call the Gaps stays put. "
-        f"This page shows a published snapshot dated {long_date}.</p>\n"
+        f"This page shows a published snapshot dated {long_date}. "
+        "It is updated every two weeks around 08:30 (Hong Kong time).</p>\n"
         "<script>\n"
         f"const DATA = {blob};\n"
         "const BUCKETS = "
@@ -766,6 +772,7 @@ def self_test() -> None:
         updated = html_path.read_text(encoding="utf-8")
         assert "Snapshot 11 November 2026." in updated
         assert "published snapshot dated 11 November 2026." in updated
+        assert updated.count("It is updated every two weeks around 08:30 (Hong Kong time).") == 1
         assert "Call the Ledger" in updated
         assert "Call the Gaps" in updated
         assert "Stock code watchlist" in updated
@@ -810,6 +817,23 @@ def self_test() -> None:
         else:
             raise AssertionError("unknown purpose should fail")
         assert html_path.read_text(encoding="utf-8") == sealed
+
+    # The live page's frequency sentence must survive a snapshot-date rewrite.
+    # build_html is in memory only; this must not touch the published file.
+    frequency = "It is updated every two weeks around 08:30 (Hong Kong time)."
+    live_path = DEFAULT_HTML
+    live = live_path.read_text(encoding="utf-8")
+    if live.count(frequency) != 1:
+        raise AssertionError("frequency sentence must appear once on the live page")
+    patched = build_html(live, load_existing(live), "2030-01-08")
+    if patched.count(frequency) != 1:
+        raise AssertionError("refresh dropped the frequency sentence")
+    if "Snapshot 8 January 2030" not in patched:
+        raise AssertionError("intro snapshot date was not rewritten in memory")
+    if "published snapshot dated 8 January 2030" not in patched:
+        raise AssertionError("privacy-note snapshot date was not rewritten in memory")
+    if live_path.read_text(encoding="utf-8") != live:
+        raise AssertionError("self-test wrote the live page")
 
     log("self-test ok")
 

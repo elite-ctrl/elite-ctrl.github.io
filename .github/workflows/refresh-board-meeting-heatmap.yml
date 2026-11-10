@@ -1,20 +1,37 @@
 # Refresh the Board meeting heat map from HKEX Board Meeting Notices.
 #
-# Schedule: weekdays only, 08:30 in the morning, Asia/Hong_Kong.
+# Schedule: every two weeks, Tuesday, around 08:30 in the morning, Asia/Hong_Kong.
+# GitHub Actions cron cannot express a 14-day interval, so the trigger is a weekly
+# Tuesday cron plus a skip on the off week (the fortnight job below).
+#
 # GitHub Actions cron is UTC. Hong Kong Time is UTC+8 all year (no daylight saving).
-#   30 0 * * 1-5
+#   30 0 * * 2
 #   = 00:30 UTC
 #   = 08:30 Asia/Hong_Kong
-#   = Monday–Friday (cron days 1-5). Saturday and Sunday are not scheduled.
+#   = Tuesday only (cron day 2).
 # GitHub may start the job a few minutes after 00:30 UTC; it still lands in the
 # 08:00–09:00 HKT window when the runner is on time.
+#
+# Even-week gate (scheduled runs only):
+#   The fortnight job reads the ISO-8601 week number in Asia/Hong_Kong
+#   (GNU date %V: Monday-based, 01–53). A scheduled run continues only when that
+#   week is even. An odd week is a successful skip; it does not fetch or commit.
+#   Phased from the first successful scheduled run, Tuesday 10 November 2026
+#   (ISO week 46, even; the runner started at 09:37 HKT that morning). The next
+#   automatic run is Tuesday 24 November 2026 (ISO week 48) around 08:30 HKT,
+#   then every later even ISO week (8 December 2026, 22 December 2026, and so on).
+#   2026 has ISO week 53. Week 53 and week 01 of 2027 are both odd, so the
+#   Tuesdays 29 December 2026 and 5 January 2027 are both skipped. The next
+#   automatic run after 22 December 2026 is Tuesday 12 January 2027 (ISO week 02).
+#   From that Tuesday the even-week runs are two weeks apart again.
 #
 # Manual run (workflow_dispatch):
 #   GitHub → Actions → "Refresh HKEX board meeting heatmap" → Run workflow
 #   Choose branch main (after this file is on main, the schedule only runs there).
 #   Or: gh workflow run refresh-board-meeting-heatmap.yml --ref main
-# A hand run does the same work as the morning run. It commits only when the
-# JSON-normalized meeting set actually changed.
+# A hand run does the same work as a scheduled run. The fortnight gate does not
+# apply to workflow_dispatch, including on an odd ISO week. It commits only when
+# the JSON-normalized meeting set actually changed.
 #
 # The job fetches Main (ebmn_c.htm) and GEM (cbmngem.htm), retries when HKEX or
 # Akamai returns 503 / a bot challenge, and exits before writing if the fetch or
@@ -24,7 +41,8 @@ name: Refresh HKEX board meeting heatmap
 
 on:
   schedule:
-    - cron: "30 0 * * 1-5"
+    # Tuesday 00:30 UTC = 08:30 Asia/Hong_Kong. Off weeks are skipped below.
+    - cron: "30 0 * * 2"
   workflow_dispatch:
 
 permissions:
@@ -35,7 +53,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  fortnight:
+    name: Even ISO week gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - name: Run on even ISO weeks; always run a hand dispatch
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          # workflow_dispatch, and any future non-schedule trigger, always refresh.
+          if [[ "$EVENT_NAME" != "schedule" ]]; then
+            echo "event=${EVENT_NAME:-<empty>}; fortnight gate does not apply"
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          zone="$(TZ=Asia/Hong_Kong date +%Z)"
+          if [[ "$zone" != "HKT" ]]; then
+            echo "expected Asia/Hong_Kong to be HKT, got ${zone:-<empty>}"
+            exit 1
+          fi
+          week="$(TZ=Asia/Hong_Kong date +%V)"
+          today="$(TZ=Asia/Hong_Kong date +%F)"
+          dow="$(TZ=Asia/Hong_Kong date +%u)"
+          if ! [[ "$week" =~ ^[0-9]{2}$ ]]; then
+            echo "refusing ISO week: ${week:-<empty>}"
+            exit 1
+          fi
+          if ! [[ "$today" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+            echo "refusing Hong Kong date: ${today:-<empty>}"
+            exit 1
+          fi
+          # %u: 1 = Monday … 7 = Sunday. The cron is Tuesday; a multi-day delay
+          # still uses whatever Hong Kong date the runner actually reached.
+          if (( 10#$week % 2 == 0 )); then
+            echo "ISO week $week ($today, weekday $dow, Asia/Hong_Kong) is even; refreshing"
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "ISO week $week ($today, weekday $dow, Asia/Hong_Kong) is odd; skipping this fortnight"
+            echo "run=no" >> "$GITHUB_OUTPUT"
+          fi
+
   refresh:
+    needs: fortnight
+    if: needs.fortnight.outputs.run == 'yes'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
