@@ -1,1 +1,84 @@
-{"tier1": [{"code": "10000", "nameEn": "Announcements and Notices", "nameTc": "公告及通告"}, {"code": "20000", "nameEn": "Circulars", "nameTc": "通函"}, {"code": "30000", "nameEn": "Listing Documents", "nameTc": "上市文件"}, {"code": "40000", "nameEn": "Financial Statements/ESG Information", "nameTc": "財務報表/環境、社會及管治資料"}, {"code": "50000", "nameEn": "Next Day Disclosure Returns", "nameTc": "翌日披露報表"}, {"code": "51500", "nameEn": "Monthly Returns", "nameTc": "月報表"}, {"code": "52000", "nameEn": "Proxy Forms", "nameTc": "委任代表表格"}, {"code": "53000", "nameEn": "Company Information Sheet", "nameTc": "公司資料報表"}, {"code": "80000", "nameEn": "Trading Information of Exchange Traded Funds", "nameTc": "交易所買賣基金的交易資料"}, {"code": "81000", "nameEn": "Trading Information of Leveraged and Inverse Products", "nameTc": "槓桿及反向產品的交易資料"}, {"code": "54000", "nameEn": "Constitutional Documents", "nameTc": "憲章文件"}, {"code": "56000", "nameEn": "Documents on Display", "nameTc": "展示文件"}, {"code": "90000", "nameEn": "Regulatory Announcement & News", "nameTc": "監管者發出的公告及消息"}, {"code": "55000", "nameEn": "Takeovers Code - dealing disclosures", "nameTc": "合併守則 - 交易披露"}, {"code": "70000", "nameEn": "Debt and Structured Products", "nameTc": "債券及結構性產品"}, {"code": "57000", "nameEn": "Documents on Display (Debt Issuance Programmes)", "nameTc": "展示文件（債務證券發行計劃）"}, {"code": "58000", "nameEn": "Documents on Display (Debt Securities)", "nameTc": "展示文件（債務證券）"}, {"code": "59000", "nameEn": "Documents on Display (Structured Products)", "nameTc": "展示文件（結構性產品）"}, {"code": "91000", "nameEn": "Application Proofs, OC Announcements and Post Hearing Information Packs or PHIPs", "nameTc": "申請版本、整體協調人公告及聆訊後資料集"}, {"code": "51000", "nameEn": "Share Buyback Reports (Before 1 January 2009)", "nameTc": "股份購回報告 (2009年1月1日前)"}]}
+{
+  "tier1": [
+    {
+      "code": "10000",
+      "nameEn": "Announcements and Notices",
+      "nameTc": "公告及通告"
+    },
+    {
+      "code": "20000",
+      "nameEn": "Circulars",
+      "nameTc": "通函"
+    },
+    {
+      "code": "30000",
+      "nameEn": "Listing Documents",
+      "nameTc": "上市文件"
+    },
+    {
+      "code": "40000",
+      "nameEn": "Financial Statements/ESG Information",
+      "nameTc": "財務報表/環境、社會及管治資料"
+    },
+    {
+      "code": "50000",
+      "nameEn": "Next Day Disclosure Returns",
+      "nameTc": "翌日披露報表"
+    },
+    {
+      "code": "51500",
+      "nameEn": "Monthly Returns",
+      "nameTc": "月報表"
+    },
+    {
+      "code": "52000",
+      "nameEn": "Proxy Forms",
+      "nameTc": "委任代表表格"
+    },
+    {
+      "code": "53000",
+      "nameEn": "Company Information Sheet",
+      "nameTc": "公司資料報表"
+    },
+    {
+      "code": "80000",
+      "nameEn": "Trading Information of Exchange Traded Funds",
+      "nameTc": "交易所買賣基金的交易資料"
+    },
+    {
+      "code": "81000",
+      "nameEn": "Trading Information of Leveraged and Inverse Products",
+      "nameTc": "槓桿及反向產品的交易資料"
+    },
+    {
+      "code": "54000",
+      "nameEn": "Constitutional Documents",
+      "nameTc": "憲章文件"
+    },
+    {
+      "code": "56000",
+      "nameEn": "Documents on Display",
+      "nameTc": "展示文件"
+    },
+    {
+      "code": "90000",
+      "nameEn": "Regulatory Announcement & News",
+      "nameTc": "監管者發出的公告及消息"
+    },
+    {
+      "code": "55000",
+      "nameEn": "Takeovers Code - dealing disclosures",
+      "nameTc": "合併守則 - 交易披露"
+    },
+    {
+      "code": "91000",
+      "nameEn": "Application Proofs, OC Announcements and Post Hearing Information Packs or PHIPs",
+      "nameTc": "申請版本、整體協調人公告及聆訊後資料集"
+    },
+    {
+      "code": "51000",
+      "nameEn": "Share Buyback Reports (Before 1 January 2009)",
+      "nameTc": "股份購回報告 (2009年1月1日前)"
+    }
+  ]
+}
