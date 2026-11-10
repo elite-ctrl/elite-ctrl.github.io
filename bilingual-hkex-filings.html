@@ -12,12 +12,12 @@
     gtag('config', 'G-6YMJ8X3SVM');
   </script>
   <title>Bilingual HKEX filings | LedgerLex Language Studio</title>
-  <meta name="description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
+  <meta name="description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#FFFFFB">
   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
   <meta property="og:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
-  <meta property="og:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
+  <meta property="og:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
@@ -26,7 +26,7 @@
   <meta property="og:image:alt" content="LedgerLex — Financial storytelling that never drops a language">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
-  <meta name="twitter:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, and export up to ten candidate glossary pairs. Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
+  <meta name="twitter:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 10 November 2026. Main Board and GEM equity and ETF cache, 10 November 2023 through 10 November 2026.">
   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,14 +63,6 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What does Export glossary produce?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A light TSV of at most ten English–Traditional Chinese candidate pairs for that filing, marked candidate. It is not publish-ready translation memory, and it is not for unsupervised publication."
         }
       },
       {
@@ -726,15 +718,6 @@
 
     .filing__links a:hover { background: var(--yellow); }
 
-    .filing__glossary-note {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 15px;
-      color: var(--muted);
-      max-width: 168px;
-      text-wrap: pretty;
-    }
-
     .soft-cta {
       margin-top: 24px;
       display: grid;
@@ -879,7 +862,6 @@
       .filing { grid-template-columns: 1fr; }
       .filing__actions { align-items: flex-start; min-width: 0; }
       .filing__links { justify-content: flex-start; }
-      .filing__glossary-note { max-width: none; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -975,8 +957,8 @@
             <p class="subtitle">Search a Hong Kong issuer, open its HKEXnews headline types, and launch the English and Traditional Chinese announcement PDFs together when both exist.</p>
             <p class="subtitle">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
             <div class="tool-notes">
-              <p class="disclaimer"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, and Next Day Disclosure Returns for share buybacks, are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Glossary export is at most ten candidate pairs, and it is not publish-ready translation memory. Confirm against HKEXnews before you rely on a filing.</p>
-              <p class="privacy-note">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. A glossary download stays in the browser. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+              <p class="disclaimer"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, and Next Day Disclosure Returns for share buybacks, are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
+              <p class="privacy-note">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
               <p class="disclaimer disclaimer--legal"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
             </div>
           </header>
@@ -1061,10 +1043,6 @@
           <div class="faq-item">
             <h3>Which filings are left out of the cache?</h3>
             <p>Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides.</p>
-          </div>
-          <div class="faq-item">
-            <h3>What does Export glossary produce?</h3>
-            <p>A light TSV of at most ten English–Traditional Chinese candidate pairs for that filing, marked candidate. It is not publish-ready translation memory, and it is not for unsupervised publication.</p>
           </div>
           <div class="faq-item">
             <h3>How does Bilingual filings sit with the other Tools?</h3>
@@ -1251,56 +1229,6 @@ function openBilingual(en, tc, title, code) {
   a.remove();
 }
 
-function splitTitleSegments(s) {
-  return String(s || "")
-    .split(/[;\/·；／]+/)
-    .map(function (p) { return p.trim(); })
-    .filter(Boolean);
-}
-
-function glossaryCandidates(f) {
-  var pairs = [];
-  var seen = {};
-  function add(en, tc) {
-    en = String(en || "").trim();
-    tc = String(tc || "").trim();
-    if (!en || !tc || pairs.length >= 10) return;
-    var key = en.toLowerCase() + "\0" + tc;
-    if (seen[key]) return;
-    seen[key] = true;
-    pairs.push({ en: en, tc: tc });
-  }
-  add(f.titleEn, f.titleTc);
-  add(f.categoryEn, f.categoryTc);
-  add(f.tier1En, f.tier1Tc);
-  var enSegs = splitTitleSegments(f.titleEn);
-  var tcSegs = splitTitleSegments(f.titleTc);
-  if (enSegs.length > 1 && enSegs.length === tcSegs.length) {
-    for (var i = 0; i < enSegs.length && pairs.length < 10; i++) add(enSegs[i], tcSegs[i]);
-  }
-  return pairs;
-}
-
-function downloadGlossaryCandidates(f, stockCode) {
-  var pairs = glossaryCandidates(f);
-  if (!pairs.length) return;
-  var rows = ["en\ttc\tnote"];
-  pairs.forEach(function (p) {
-    rows.push(
-      p.en.replace(/\t/g, " ").replace(/\r?\n/g, " ") + "\t" +
-      p.tc.replace(/\t/g, " ").replace(/\r?\n/g, " ") + "\tcandidate"
-    );
-  });
-  var blob = new Blob([rows.join("\n") + "\n"], { type: "text/tab-separated-values;charset=utf-8" });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement("a");
-  a.href = url;
-  a.download = "glossary-candidates-" + stockCode + "-" + (f.newsIdEn || "entry") + ".tsv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
-}
 
 function decodeEntities(s) {
   if (!s || s.indexOf("&") === -1) return s || "";
@@ -1506,8 +1434,6 @@ function renderIssuer(code) {
 
   listHost.innerHTML = filtered.map(function (f, idx) {
     var cat = f.tier2En ? (f.tier1En + " · " + f.tier2En) : f.tier1En;
-    var glossN = glossaryCandidates(f).length;
-    var glossDisabled = glossN < 1;
     return (
       '<article class="filing">' +
         '<div class="filing__when">' + escapeHtml(f.dateTime) +
@@ -1522,10 +1448,6 @@ function renderIssuer(code) {
             '<a href="' + escapeHtml(f.pdfEn) + '" target="_blank" rel="noopener noreferrer">EN PDF</a>' +
             '<a href="' + escapeHtml(f.pdfTc) + '" target="_blank" rel="noopener noreferrer">TC PDF</a>' +
           "</div>" +
-          '<button type="button" class="btn btn--ghost btn--sm" data-glossary="' + idx + '"' +
-            (glossDisabled ? ' disabled aria-disabled="true"' : "") +
-            ' title="Candidate pairs only — not publish-ready TM">Export glossary</button>' +
-          '<p class="filing__glossary-note">Candidate pairs only — not publish-ready TM</p>' +
         "</div>" +
       "</article>"
     );
@@ -1535,13 +1457,6 @@ function renderIssuer(code) {
     btn.addEventListener("click", function () {
       var f = filtered[Number(btn.getAttribute("data-open"))];
       if (f) openBilingual(f.pdfEn, f.pdfTc, f.titleEn, code);
-    });
-  });
-  listHost.querySelectorAll("[data-glossary]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      if (btn.disabled) return;
-      var f = filtered[Number(btn.getAttribute("data-glossary"))];
-      if (f) downloadGlossaryCandidates(f, code);
     });
   });
 }
