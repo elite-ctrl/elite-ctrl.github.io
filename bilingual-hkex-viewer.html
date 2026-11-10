@@ -466,10 +466,29 @@
   note.hidden = false;
   pair.hidden = false;
 
-  /* Second gesture in this tab. TC first, then EN, so the English file lands in front. */
+  /* Open two blank windows in the same click, then point them at the PDFs.
+     Do not pass "noopener" as a window.open feature: Chrome then treats the
+     second open as a blocked popup, so only the Chinese file appeared.
+     TC first, EN second, so the English file lands in front. If the browser
+     still blocks one window, open the missing file in this tab. */
   openBoth.addEventListener("click", function () {
-    window.open(tc, "_blank", "noopener,noreferrer");
-    window.open(en, "_blank", "noopener,noreferrer");
+    var wTc = window.open("about:blank", "hkex-pdf-tc");
+    var wEn = window.open("about:blank", "hkex-pdf-en");
+    if (wTc) {
+      wTc.opener = null;
+      wTc.location.replace(tc);
+    }
+    if (wEn) {
+      wEn.opener = null;
+      wEn.location.replace(en);
+    }
+    if (wTc && !wEn) {
+      location.assign(en);
+    } else if (wEn && !wTc) {
+      location.assign(tc);
+    } else if (!wTc && !wEn) {
+      note.textContent = "Your browser blocked the PDF windows. Use EN PDF or TC PDF in the yellow bar.";
+    }
   });
 })();
   </script>
