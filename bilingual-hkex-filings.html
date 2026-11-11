@@ -46,7 +46,7 @@
         "name": "What is Bilingual filings?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 11 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 11 November 2023 through 11 November 2026."
+          "text": "Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 11 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 11 November 2023 through 11 November 2026."
         }
       },
       {
@@ -718,6 +718,16 @@
 
     .filing__links a:hover { background: var(--yellow); }
 
+    .filing__popup-note {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      background: var(--yellow);
+      border: 2px solid var(--ink);
+      padding: 6px 8px;
+    }
+
     .soft-cta {
       margin-top: 24px;
       display: grid;
@@ -1042,7 +1052,7 @@
           <h2 id="bilingual-faq-title">Questions about this cache</h2>
           <div class="faq-item">
             <h3>What is Bilingual filings?</h3>
-            <p data-cache-dates="cutoff from to">Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together in one tab when both exist. Beta snapshot: 11 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 11 November 2023 through 11 November 2026.</p>
+            <p data-cache-dates="cutoff from to">Bilingual filings is a Beta desk tool on LedgerLex Language Studio. Search a Hong Kong issuer, filter HKEXnews headline types, and open the English and Traditional Chinese announcement PDFs together when both exist. Beta snapshot: 11 November 2026 (Asia/Hong_Kong). The published cache covers Main Board and GEM equity and ETF issuers from 11 November 2023 through 11 November 2026.</p>
           </div>
           <div class="faq-item">
             <h3>Does the page query HKEXnews while I search?</h3>
@@ -1226,21 +1236,55 @@ function renderHub() {
   });
 }
 
-/* One new tab per click. Chrome will not open two PDF tabs from one gesture.
-   The viewer shows EN and TC together, with a link for each file. */
-function openBilingual(en, tc, title, code) {
-  var params = new URLSearchParams();
-  params.set("en", en);
-  params.set("tc", tc);
-  if (title) params.set("title", title);
-  if (code) params.set("code", code);
-  var a = document.createElement("a");
-  a.href = "bilingual-hkex-viewer.html?" + params.toString();
-  a.target = "_blank";
-  a.rel = "noopener";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+/* Open both PDFs from this click and stay on the filings list.
+   Do not open bilingual-hkex-viewer.html.
+   Chrome allows one window.open per click and blocks the next one in that
+   gesture. Do not pass "noopener" as a window feature, and do not send this
+   page to the missing PDF. Open the English file first, then Traditional
+   Chinese, so the English PDF is the one that opens when the second window
+   is blocked. If the browser allows both, the Traditional Chinese file lands
+   in front. A blocked window leaves a note on the row. */
+function openPdfTab(url) {
+  if (!url) return null;
+  var win = window.open(url, "_blank");
+  if (!win) return null;
+  try { win.opener = null; } catch (err) { /* The PDF tab can already be cross-origin. */ }
+  return win;
+}
+
+function popupBlockNote(button, text) {
+  var actions = button && button.parentNode;
+  if (!actions) return;
+  var note = actions.querySelector(".filing__popup-note");
+  if (!text) {
+    if (note) note.remove();
+    return;
+  }
+  if (!note) {
+    note = document.createElement("p");
+    note.className = "filing__popup-note";
+    note.setAttribute("role", "status");
+    actions.appendChild(note);
+  }
+  note.textContent = text;
+}
+
+function openBilingual(en, tc, button) {
+  var wEn = openPdfTab(en);
+  var wTc = openPdfTab(tc);
+  if (wTc && wEn) {
+    popupBlockNote(button, "");
+    return;
+  }
+  var text;
+  if (!wTc && !wEn) {
+    text = "The browser blocked both PDF windows. Use EN PDF and TC PDF on this row.";
+  } else if (!wEn) {
+    text = "The browser blocked the English PDF. Use EN PDF on this row.";
+  } else {
+    text = "The browser blocked the Traditional Chinese PDF. Use TC PDF on this row.";
+  }
+  popupBlockNote(button, text);
 }
 
 
@@ -1593,7 +1637,7 @@ function renderIssuer(code) {
   listHost.querySelectorAll("[data-open]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var f = filtered[Number(btn.getAttribute("data-open"))];
-      if (f) openBilingual(f.pdfEn, f.pdfTc, f.titleEn, code);
+      if (f) openBilingual(f.pdfEn, f.pdfTc, btn);
     });
   });
 }
