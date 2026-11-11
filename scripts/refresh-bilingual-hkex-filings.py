@@ -47,14 +47,15 @@ gitignored; override with --work or HKEX_FILINGS_ROOT):
   python3 scripts/refresh-bilingual-hkex-filings.py pull --full-repull --work DIR
   python3 scripts/refresh-bilingual-hkex-filings.py gzip --work DIR
 
-build writes cache-meta.json, stocks.json, tiers.json, and
-filings/{prefix}/{code}.json.gz (gzip-9) in the work directory. A later
-run rewrites an issuer file only when its compact JSON changed, leaves
-unchanged gzip files in place, and deletes orphan issuer files. gzip is
-the ship-prep confirmation: it runs only after the quality gate would
-pass, deletes any leftover monolith, and does not write
-filings-cache.json.gz. Copying the split onto the site is a later pull
-request. See scripts/bilingual-hkex-filings.md.
+build writes cache-meta.json, stocks.json, tiers.json, and, when the
+build is shippable, filings/{prefix}/{code}.json.gz (gzip-9) in the work
+directory. A later shippable run rewrites an issuer file only when its
+compact JSON changed, leaves unchanged gzip files in place, and deletes
+orphan issuer files. A failed or partial build leaves the existing issuer
+gzip files untouched. gzip is the ship-prep confirmation: it runs only
+after the quality gate would pass, deletes any leftover monolith, and
+does not write filings-cache.json.gz. Copying the split onto the site is
+a later pull request. See scripts/bilingual-hkex-filings.md.
 
 cookies.txt, if the studio keeps one, is read from the work directory
 and is never written by this script. Do not commit it.
@@ -1997,15 +1998,23 @@ def cmd_build() -> int:
     atomic_write(paths.meta, json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
     atomic_write(paths.stocks, json.dumps(stocks, ensure_ascii=False, indent=2) + "\n")
     atomic_write(paths.tiers, json.dumps(tiers, ensure_ascii=False, indent=2) + "\n")
+    # A failed or partial build must not rewrite filings/ or delete orphans.
+    # The indexes above are diagnostic. The previous issuer gzip files stay.
+    removed = delete_monolith_leftovers()
     sync = {"written": 0, "unchanged": 0, "deleted": 0}
-    try:
+    issuer_sync = False
+    if reasons:
+        log(
+            "BUILD NOT SHIPPABLE before the issuer sync. "
+            "Existing issuer gzip files were left in place."
+        )
+    else:
+        issuer_sync = True
         sync = sync_issuer_files(issuers, snapshot)
-    finally:
-        removed = delete_monolith_leftovers()
-    disk_issuers = load_issuer_tree()
-    reasons.extend(cache_meta_problems(meta, disk_issuers))
-    reasons.extend(issuer_tree_problems(meta, stocks, disk_issuers))
-    reasons = dedupe(reasons)
+        disk_issuers = load_issuer_tree()
+        reasons.extend(cache_meta_problems(meta, disk_issuers))
+        reasons.extend(issuer_tree_problems(meta, stocks, disk_issuers))
+        reasons = dedupe(reasons)
     manifest = {
         "shippable": not reasons,
         "reasons": reasons,
@@ -2017,6 +2026,7 @@ def cmd_build() -> int:
         "layout": "issuer-split",
         "monolith": False,
         "monolithRemoved": removed,
+        "issuerSync": issuer_sync,
         "issuerFilesWritten": sync["written"],
         "issuerFilesUnchanged": sync["unchanged"],
         "issuerFilesDeleted": sync["deleted"],
@@ -2026,6 +2036,10 @@ def cmd_build() -> int:
         "lookbackFrom": status.get("lookbackFrom"),
         "gzip": False,
         "gzipNote": (
+            "Issuer gzip files were left unchanged because this build is not shippable. "
+            "No filings-cache.json.gz was written."
+            if not issuer_sync
+            else
             "Build writes gzip-9 issuer files in the work directory and does not write "
             "filings-cache.json.gz. gzip confirms the ship prep after the quality gate."
         ),
@@ -2750,6 +2764,134 @@ def _test_split_write() -> None:
     PATHS = None
 
 
+def _seed_equity_and_tiers(codes: list[tuple[str, int, str, str]]) -> None:
+    paths = require_paths()
+    paths.data.mkdir(parents=True, exist_ok=True)
+    english = [{"c": code, "i": stock_id, "n": name_en} for code, stock_id, name_en, _name_tc in codes]
+    chinese = [{"c": code, "i": stock_id, "n": name_tc} for code, stock_id, _name_en, name_tc in codes]
+    (paths.data / "activestock_sehk_e.json").write_text(json.dumps(english), encoding="utf-8")
+    (paths.data / "activestock_sehk_c.json").write_text(json.dumps(chinese), encoding="utf-8")
+    (paths.data / "tierone_e.json").write_text(
+        json.dumps([{"name": "Announcements and Notices", "code": "10000"}]),
+        encoding="utf-8",
+    )
+    (paths.data / "tierone_c.json").write_text(
+        json.dumps([{"name": "公告及通告", "code": "10000"}]),
+        encoding="utf-8",
+    )
+    (paths.data / "tiertwo_e.json").write_text("[]", encoding="utf-8")
+    (paths.data / "tiertwo_c.json").write_text("[]", encoding="utf-8")
+
+
+def _write_complete_raw(lang: str, start: date, end: date, rows: list[dict]) -> None:
+    path = raw_path(lang, start, end)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(rows), encoding="utf-8")
+    path.with_suffix(".meta.json").write_text(json.dumps({"complete": True}), encoding="utf-8")
+
+
+def _issuer_fingerprints(codes: list[str]) -> dict[str, tuple[int, str] | None]:
+    paths = require_paths()
+    return {code: _fingerprint(issuer_gzip_path(paths.root, code)) for code in codes}
+
+
+def _test_failed_build_preserves_issuer_files() -> None:
+    """A non-shippable build or gzip must not rewrite or delete issuer gzip files."""
+    import io
+    import tempfile
+    from contextlib import redirect_stdout
+
+    today = date(2026, 11, 10)
+    from_date = rolling_from_date(today)
+    snapshot = snapshot_label(today)
+    equity_rows = [
+        ("00001", 1, "CKH HOLDINGS", "長和"),
+        ("00700", 700, "TENCENT", "騰訊"),
+        ("03759", 3759, "EXAMPLE", "例子"),
+    ]
+    equity = {
+        code: {"code": code, "stockId": stock_id, "nameEn": name_en, "nameTc": name_tc}
+        for code, stock_id, name_en, name_tc in equity_rows
+    }
+    kept = {
+        code: issuer_record(equity[code], [_sample_filing(f"Kept {code}")], {"paired": 1}, from_date, today)
+        for code in equity
+    }
+
+    def plant(paths: WorkPaths) -> dict[str, tuple[int, str] | None]:
+        sync_issuer_files(kept, snapshot)
+        (paths.root / "filings-cache.json").write_text("{}\n", encoding="utf-8")
+        (paths.root / "filings-cache.json.gz").write_bytes(gzip.compress(b"{}"))
+        return _issuer_fingerprints(list(equity))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = configure(Path(tmp))
+        _seed_equity_and_tiers(equity_rows)
+        before = plant(paths)
+        status = _clean_pull_status()
+        status["equityUniverse"] = 3
+        en_row = _row("100", "Replaced", "Announcements and Notices - [Results]", "01/06/2024 10:00")
+        tc_row = _row("101", "已更換", "公告及通告 - [業績]", "01/06/2024 10:00")
+        en_row["STOCK_CODE"] = "00001"
+        tc_row["STOCK_CODE"] = "00001"
+        for job in (job_from_dict(item) for item in status["jobs"]):
+            _write_complete_raw(job.lang, job.start, job.end, [en_row if job.lang == "E" else tc_row])
+        atomic_write(paths.pull_status, json.dumps(status) + "\n")
+        with redirect_stdout(io.StringIO()):
+            build_code = cmd_build()
+        _expect(build_code == 1, "partial pair store is outside the Live count band")
+        manifest = json.loads(paths.build_manifest.read_text(encoding="utf-8"))
+        _expect(manifest.get("issuerSync") is False, manifest.get("issuerSync"))
+        _expect(manifest.get("issuerFilesDeleted") == 0, manifest.get("issuerFilesDeleted"))
+        _expect(manifest.get("issuerFilesWritten") == 0, manifest.get("issuerFilesWritten"))
+        _expect(_issuer_fingerprints(list(equity)) == before, "partial build rewrote or deleted issuer files")
+        _expect(issuer_gzip_path(paths.root, "00700").is_file(), "partial build deleted an issuer absent from the pair store")
+        _expect("Kept 00001" in gzip.decompress(issuer_gzip_path(paths.root, "00001").read_bytes()).decode("utf-8"), "partial build rewrote a kept issuer")
+        for name in MONOLITH_NAMES:
+            if name == "filings-cache.partial.json":
+                continue
+            _expect(not (paths.root / name).exists(), f"failed build left {name}")
+        (paths.root / "filings-cache.json.gz").write_bytes(gzip.compress(b"{}"))
+        with redirect_stdout(io.StringIO()):
+            gzip_code = cmd_gzip()
+        _expect(gzip_code == 1, "gzip must refuse a partial build")
+        _expect(_issuer_fingerprints(list(equity)) == before, "refused gzip rewrote or deleted issuer files")
+        _expect(not (paths.root / "filings-cache.json.gz").exists(), "refused gzip left a monolith")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = configure(Path(tmp))
+        _seed_equity_and_tiers(equity_rows)
+        before = plant(paths)
+        status = _clean_pull_status()
+        status["equityUniverse"] = 3
+        status["failures"] = ["FAIL E 2026-11-01-2026-11-10: http 503"]
+        atomic_write(paths.pull_status, json.dumps(status) + "\n")
+        with redirect_stdout(io.StringIO()):
+            build_code = cmd_build()
+        _expect(build_code == 1, "pull failure is not shippable")
+        manifest = json.loads(paths.build_manifest.read_text(encoding="utf-8"))
+        _expect(manifest.get("issuerSync") is False, "pull failure still synced issuer files")
+        _expect(any("pulls failed" in reason for reason in manifest.get("reasons") or []), manifest.get("reasons"))
+        _expect(_issuer_fingerprints(list(equity)) == before, "pull failure rewrote or deleted issuer files")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = configure(Path(tmp))
+        before = plant(paths)
+        status = _clean_pull_status()
+        status["equityUniverse"] = 0
+        atomic_write(paths.pull_status, json.dumps(status) + "\n")
+        with redirect_stdout(io.StringIO()):
+            build_code = cmd_build()
+        _expect(build_code == 1, "empty equity universe is not shippable")
+        manifest = json.loads(paths.build_manifest.read_text(encoding="utf-8"))
+        _expect(manifest.get("issuerSync") is False, "empty universe still synced issuer files")
+        _expect(any("equity universe is empty" in reason for reason in manifest.get("reasons") or []), manifest.get("reasons"))
+        _expect(_issuer_fingerprints(list(equity)) == before, "empty universe rewrote or deleted issuer files")
+
+    global PATHS
+    PATHS = None
+
+
 def _test_network_and_live_guard(before: dict[Path, tuple[int, str] | None]) -> None:
     _expect(_NETWORK_OK is False, "network starts disabled")
     try:
@@ -2834,6 +2976,7 @@ def self_test() -> None:
     _test_tiers()
     _test_gate()
     _test_split_write()
+    _test_failed_build_preserves_issuer_files()
     _test_network_and_live_guard(before)
     after = {path: _fingerprint(path) for path in watched}
     if before != after:

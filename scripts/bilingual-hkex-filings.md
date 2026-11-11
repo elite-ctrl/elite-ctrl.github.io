@@ -42,7 +42,9 @@ python3 scripts/refresh-bilingual-hkex-filings.py all --work DIR
 
 Each issuer file is gzip-9 JSON. The compact payload is `code`, `stockId`, `nameEn`, `nameTc`, `snapshot`, `sourceWindow`, `stats`, and `filings`. Filing rows use `dateTime`, `newsIdEn`, `newsIdTc`, `titleEn`, `titleTc`, `tier1Code`, `tier1En`, `tier1Tc`, `tier2En`, `tier2Tc`, `categoryEn`, `categoryTc`, `pdfEn`, `pdfTc`, `fileInfoEn`, and `fileInfoTc`. Every issuer file carries the same `snapshot` string as `cache-meta.json`. The page notes snapshot drift when they differ.
 
-A later Wednesday or Sunday run rewrites an issuer file only when that compact payload changed, leaves unchanged gzip files in place, and deletes orphan issuer files whose codes are no longer `hasCache`. The first run into an empty `filings/` tree writes every issuer file. `cache-meta.json`, `stocks.json`, and `tiers.json` are updated on each build.
+A later shippable Wednesday or Sunday run rewrites an issuer file only when that compact payload changed, leaves unchanged gzip files in place, and deletes orphan issuer files whose codes are no longer `hasCache`. The first shippable run into an empty `filings/` tree writes every issuer file. `cache-meta.json`, `stocks.json`, and `tiers.json` are written on each build, including a build that is not shippable, so the report can be diagnosed.
+
+A build that is not yet a shippable complete split does not rewrite the `filings/` tree and does not delete issuer files. That includes a pull or raw-read failure, an empty Main+GEM equity universe, and a partial pair store. Issuer gzip files already in the work directory stay as they were. A leftover monolith in the work directory is still deleted.
 
 `build` does not write `filings-cache.json` or `filings-cache.json.gz`. If a previous run left either file in the work directory, the new write path deletes it.
 
@@ -66,7 +68,7 @@ The window is today minus three years in Asia/Hong_Kong. 29 February falls back 
 
 ## Ship prep
 
-`gzip` is the ship-prep confirmation. It runs only after the quality gate would pass. Issuer files are already gzip-9 from `build`, so this step does not compress a monolith. It deletes any leftover `filings-cache.json` or `filings-cache.json.gz` in the work directory, rewrites an issuer file only when its payload changed, and does not write a Live site file.
+`gzip` is the ship-prep confirmation. It runs only after the quality gate would pass. Issuer files are already gzip-9 from a shippable `build`, so this step does not compress a monolith. It deletes any leftover `filings-cache.json` or `filings-cache.json.gz` in the work directory. When the gate passes, it rewrites an issuer file only when its payload changed. When the gate fails, it does not rewrite or delete issuer files. It does not write a Live site file.
 
 ```bash
 python3 scripts/refresh-bilingual-hkex-filings.py gzip --work DIR
