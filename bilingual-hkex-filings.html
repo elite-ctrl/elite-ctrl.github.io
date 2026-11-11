@@ -720,9 +720,12 @@
 
     .filing__popup-note {
       margin: 0;
+      width: 240px;
+      max-width: 240px;
       font-size: 12px;
       font-weight: 700;
       line-height: 16px;
+      color: var(--ink);
       background: var(--yellow);
       border: 2px solid var(--ink);
       padding: 6px 8px;
@@ -871,6 +874,7 @@
       .issuer-row .cache-pill { grid-column: 2; justify-self: start; }
       .filing { grid-template-columns: 1fr; }
       .filing__actions { align-items: flex-start; min-width: 0; }
+      .filing__popup-note { align-self: stretch; width: auto; max-width: none; }
       .filing__links { justify-content: flex-start; }
     }
 
@@ -1238,18 +1242,32 @@ function renderHub() {
 
 /* Open both PDFs from this click and stay on the filings list.
    Do not open bilingual-hkex-viewer.html.
-   Chrome allows one window.open per click and blocks the next one in that
-   gesture. Do not pass "noopener" as a window feature, and do not send this
-   page to the missing PDF. Open the English file first, then Traditional
-   Chinese, so the English PDF is the one that opens when the second window
-   is blocked. If the browser allows both, the Traditional Chinese file lands
-   in front. A blocked window leaves a note on the row. */
+   A blank URL was never a file: do not call window.open for it, and do not
+   tell the reader the browser blocked it. Chrome allows one window.open per
+   click and blocks the next one in that gesture. Do not pass "noopener" as a
+   window feature, and do not send this page to the missing PDF. Open the
+   English file first, then Traditional Chinese, so the English PDF is the
+   one that opens when the second window is blocked. If the browser allows
+   both, the Traditional Chinese file lands in front. */
+function cleanPdfUrl(url) {
+  if (typeof url !== "string") return "";
+  return url.trim();
+}
+
 function openPdfTab(url) {
-  if (!url) return null;
   var win = window.open(url, "_blank");
   if (!win) return null;
+  try {
+    if (win.closed) return null;
+  } catch (err) { /* closed can be unreadable; the window still opened. */ }
   try { win.opener = null; } catch (err) { /* The PDF tab can already be cross-origin. */ }
   return win;
+}
+
+function filingPdfLink(url, label) {
+  var href = cleanPdfUrl(url);
+  if (!href) return "";
+  return '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>";
 }
 
 function popupBlockNote(button, text) {
@@ -1258,33 +1276,36 @@ function popupBlockNote(button, text) {
   var note = actions.querySelector(".filing__popup-note");
   if (!text) {
     if (note) note.remove();
+    if (button) button.removeAttribute("aria-describedby");
     return;
   }
   if (!note) {
     note = document.createElement("p");
     note.className = "filing__popup-note";
+    note.id = "filing-popup-note-" + (button.getAttribute("data-open") || "row");
     note.setAttribute("role", "status");
-    actions.appendChild(note);
+    if (button.nextSibling) actions.insertBefore(note, button.nextSibling);
+    else actions.appendChild(note);
   }
   note.textContent = text;
+  button.setAttribute("aria-describedby", note.id);
 }
 
 function openBilingual(en, tc, button) {
-  var wEn = openPdfTab(en);
-  var wTc = openPdfTab(tc);
-  if (wTc && wEn) {
-    popupBlockNote(button, "");
+  var enUrl = cleanPdfUrl(en);
+  var tcUrl = cleanPdfUrl(tc);
+  if (!enUrl && !tcUrl) {
+    popupBlockNote(button, "This row has no English or Traditional Chinese PDF.");
     return;
   }
-  var text;
-  if (!wTc && !wEn) {
-    text = "The browser blocked both PDF windows. Use EN PDF and TC PDF on this row.";
-  } else if (!wEn) {
-    text = "The browser blocked the English PDF. Use EN PDF on this row.";
-  } else {
-    text = "The browser blocked the Traditional Chinese PDF. Use TC PDF on this row.";
-  }
-  popupBlockNote(button, text);
+  var wEn = enUrl ? openPdfTab(enUrl) : null;
+  var wTc = tcUrl ? openPdfTab(tcUrl) : null;
+  var parts = [];
+  if (!enUrl) parts.push("This row has no English PDF.");
+  else if (!wEn) parts.push("The browser blocked the English PDF. Use EN PDF on this row.");
+  if (!tcUrl) parts.push("This row has no Traditional Chinese PDF.");
+  else if (!wTc) parts.push("The browser blocked the Traditional Chinese PDF. Use TC PDF on this row.");
+  popupBlockNote(button, parts.join(" "));
 }
 
 
@@ -1626,8 +1647,8 @@ function renderIssuer(code) {
         '<div class="filing__actions">' +
           '<button type="button" class="btn btn--accent btn--sm" data-open="' + idx + '">Open bilingual</button>' +
           '<div class="filing__links">' +
-            '<a href="' + escapeHtml(f.pdfEn) + '" target="_blank" rel="noopener noreferrer">EN PDF</a>' +
-            '<a href="' + escapeHtml(f.pdfTc) + '" target="_blank" rel="noopener noreferrer">TC PDF</a>' +
+            filingPdfLink(f.pdfEn, "EN PDF") +
+            filingPdfLink(f.pdfTc, "TC PDF") +
           "</div>" +
         "</div>" +
       "</article>"
