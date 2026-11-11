@@ -54,7 +54,7 @@
         "name": "Does the page query HKEXnews while I search?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. The page reads a published Beta cache (filings-cache.json.gz, stocks.json, and tiers.json) beside this page. It gunzips the filings cache in the browser. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it."
+          "text": "No. The page reads a published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it."
         }
       },
       {
@@ -966,13 +966,13 @@
             <p class="subtitle" data-cache-dates="cutoff">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
             <div class="tool-notes">
               <p class="disclaimer" data-cache-dates="from to"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
-              <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+              <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. It reads a published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
               <p class="disclaimer disclaimer--legal" data-cache-dates="cutoff"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
             </div>
           </header>
 
           <noscript>
-            <p class="disclaimer">This tool needs JavaScript to gunzip the Beta cache in the browser. It does not call HKEXnews.</p>
+            <p class="disclaimer">This tool needs JavaScript to read the published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not call HKEXnews on every click.</p>
           </noscript>
 
           <div class="toolbar">
@@ -1046,7 +1046,7 @@
           </div>
           <div class="faq-item">
             <h3>Does the page query HKEXnews while I search?</h3>
-            <p>No. The page reads a published Beta cache beside this page (filings-cache.json.gz, stocks.json, and tiers.json). It gunzips the filings cache in the browser. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it.</p>
+            <p>No. The page reads a published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it.</p>
           </div>
           <div class="faq-item">
             <h3>Which filings are left out of the cache?</h3>
@@ -1115,13 +1115,19 @@
   </footer>
 
   <script>
-/* Sibling cache: filings-cache.json.gz, stocks.json, tiers.json.
-   The filings file is gzip. The page gunzips it in the browser.
+/* Sibling cache beside this page: cache-meta.json, stocks.json, tiers.json,
+   and one issuer filings file after a code or name is chosen.
+   The page does not call HKEXnews on every click.
    Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are removed before publish.
    isExcludedFiling stays as a second check if a later refresh leaves a row in. */
 var STOCKS = null;
-var FILINGS = null;
 var TIERS = null;
+var CACHE_META = null;
+var issuerPacks = {};
+var issuerLoads = {};
+var issuerErrors = {};
+var issuerInflight = null;
+var issuerSeq = 0;
 var hubQuery = "";
 var titleQuery = "";
 var activeTier1 = new Set();
@@ -1312,11 +1318,81 @@ function isExcludedFiling(f) {
   return !boilerplate;
 }
 
+function stockByCode(code) {
+  if (!STOCKS || !STOCKS.stocks) return null;
+  for (var i = 0; i < STOCKS.stocks.length; i++) {
+    if (STOCKS.stocks[i].c === code) return STOCKS.stocks[i];
+  }
+  return null;
+}
+
+function snapshotDriftNote(pack) {
+  if (!CACHE_META || !pack) return "";
+  if (pack.snapshot === CACHE_META.snapshot) return "";
+  return " This issuer file's snapshot does not match the published cache snapshot.";
+}
+
+function issuerFileName(code) {
+  return "filings/" + String(code).slice(0, 2) + "/" + code + ".json.gz";
+}
+
+/* One issuer file after a code is chosen. Keep the decoded pack so Back does not refetch. */
+function loadIssuerPack(code) {
+  if (issuerPacks[code]) return Promise.resolve(issuerPacks[code]);
+  if (issuerLoads[code]) return issuerLoads[code];
+  var name = issuerFileName(code);
+  var pending = loadGzipJson(name).then(function (pack) {
+    if (!pack || !Array.isArray(pack.filings)) throw new Error("issuer filings were unreadable");
+    pack.filings.forEach(decodeFiling);
+    issuerPacks[code] = pack;
+    return pack;
+  });
+  issuerLoads[code] = pending;
+  pending.catch(function () {
+    if (issuerLoads[code] === pending) delete issuerLoads[code];
+  });
+  return pending;
+}
+
+function issuerStillCurrent(seq, code) {
+  if (seq !== issuerSeq) return false;
+  var route = parseRoute();
+  return route.view === "issuer" && route.code === code;
+}
+
+function openIssuer(code) {
+  var seq = ++issuerSeq;
+  var stock = stockByCode(code);
+  if (!stock || !stock.hasCache) {
+    issuerInflight = null;
+    renderIssuer(code);
+    return;
+  }
+  if (issuerPacks[code]) {
+    issuerInflight = null;
+    renderIssuer(code);
+    return;
+  }
+  issuerInflight = code;
+  delete issuerErrors[code];
+  renderIssuer(code);
+  loadIssuerPack(code).then(function () {
+    if (!issuerStillCurrent(seq, code)) return;
+    issuerInflight = null;
+    renderIssuer(code);
+  }).catch(function (err) {
+    if (!issuerStillCurrent(seq, code)) return;
+    issuerInflight = null;
+    issuerErrors[code] = err || new Error("issuer filings");
+    renderIssuer(code);
+  });
+}
+
 function renderIssuer(code) {
   document.getElementById("view-hub").hidden = true;
   document.getElementById("view-issuer").hidden = false;
-  var pack = FILINGS.issuers[code];
-  var stock = STOCKS.stocks.find(function (s) { return s.c === code; });
+  var pack = issuerPacks[code];
+  var stock = stockByCode(code);
   var head = document.getElementById("issuer-head");
   var nameEn = (pack && pack.nameEn) || (stock && stock.n) || code;
   var nameTc = (pack && pack.nameTc) || (stock && stock.nt) || "";
@@ -1325,6 +1401,36 @@ function renderIssuer(code) {
   var meta = document.getElementById("issuer-meta");
   var t1Host = document.getElementById("tier1-chips");
   var t2Host = document.getElementById("tier2-chips");
+
+  if (issuerInflight === code && !pack) {
+    head.innerHTML =
+      '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+      '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
+      (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
+      '<p class="meta">Loading this issuer\'s filings…</p></div>';
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = "Loading this issuer's filings…";
+    meta.textContent = "Loading…";
+    return;
+  }
+
+  if (!pack && issuerErrors[code]) {
+    head.innerHTML =
+      '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+      '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
+      (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
+      '<p class="meta">This issuer\'s filings could not be opened.</p></div>';
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = "This issuer's filings could not be opened. The published file was missing, or it could not be read. Go back, then choose the issuer again.";
+    meta.textContent = "Could not load this issuer's filings";
+    return;
+  }
 
   if (!pack || !pack.filings.length) {
     head.innerHTML =
@@ -1349,7 +1455,8 @@ function renderIssuer(code) {
     '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
     (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
     '<p class="meta">' + visibleFilings.length + " paired bilingual filing" + (visibleFilings.length === 1 ? "" : "s") +
-    " in this Beta cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed.</p></div>";
+    " in this Beta cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed." +
+    snapshotDriftNote(pack) + "</p></div>";
 
   if (!visibleFilings.length) {
     t1Host.innerHTML = "";
@@ -1492,7 +1599,7 @@ function renderIssuer(code) {
 }
 
 function render() {
-  if (!STOCKS || !FILINGS || !TIERS) return;
+  if (!STOCKS || !TIERS || !CACHE_META) return;
   var route = parseRoute();
   if (route.view === "issuer") {
     activeTier1 = new Set();
@@ -1502,15 +1609,17 @@ function render() {
     if (titleInputReset) titleInputReset.value = "";
     var clearReset = document.getElementById("title-search-clear");
     if (clearReset) clearReset.hidden = true;
-    renderIssuer(route.code);
+    openIssuer(route.code);
     window.scrollTo(0, 0);
   } else {
+    issuerSeq += 1;
+    issuerInflight = null;
     renderHub();
   }
 }
 
 /* Snapshot cutoff and the three-year window.
-   Prefer an explicit cutoff, then snapshot, on the filings cache and then stocks.json:
+   Prefer an explicit cutoff, then snapshot, on cache-meta.json and then stocks.json:
    cutoff, cutoffDate, asOf, snapshotDate, or snapshot (string or {date,cutoff,asOf}).
    Prefer an explicit window when one is published at the top level (or under snapshot):
    window, dateWindow, coverage, sourceWindow, from/to, windowFrom/windowTo,
@@ -1704,10 +1813,10 @@ function showCacheError(err) {
   var meta = document.getElementById("hub-meta");
   var empty = document.getElementById("hub-empty");
   var why = err && err.message ? " " + err.message + "." : "";
-  if (meta) meta.textContent = "The Beta cache did not load." + why + " Refresh the page. This tool reads filings-cache.json.gz beside this page and gunzips it in the browser, with stocks.json and tiers.json. It does not call HKEXnews.";
+  if (meta) meta.textContent = "The Beta cache did not load." + why + " Refresh the page. This page reads a published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not call HKEXnews on every click.";
   if (empty) {
     empty.hidden = false;
-    empty.textContent = "filings-cache.json.gz could not be gunzipped, or a sibling cache file was missing.";
+    empty.textContent = "The published Beta cache beside this page could not be read, or a sibling cache file was missing.";
   }
 }
 
@@ -1778,19 +1887,13 @@ function loadGzipJson(name) {
 
   Promise.all([
     loadJson("stocks.json"),
-    loadGzipJson("filings-cache.json.gz"),
-    loadJson("tiers.json")
+    loadJson("tiers.json"),
+    loadJson("cache-meta.json")
   ]).then(function (parts) {
     STOCKS = parts[0];
-    FILINGS = parts[1];
-    TIERS = parts[2];
-    applyPublishedDates(FILINGS, STOCKS);
-    if (FILINGS && FILINGS.issuers) {
-      Object.keys(FILINGS.issuers).forEach(function (code) {
-        var pack = FILINGS.issuers[code];
-        if (pack && pack.filings) pack.filings.forEach(decodeFiling);
-      });
-    }
+    TIERS = parts[1];
+    CACHE_META = parts[2];
+    applyPublishedDates(CACHE_META, STOCKS);
     if (!location.hash) location.replace("#/");
     render();
   }).catch(function (err) { showCacheError(err); });
