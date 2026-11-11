@@ -197,6 +197,7 @@
     .bilingual-bar__title {
       flex: 1 1 240px;
       min-width: 0;
+      margin: 0;
       font-size: 14px;
       font-weight: 700;
       line-height: 20px;
@@ -314,6 +315,14 @@
         <a href="printer-index.html" role="listitem">Printer index <span class="nav-beta">Beta</span></a>
         <a href="bilingual-hkex-filings.html" role="listitem" aria-current="page">Bilingual filings <span class="nav-beta">Beta</span></a>
         <a href="language-watchdog.html" role="listitem">Language Watchdog</a>
+        <div class="topnav__item" role="listitem">
+          <button type="button" class="topnav__trigger" id="topnav-desk-btn" aria-expanded="false" aria-controls="topnav-desk-menu" aria-haspopup="true">Desk</button>
+          <div class="topnav__menu" id="topnav-desk-menu" role="group" aria-labelledby="topnav-desk-btn" hidden>
+            <a href="trainee.html">Trainee</a>
+            <a href="financial-translation.html">Finance</a>
+            <a href="trade-in-words.html">Trade in Words</a>
+          </div>
+        </div>
       </div>
       <a class="btn topnav__cta" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
       <button class="topnav__toggle" type="button" aria-expanded="false" aria-controls="mobile-panel" aria-label="Open menu" id="nav-toggle">
@@ -365,7 +374,7 @@
     <div class="bilingual-bar" id="bilingual-bar">
       <span class="bilingual-bar__mark">Bilingual</span>
       <span class="bilingual-bar__pair">EN | TC</span>
-      <p class="bilingual-bar__title" id="viewer-title"></p>
+      <h1 class="bilingual-bar__title" id="viewer-title">Bilingual view</h1>
       <div class="bilingual-bar__actions">
         <button type="button" class="btn btn--accent btn--sm" id="open-both" hidden>Open both PDFs</button>
         <a class="btn btn--ghost btn--sm" id="open-en" href="#" target="_blank" rel="noopener noreferrer" hidden>EN PDF</a>
@@ -452,8 +461,8 @@
     return;
   }
 
-  var label = (code ? code + " · " : "") + title;
-  titleEl.textContent = label.trim();
+  var label = ((code ? code + " · " : "") + title).trim();
+  titleEl.textContent = label || "Bilingual view";
   if (title) document.title = title + " | Bilingual view | LedgerLex";
 
   openEn.href = en;
