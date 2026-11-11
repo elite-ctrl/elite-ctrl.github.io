@@ -1,8 +1,41 @@
 (function () {
   "use strict";
 
-  if (typeof pdfjsLib !== "undefined") {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/pdfjs/pdf.worker.min.js";
+  var readerSrc = {
+    pdf: "/assets/pdfjs/pdf.min.js",
+    docx: "/assets/mammoth/mammoth.browser.min.js"
+  };
+  var readerLoad = {};
+  function ensureReader(kind) {
+    if (kind === "pdf" && typeof pdfjsLib !== "undefined") {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/pdfjs/pdf.worker.min.js";
+      return Promise.resolve();
+    }
+    if (kind === "docx" && typeof mammoth !== "undefined") return Promise.resolve();
+    var src = readerSrc[kind];
+    var missing = kind === "docx" ? "word-reader-missing" : "reader-missing";
+    if (!src) return Promise.reject(new Error(missing));
+    if (!readerLoad[kind]) {
+      readerLoad[kind] = new Promise(function (resolve, reject) {
+        var script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        script.onload = function () { resolve(); };
+        script.onerror = function () {
+          readerLoad[kind] = null;
+          reject(new Error(missing));
+        };
+        document.head.appendChild(script);
+      });
+    }
+    return readerLoad[kind].then(function () {
+      if (kind === "pdf") {
+        if (typeof pdfjsLib === "undefined") throw new Error("reader-missing");
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/pdfjs/pdf.worker.min.js";
+        return;
+      }
+      if (typeof mammoth === "undefined") throw new Error("word-reader-missing");
+    });
   }
 
   var $ = function (id) { return document.getElementById(id); };
@@ -640,19 +673,19 @@
     }
     statusText[side] = kind === "pdf" ? "Reading PDF…" : "Reading Word document…";
     run();
-    var extractPromise;
-    if (kind === "pdf") {
-      extractPromise = extractPdfText(file, function (pageNo, total) {
-        if (job !== jobs[side]) return;
-        statusText[side] = "Reading page " + pageNo + " of " + total + "…";
-        paintStatus();
-        $("results").innerHTML = '<p class="empty">Reading the file…</p>';
-      });
-    } else {
-      extractPromise = extractDocxText(file);
-    }
-    extractPromise.then(function (result) {
-      if (job !== jobs[side]) return;
+    ensureReader(kind).then(function () {
+      if (job !== jobs[side]) return null;
+      if (kind === "pdf") {
+        return extractPdfText(file, function (pageNo, total) {
+          if (job !== jobs[side]) return;
+          statusText[side] = "Reading page " + pageNo + " of " + total + "…";
+          paintStatus();
+          $("results").innerHTML = '<p class="empty">Reading the file…</p>';
+        });
+      }
+      return extractDocxText(file);
+    }).then(function (result) {
+      if (job !== jobs[side] || result == null) return;
       if (!result.text.trim()) {
         statusError[side] = true;
         if (kind === "pdf") {
