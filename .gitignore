@@ -21,3 +21,11 @@
 **/.impeccable/live/deferred-svelte-component-accepts.json
 **/.impeccable/live/*.png
 # impeccable-ignore-end
+
+# Studio work tree for the bilingual HKEXnews refresh.
+# Raw pulls, cookies, and local cache builds stay off the site branch.
+data/hkex-filings-work/
+cookies.txt
+**/cookies.txt
+__pycache__/
+*.pyc
