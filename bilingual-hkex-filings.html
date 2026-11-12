@@ -62,7 +62,7 @@
         "name": "Which filings are left out of the cache?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. Debt and Structured Products (債券及結構性產品, including cancelled or reissued prefixes, and the related documents on display for debt programmes, debt securities, and structured products) are removed before publish. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides."
+          "text": "Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Next Day Disclosure Return (Resubmission) rows, including 翌日披露報表 (重新提交), are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. Debt and Structured Products (債券及結構性產品, including cancelled or reissued prefixes, and the related documents on display for debt programmes, debt securities, and structured products) are removed before publish. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides."
         }
       },
       {
@@ -979,7 +979,7 @@
             <p class="subtitle">Search a Hong Kong issuer, open its HKEXnews headline types, and launch the English and Traditional Chinese announcement PDFs together when both exist.</p>
             <p class="subtitle" data-cache-dates="cutoff">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
             <div class="tool-notes">
-              <p class="disclaimer" data-cache-dates="from to"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
+              <p class="disclaimer" data-cache-dates="from to"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, Next Day Disclosure Return (Resubmission) rows, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
               <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. It reads a published Beta cache beside this page (cache-meta.json, stocks.json, tiers.json, and one issuer filings file after a code or name is chosen). It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
               <p class="disclaimer disclaimer--legal" data-cache-dates="cutoff"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
             </div>
@@ -1064,7 +1064,7 @@
           </div>
           <div class="faq-item">
             <h3>Which filings are left out of the cache?</h3>
-            <p>Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. Debt and Structured Products (債券及結構性產品, including cancelled or reissued prefixes, and the related documents on display for debt programmes, debt securities, and structured products) are removed before publish. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides.</p>
+            <p>Monthly Returns (the whole Tier 1, including 月報表 and code 51500) are removed before publish. Next Day Disclosure Returns for share buybacks are removed before publish. Next Day Disclosure Return (Resubmission) rows, including 翌日披露報表 (重新提交), are removed before publish. Other Next Day Disclosure Returns stay. AGM circulars and announcements about a share repurchase stay. Debt and Structured Products (債券及結構性產品, including cancelled or reissued prefixes, and the related documents on display for debt programmes, debt securities, and structured products) are removed before publish. English stubs that only say the filing was published in Chinese are dropped, and a bilingual open needs a real PDF on both sides.</p>
           </div>
           <div class="faq-item">
             <h3>How does Bilingual filings sit with the other Tools?</h3>
@@ -1132,7 +1132,7 @@
 /* Sibling cache beside this page: cache-meta.json, stocks.json, tiers.json,
    and one issuer filings file after a code or name is chosen.
    The page does not call HKEXnews on every click.
-   Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are removed before publish.
+   Monthly Returns, NDR Share Buybacks, NDR resubmissions, and Debt and Structured Products are removed before publish.
    isExcludedFiling stays as a second check if a later refresh leaves a row in. */
 var STOCKS = null;
 var TIERS = null;
@@ -1370,6 +1370,9 @@ function isExcludedFiling(f) {
     t1Tc.indexOf("翌日披露") !== -1 ||
     catTc.indexOf("翌日披露") !== -1;
   if (!isNdr) return false;
+  /* Next Day Disclosure Return (Resubmission), including RE-SUBMISSION and 重新提交.
+     A dividend announcement that says resubmission is not an NDR and stays. */
+  if (/re-?submission/i.test(title) || title.indexOf("重新提交") !== -1 || titleTc.indexOf("重新提交") !== -1) return true;
   var buybackChip =
     t2.indexOf("Share Buyback") !== -1 || t2.indexOf("Share Buy-back") !== -1 ||
     cat.indexOf("Share Buyback") !== -1 || cat.indexOf("Share Buy-back") !== -1 ||
@@ -1520,7 +1523,7 @@ function renderIssuer(code) {
     '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
     (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
     '<p class="meta">' + visibleFilings.length + " paired bilingual filing" + (visibleFilings.length === 1 ? "" : "s") +
-    " in this Beta cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed." +
+    " in this Beta cache. Monthly Returns, NDR Share Buybacks, NDR resubmissions, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed." +
     snapshotDriftNote(pack) + "</p></div>";
 
   if (!visibleFilings.length) {
@@ -1528,7 +1531,7 @@ function renderIssuer(code) {
     t2Host.innerHTML = "";
     listHost.innerHTML = "";
     empty.hidden = false;
-    empty.textContent = "No paired filings left after exclusions. Monthly Returns, Next Day Disclosure share buybacks, and Debt and Structured Products are left out. Other next-day disclosure returns stay.";
+    empty.textContent = "No paired filings left after exclusions. Monthly Returns, Next Day Disclosure share buybacks, Next Day Disclosure Return (Resubmission) rows, and Debt and Structured Products are left out. Other next-day disclosure returns stay.";
     meta.textContent = "0 of " + pack.filings.length + " paired filings in this cache";
     return;
   }
@@ -1621,7 +1624,7 @@ function renderIssuer(code) {
     listHost.innerHTML = "";
     empty.hidden = false;
     empty.textContent = titleNeedle
-      ? "No paired filings match that title in this cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are not in the file. Clear the title, or a Tier chip, to widen the list."
+      ? "No paired filings match that title in this cache. Monthly Returns, NDR Share Buybacks, NDR resubmissions, and Debt and Structured Products are not in the file. Clear the title, or a Tier chip, to widen the list."
       : "No paired filings match these headline chips. Clear a Tier 1 or Tier 2 chip to widen the list.";
     meta.innerHTML = "0 of " + visibleFilings.length + " filings in this cache";
     return;
@@ -1632,7 +1635,7 @@ function renderIssuer(code) {
   if (titleNeedle) filterNote.push("title");
   meta.innerHTML = "<strong>" + filtered.length + "</strong> paired bilingual filing" + (filtered.length === 1 ? "" : "s") +
     (filterNote.length ? " after " + filterNote.join(" + ") + " · " + visibleFilings.length + " in this cache" : " in this cache") +
-    " · Monthly Returns, NDR Share Buybacks, and Debt and Structured Products excluded";
+    " · Monthly Returns, NDR Share Buybacks, NDR resubmissions, and Debt and Structured Products excluded";
 
   listHost.innerHTML = filtered.map(function (f, idx) {
     var cat = f.tier2En ? (f.tier1En + " · " + f.tier2En) : f.tier1En;

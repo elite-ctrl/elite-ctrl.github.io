@@ -25,9 +25,12 @@ from GitHub Actions.
 
 Build strips, with a contains match (not an exact match, and not
 startswith): Monthly Returns (the whole Tier 1, including 月報表 and
-51500); Next Day Disclosure share buybacks (other NDRs stay, including
-the standard form title "changes in issued share capital and/or share
-buybacks" / 已發行股本及/或股份購回; AGM repurchase circulars stay);
+51500); Next Day Disclosure share buybacks and Next Day Disclosure
+Return (Resubmission) rows, including 翌日披露報表 (重新提交) and
+RE-SUBMISSION (other NDRs stay, including the standard form title
+"changes in issued share capital and/or share buybacks" /
+已發行股本及/或股份購回; AGM repurchase circulars stay; a dividend
+announcement marked resubmission is not an NDR and stays);
 warrants, options, and 牛熊證 (CBBCs); Debt and Structured Products
 (債券及結構性產品), code 70000, including cancelled or reissued prefixes,
 and documents-on-display types 57000, 58000, and 59000. Those debt chips
@@ -854,12 +857,26 @@ def is_debt_or_structured_product(tier1_code: str, tier1_name: str, category: st
     return contains_any(blob, DEBT_NAME_MARKERS)
 
 
+def is_ndr_resubmission_title(title: str) -> bool:
+    """True for a Next Day Disclosure Return filed again, not a dividend resubmission.
+
+    Matches (Resubmission), RE-SUBMISSION, and 重新提交. The caller already
+    knows the row is an NDR, so a dividend announcement that says resubmission
+    never reaches this check.
+    """
+    text = clean_text(title)
+    if "重新提交" in text:
+        return True
+    return re.search(r"re-?submission", text, re.I) is not None
+
+
 def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str, title: str = "") -> bool:
-    """Strip Monthly Returns, NDR share buybacks, and Debt and Structured Products.
+    """Strip Monthly Returns, NDR share buybacks, NDR resubmissions, and debt products.
 
     The standard NDR form title ("changes in issued share capital and/or share
     buybacks" / 已發行股本及/或股份購回) is not a buyback on its own. Other NDRs
-    stay. AGM repurchase circulars are not NDRs and stay.
+    stay, except Next Day Disclosure Return (Resubmission). AGM repurchase
+    circulars are not NDRs and stay.
     """
     tier1 = clean_text(tier1_name)
     tier2 = clean_text(tier2_name)
@@ -884,6 +901,8 @@ def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str
     )
     if not is_ndr:
         return False
+    if is_ndr_resubmission_title(filing_title):
+        return True
     if any(token in tier2 or token in cat for token in ("Share Buyback", "Share Buy-back", "股份購回")):
         return True
     if re.search(r"Share Buy-?backs?", filing_title, re.I) or "股份購回" in filing_title:
@@ -1277,7 +1296,9 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
             "Main Board + GEM equity/ETF issuers (stock codes 00001–09999). "
             "Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong "
             "even when the monthly raw file is already complete. "
-            "Cache rows for Monthly Returns, NDR Share Buybacks, Debt and Structured Products "
+            "Cache rows for Monthly Returns, NDR Share Buybacks, NDR resubmissions "
+            "(Next Day Disclosure Return (Resubmission) / 翌日披露報表 (重新提交)), "
+            "Debt and Structured Products "
             "(債券及結構性產品, including related debt and structured-product documents on display), "
             "and warrants, options, and CBBCs (牛熊證) are stripped at build (not only hidden in the UI). "
             "Metadata and FILE_LINK hyperlinks only; PDF bodies are not stored."
@@ -1288,6 +1309,10 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
                 "Next Day Disclosure Returns with Share Buyback in tier2 or category, "
                 "or an explicit Share Buyback title; cancelled or reissued prefixes included; "
                 "standard NDR form wording (and/or share buybacks) kept; AGM repurchase circulars kept"
+            ),
+            "ndrResubmission": (
+                "Next Day Disclosure Return (Resubmission), including RE-SUBMISSION "
+                "and 翌日披露報表 (重新提交); a dividend announcement marked resubmission stays"
             ),
             "debtAndStructuredProducts": (
                 "tier1 Debt and Structured Products / 債券及結構性產品 / code 70000, "
@@ -1745,7 +1770,7 @@ def render_report(
         f"Equity/ETF universe (Main+GEM; warrants, options, and CBBCs stripped): {equity_count}",
         f"Issuers in the hasCache universe (paired filings > 0): {len(issuers)}",
         f"Total paired filings: {totals['paired']}",
-        f"Total excluded at build (Monthly Returns, NDR Share Buybacks, Debt and Structured Products): {totals['excluded']}",
+        f"Total excluded at build (Monthly Returns, NDR Share Buybacks, NDR resubmissions, Debt and Structured Products): {totals['excluded']}",
         f"Warrants, options, and CBBCs filtered (filing rows EN+TC skipped): {ingest.skipped_derivative_rows}",
         f"Non-equity EN rows skipped: {ingest.skipped_non_equity}",
         f"Total unpaired EN: {totals['unpaired']}",
@@ -2211,6 +2236,27 @@ def _test_exclusions_and_hascache() -> None:
         maps,
     )
     _expect(buyback == [] and buyback_stats["excludedAtBuild"] == 1, "NDR share buyback")
+
+    resubmitted, resubmitted_stats = pair_filings(
+        [_row("46", "Next Day Disclosure Return (Resubmission)", "Next Day Disclosure Returns - [Others]")],
+        [_row("47", "翌日披露報表 (重新提交)", "翌日披露報表 - [其他]")],
+        maps,
+    )
+    _expect(resubmitted == [] and resubmitted_stats["excludedAtBuild"] == 1, "NDR resubmission")
+
+    resubmitted_hyphen, hyphen_stats = pair_filings(
+        [_row("48", "NEXT DAY DISCLOSURE RETURN - RE-SUBMISSION", "Next Day Disclosure Returns - [Others]")],
+        [_row("49", "翌日披露報表", "翌日披露報表 - [其他]")],
+        maps,
+    )
+    _expect(resubmitted_hyphen == [] and hyphen_stats["excludedAtBuild"] == 1, "NDR re-submission")
+
+    dividend_resub, dividend_stats = pair_filings(
+        [_row("50", "Cash Dividend Announcement for Equity Issuer (Resubmission)", "Announcements and Notices - [Dividend or Distribution (Announcement Form)]")],
+        [_row("51", "現金股息 (重新提交)", "公告及通告 - [股息或分派(公告表格)]")],
+        maps,
+    )
+    _expect(len(dividend_resub) == 1 and dividend_stats["excludedAtBuild"] == 0, "dividend resubmission stays")
 
     agm, agm_stats = pair_filings(
         [_row("44", "Proposed general mandate and share repurchase", "Circulars - [Repurchase Mandate]")],
