@@ -389,3 +389,63 @@ mark.hl {
     transform: none;
   }
 }
+
+/* Floating left filter. From 1200px the filter sits to the left of the
+   Hits list and stays in view (sticky, under the nav) while the list
+   scrolls. Below 1200px it stays above the list, so the five-column
+   table is not squeezed. */
+.archive__body,
+.archive__results {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .archive__body {
+    display: grid;
+    grid-template-columns: 268px minmax(0, 1fr);
+    column-gap: 28px;
+    align-items: start;
+  }
+
+  .filter {
+    position: sticky;
+    top: 96px;
+    z-index: 4;
+    margin-bottom: 0;
+    padding: 16px;
+    max-height: calc(100vh - 112px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .filter__title {
+    font-size: 16px;
+    line-height: 22px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .filter__hint {
+    font-size: 12px;
+    line-height: 16px;
+    margin-bottom: 12px;
+  }
+
+  .chips {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .chip {
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 34px;
+  }
+
+  .filter__count {
+    margin-top: 10px;
+  }
+}
