@@ -25,12 +25,12 @@ from GitHub Actions.
 
 Build strips, with a contains match (not an exact match, and not
 startswith): Monthly Returns (the whole Tier 1, including 月報表 and
-51500); Next Day Disclosure share buybacks and Next Day Disclosure
-Return (Resubmission) rows, including 翌日披露報表 (重新提交) and
-RE-SUBMISSION (other NDRs stay, including the standard form title
-"changes in issued share capital and/or share buybacks" /
-已發行股本及/或股份購回; AGM repurchase circulars stay; a dividend
-announcement marked resubmission is not an NDR and stays);
+51500); the whole Next Day Disclosure Returns tier (翌日披露報表,
+code 50000), including the standard form, share buybacks, and
+resubmissions. AGM repurchase circulars stay, as does an announcement
+that only mentions the form. A dividend announcement marked
+resubmission is not this tier and stays. The tier chip is removed
+from tiers.json;
 warrants, options, and 牛熊證 (CBBCs); Debt and Structured Products
 (債券及結構性產品), code 70000, including cancelled or reissued prefixes,
 and documents-on-display types 57000, 58000, and 59000. Those debt chips
@@ -857,44 +857,34 @@ def is_debt_or_structured_product(tier1_code: str, tier1_name: str, category: st
     return contains_any(blob, DEBT_NAME_MARKERS)
 
 
-def is_resubmission_marker(title: str) -> bool:
-    """True when the title says it was filed again.
+def is_ndr_form_title(title: str) -> bool:
+    """True when the title is the Next Day Disclosure Return form itself.
 
-    The marker must start at a word boundary, so "presubmission" does not match.
+    A leading "(Resubmission)" still counts. A later mention, such as
+    "supplemental announcement to next day disclosure returns", does not.
     """
-    text = clean_text(title)
-    if "重新提交" in text:
-        return True
-    return re.search(r"(?<![A-Za-z])re-?submission", text, re.I) is not None
-
-
-def is_ndr_resubmission_title(title: str) -> bool:
-    """True when this title itself is a Next Day Disclosure Return filed again.
-
-    Used before tier classification, so a blank chip cannot keep
-    "NEXT DAY DISCLOSURE RETURN (RESUBMISSION)" or 翌日披露報表 (重新提交).
-    A dividend announcement that says resubmission does not name the form.
-    """
-    text = clean_text(title)
-    if not is_resubmission_marker(text):
+    text = clean_text(title).strip()
+    if not text:
         return False
     folded = text.casefold()
-    return "next day disclosure" in folded or "翌日披露" in text
+    folded = re.sub(r"^\((?:resubmission|re-submission)\)\s*", "", folded, flags=re.I)
+    if folded.startswith("next day disclosure return"):
+        return True
+    stripped = re.sub(r"^（?重新提交）?\s*", "", text)
+    return stripped.startswith("翌日披露報表") or text.startswith("翌日披露報表")
 
 
 def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str, title: str = "") -> bool:
     """Strip Monthly Returns, NDR share buybacks, NDR resubmissions, and debt products.
 
-    The standard NDR form title ("changes in issued share capital and/or share
-    buybacks" / 已發行股本及/或股份購回) is not a buyback on its own. Other NDRs
-    stay, except Next Day Disclosure Return (Resubmission). AGM repurchase
-    circulars are not NDRs and stay.
+    The whole Next Day Disclosure Returns tier goes, including the standard
+    form, share buybacks, and resubmissions. AGM repurchase circulars are a
+    different tier and stay. An announcement that only mentions the form stays.
     """
     tier1 = clean_text(tier1_name)
-    tier2 = clean_text(tier2_name)
     cat = clean_text(category)
     filing_title = clean_text(title)
-    if is_ndr_resubmission_title(filing_title):
+    if is_ndr_form_title(filing_title):
         return True
     if is_debt_or_structured_product(tier1_code, tier1_name, category):
         return True
@@ -913,39 +903,27 @@ def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str
         or "翌日披露" in tier1
         or "翌日披露" in cat
     )
-    if not is_ndr:
-        return False
-    if is_resubmission_marker(filing_title):
-        return True
-    if any(token in tier2 or token in cat for token in ("Share Buyback", "Share Buy-back", "股份購回")):
-        return True
-    if re.search(r"Share Buy-?backs?", filing_title, re.I) or "股份購回" in filing_title:
-        boilerplate = re.search(
-            r"changes in issued share(?:s| capital)|issued shares or treasury shares"
-            r"|已發行股本|已發行股份或庫存股份",
-            filing_title,
-            re.I,
-        )
-        if boilerplate:
-            return False
-        return True
-    return False
+    return is_ndr
 
 
 def tier_chip_forbidden(code: str, name_en: str, name_tc: str) -> bool:
-    """True when a tier-1 chip is Debt and Structured Products, including a prefix.
+    """True for a debt chip or the Next Day Disclosure Returns chip.
 
     Contains match on the English name, the Chinese name, and the code.
     "Documents on Display" without the debt or structured-product qualifier stays.
     Monthly Returns stay in the chip list; their rows are stripped separately.
     """
-    if str(code or "").strip() in DEBT_TIER_CODES:
+    normalized = str(code or "").strip()
+    if normalized in DEBT_TIER_CODES or normalized == "50000":
         return True
-    return contains_any(f"{name_en}\n{name_tc}", DEBT_NAME_MARKERS)
+    blob = f"{name_en}\n{name_tc}"
+    if contains_any(blob, DEBT_NAME_MARKERS):
+        return True
+    return "Next Day Disclosure" in name_en or "翌日披露" in name_tc
 
 
 def build_tiers_document(tierone_en: list[dict], tierone_tc: list[dict]) -> dict:
-    """Copy the official tier-1 list and drop debt and structured-product chips."""
+    """Copy the official tier-1 list and drop debt and next-day-disclosure chips."""
     tc_by_code = {str(item.get("code", "")).strip(): item.get("name") or "" for item in tierone_tc}
     chips = []
     for item in tierone_en:
@@ -971,14 +949,17 @@ def tiers_document_problems(tiers: dict) -> list[str]:
         name_en = str(chip.get("nameEn", "") or "")
         name_tc = str(chip.get("nameTc", "") or "")
         if tier_chip_forbidden(code, name_en, name_tc):
-            problems.append(f"tiers.json still contains debt chip {code} {name_en} / {name_tc}")
+            problems.append(f"tiers.json still contains forbidden chip {code} {name_en} / {name_tc}")
     raw = json.dumps(tiers, ensure_ascii=False)
     for marker in DEBT_NAME_MARKERS:
         if marker in raw:
             problems.append(f"tiers.json contains {marker}")
-    for code in sorted(DEBT_TIER_CODES):
+    for code in sorted(DEBT_TIER_CODES | {"50000"}):
         if f'"{code}"' in raw:
             problems.append(f"tiers.json contains code {code}")
+    for marker in ("Next Day Disclosure", "翌日披露"):
+        if marker in raw:
+            problems.append(f"tiers.json contains {marker}")
     # Preserve order while dropping duplicate phrases from the two checks above.
     seen: set[str] = set()
     unique = []
@@ -1323,8 +1304,8 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
             "Main Board + GEM equity/ETF issuers (stock codes 00001–09999). "
             "Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong "
             "even when the monthly raw file is already complete. "
-            "Cache rows for Monthly Returns, NDR Share Buybacks, NDR resubmissions "
-            "(Next Day Disclosure Return (Resubmission) / 翌日披露報表 (重新提交)), "
+            "Cache rows for Monthly Returns and the whole Next Day Disclosure Returns tier "
+            "(翌日披露報表, code 50000, including share buybacks and resubmissions), "
             "Debt and Structured Products "
             "(債券及結構性產品, including related debt and structured-product documents on display), "
             "and warrants, options, and CBBCs (牛熊證) are stripped at build (not only hidden in the UI). "
@@ -1332,14 +1313,11 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
         ),
         "exclusions": {
             "monthlyReturns": "tier1 Monthly Returns / 月報表 / code 51500, contains match, including cancelled or reissued prefixes",
-            "ndrShareBuyback": (
-                "Next Day Disclosure Returns with Share Buyback in tier2 or category, "
-                "or an explicit Share Buyback title; cancelled or reissued prefixes included; "
-                "standard NDR form wording (and/or share buybacks) kept; AGM repurchase circulars kept"
-            ),
-            "ndrResubmission": (
-                "Next Day Disclosure Return (Resubmission), including RE-SUBMISSION "
-                "and 翌日披露報表 (重新提交); a dividend announcement marked resubmission stays"
+            "nextDayDisclosureReturns": (
+                "The whole tier Next Day Disclosure Returns / 翌日披露報表 / code 50000, "
+                "including the standard form, share buybacks, resubmissions, and cancelled "
+                "or reissued prefixes. AGM repurchase circulars stay. An announcement that "
+                "only mentions the form stays."
             ),
             "debtAndStructuredProducts": (
                 "tier1 Debt and Structured Products / 債券及結構性產品 / code 70000, "
@@ -1797,7 +1775,7 @@ def render_report(
         f"Equity/ETF universe (Main+GEM; warrants, options, and CBBCs stripped): {equity_count}",
         f"Issuers in the hasCache universe (paired filings > 0): {len(issuers)}",
         f"Total paired filings: {totals['paired']}",
-        f"Total excluded at build (Monthly Returns, NDR Share Buybacks, NDR resubmissions, Debt and Structured Products): {totals['excluded']}",
+        f"Total excluded at build (Monthly Returns, Next Day Disclosure Returns, Debt and Structured Products): {totals['excluded']}",
         f"Warrants, options, and CBBCs filtered (filing rows EN+TC skipped): {ingest.skipped_derivative_rows}",
         f"Non-equity EN rows skipped: {ingest.skipped_non_equity}",
         f"Total unpaired EN: {totals['unpaired']}",
@@ -2255,7 +2233,7 @@ def _test_exclusions_and_hascache() -> None:
         [_row("41", "翌日披露報表 - 已發行股本及/或股份購回的變動", "翌日披露報表 - [其他]")],
         maps,
     )
-    _expect(len(ndr_form) == 1 and ndr_stats["excludedAtBuild"] == 0, "standard NDR form stays")
+    _expect(ndr_form == [] and ndr_stats["excludedAtBuild"] == 1, "the whole NDR tier is excluded")
 
     buyback, buyback_stats = pair_filings(
         [_row("42", "Share Buyback", "Next Day Disclosure Returns - [Share Buyback]")],
@@ -2286,16 +2264,25 @@ def _test_exclusions_and_hascache() -> None:
     _expect(len(dividend_resub) == 1 and dividend_stats["excludedAtBuild"] == 0, "dividend resubmission stays")
 
     rescued, rescued_stats = pair_filings(
-        [_row("60", "Next Day Disclosure Return - changes in issued share capital", "Next Day Disclosure Returns - [Others]")],
+        [_row("60", "Results announcement", "Announcements and Notices - [Results]")],
         [
             _row("61", "翌日披露報表 (重新提交)", "翌日披露報表 - [其他]"),
-            _row("64", "翌日披露報表 - 已發行股本變動", "翌日披露報表 - [其他]"),
+            _row("64", "業績公告", "公告及通告 - [業績]"),
         ],
         maps,
     )
     _expect(
         len(rescued) == 1 and rescued[0]["newsIdTc"] == "64" and rescued_stats["excludedAtBuild"] == 0,
-        "a nearer resubmission must not swallow the real translation",
+        "a nearer next-day return must not swallow the real translation",
+    )
+    supplemental, supplemental_stats = pair_filings(
+        [_row("80", "SUPPLEMENTAL ANNOUNCEMENT TO NEXT DAY DISCLOSURE RETURNS ON 20 JULY 2021", "Announcements and Notices - [Other]")],
+        [_row("81", "補充公告", "公告及通告 - [其他]")],
+        maps,
+    )
+    _expect(
+        len(supplemental) == 1 and supplemental_stats["excludedAtBuild"] == 0,
+        "an announcement that only mentions the form stays",
     )
 
     untitled, untitled_stats = pair_filings(
@@ -2373,7 +2360,7 @@ def _test_tiers() -> None:
     )
     document = build_tiers_document(official_en, official_tc)
     codes = [chip["code"] for chip in document["tier1"]]
-    _expect(codes == ["10000", "51500", "50000", "56000"], codes)
+    _expect(codes == ["10000", "51500", "56000"], codes)
     _expect(tiers_document_problems(document) == [], "stripped tiers pass")
     dirty = {
         "tier1": [
