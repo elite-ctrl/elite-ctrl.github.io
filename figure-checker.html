@@ -12,11 +12,11 @@
     gtag('config', 'G-6YMJ8X3SVM');
   </script>
   <title>Call the Ledger | LedgerLex Language Studio</title>
-  <meta name="description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+  <meta name="description" content="Call the figures on a source PDF or Word file and its translation in the browser, including direction of change and decimal-place rounding. All data stays on your machine — the files are not uploaded for the check.">
   <meta name="theme-color" content="#FFFFFB">
   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/figure-checker.html">
   <meta property="og:title" content="Call the Ledger | LedgerLex Language Studio">
-  <meta property="og:description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+  <meta property="og:description" content="Call the figures on a source PDF or Word file and its translation in the browser, including direction of change and decimal-place rounding. All data stays on your machine — the files are not uploaded for the check.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/figure-checker.html">
   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
@@ -25,7 +25,7 @@
   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Call the Ledger | LedgerLex Language Studio">
-  <meta name="twitter:description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+  <meta name="twitter:description" content="Call the figures on a source PDF or Word file and its translation in the browser, including direction of change and decimal-place rounding. All data stays on your machine — the files are not uploaded for the check.">
   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -711,7 +711,8 @@
     }
 
     .pair-row.is-scale,
-    .pair-row.is-value { background: var(--yellow); }
+    .pair-row.is-value,
+    .pair-row.is-rounding { background: var(--yellow); }
 
     .pair-row.is-active {
       outline: 3px solid var(--ink);
@@ -733,7 +734,35 @@
     }
 
     .pair-row.is-scale .pair-banner,
-    .pair-row.is-value .pair-banner { background: var(--accent); }
+    .pair-row.is-value .pair-banner,
+    .pair-row.is-rounding .pair-banner { background: var(--accent); }
+
+    .pair-row.is-direction { background: var(--bg); }
+    .pair-row.is-direction .pair-banner { background: var(--ink); color: var(--bg); }
+
+    .pair-sub {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 8px 12px;
+      border-bottom: 3px solid var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 18px;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .pair-row.is-rounding .pair-sub,
+    .pair-row.is-scale .pair-sub,
+    .pair-row.is-value .pair-sub {
+      background: var(--yellow);
+      color: var(--ink);
+    }
+    .pair-row.is-rounding .pair-kind,
+    .pair-row.is-rounding .pair-note,
+    .pair-row.is-rounding .snip,
+    .pair-row.is-rounding .snip .side {
+      color: var(--ink);
+    }
 
     .pair-cell { position: relative; }
 
@@ -1073,7 +1102,7 @@
             <p class="eyebrow">Tools</p>
             <h1>Call the Ledger <span class="beta">Beta</span></h1>
           </div>
-          <p class="subtitle">Call the figures on a bilingual pack before it leaves the desk. Drop the source and translation as PDF or Word (.docx); numbers, percentages, dates, currencies, stock codes, and 億/百萬 scale words are paired across the whole document in this browser — not by page number. Unequal page counts, or PDF pages beside Word paragraphs, are expected and fine. All data stays on your machine — nothing is uploaded for the check.</p>
+          <p class="subtitle">Call the figures on a bilingual pack before it leaves the desk. Drop the source and translation as PDF or Word (.docx); numbers, percentages, dates, currencies, stock codes, and 億/百萬 scale words are paired across the whole document in this browser — not by page number. Unequal page counts, or PDF pages beside Word paragraphs, are expected and fine. All data stays on your machine — nothing is uploaded for the check. It also calls direction of change and decimal-place rounding.</p>
           <div class="tool-notes">
             <p class="disclaimer"><span class="disclaimer__label">Disclaimer</span> This is a beta desk aid. Reading figures from a PDF can miss scan-only text; Word files can miss text in embedded images or text boxes the extractor skips. Complex layouts and other edge cases apply on both formats. Check both files yourself. Call the Ledger is not a substitute for professional review.</p>
             <p class="privacy-note">Your pack files stay in this browser. File contents are not uploaded to LedgerLex servers for this check. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
@@ -1122,7 +1151,7 @@
           <p class="empty">Upload a source and translation (PDF or Word) to compare.</p>
         </div>
 
-        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Common finance spell-outs pair with digits: twelve per cent / twelve percent = 百分之十二 = 12%; one hundred and twenty million = 一億二千萬 = 120 million; 一百二十萬 = 1.2 million. Pagination can differ between EN and TC PDFs, or between PDF and Word; the tool still compares the full extracted text. Not covered: bare spell-outs without a scale or per cent ("twelve" alone), long or exotic compounds, ordinals, fractions, cheque-style 大寫 (壹佰…), same-document inconsistency, scanned or image-only PDFs, and text trapped in Word images without OCR. Always run your own final check on anything flagged.</p>
+        <p class="hint">Equivalents are recognised across languages and scales: HK$1,234.5 million = 港幣1,234.5百萬元 = 12.345億元; 30 June 2025 = 二零二五年六月三十日; HK3.5 cents = 3.5港仙. Common finance spell-outs pair with digits: twelve per cent / twelve percent = 百分之十二 = 12%; one hundred and twenty million = 一億二千萬 = 120 million; 一百二十萬 = 1.2 million. The tool also flags a conflict in the direction of change around a paired figure, and a difference of decimal places that looks like rounding of the same figure. Pagination can differ between EN and TC PDFs, or between PDF and Word; the tool still compares the full extracted text. Not covered: bare spell-outs without a scale or per cent ("twelve" alone), long or exotic compounds, ordinals, fractions, cheque-style 大寫 (壹佰…), same-document inconsistency, scanned or image-only PDFs, and text trapped in Word images without OCR. Also not covered: implied direction with no verb; “up to” caps; 獲利回吐 and other figurative collocations. Always run your own final check on anything flagged.</p>
       </div>
     </div>
   </main>
@@ -1682,6 +1711,289 @@
       }
     }
   
+    function curFamily(it) {
+      var c = ((it && it.cur) || "") + ((it && it.text) || "");
+      if (/HK\$|HKD|\u6e2f\u5e63|\u6e2f\u5e01|\u6e2f\u5143/i.test(c)) return "hkd";
+      if (/US\$|USD|\u7f8e\u5143|\u7f8e\u91d1/i.test(c)) return "usd";
+      if (/RMB|CNY|\u4eba\u6c11\u5e63|\u4eba\u6c11\u5e01/i.test(c)) return "cny";
+      if (/EUR|\u20ac|\u6b50\u5143|\u6b27\u5143/i.test(c)) return "eur";
+      if (/GBP|\u00a3|\u82f1\u938a|\u82f1\u9551/i.test(c)) return "gbp";
+      if (/JPY|\u00a5|\u65e5\u5713|\u65e5\u5143/i.test(c)) return "jpy";
+      return "";
+    }
+    function sameNumericFamily(a, b) {
+      if (!a || !b) return false;
+      if (a.kind === "percent" || b.kind === "percent") return a.kind === b.kind;
+      if (a.kind === "bps" || b.kind === "bps") return a.kind === b.kind;
+      if (a.kind === "pp" || b.kind === "pp") return a.kind === b.kind;
+      if (a.kind === "date" || a.kind === "year" || a.kind === "code") return false;
+      if (b.kind === "date" || b.kind === "year" || b.kind === "code") return false;
+      if (a.kind !== "amount" || b.kind !== "amount") return false;
+      var fa = curFamily(a);
+      var fb = curFamily(b);
+      if (fa && fb && fa !== fb) return false;
+      return true;
+    }
+    function relDiff(a, b) {
+      var va = Math.abs(a);
+      var vb = Math.abs(b);
+      var m = Math.max(va, vb);
+      if (!m) return 1;
+      return Math.abs(va - vb) / m;
+    }
+    function canNearPair(me, xe) {
+      var a = me.src[0];
+      var b = xe.tgt[0];
+      if (!sameNumericFamily(a, b)) return false;
+      var va = Math.abs(a.value);
+      var vb = Math.abs(b.value);
+      if (!isFinite(va) || !isFinite(vb) || va === 0 || vb === 0) return false;
+      if (Math.max(va, vb) / Math.min(va, vb) > 2) return false;
+      return relDiff(va, vb) <= 0.02;
+    }
+
+    function sameRoundingFamily(a, b) {
+      if (sameNumericFamily(a, b)) return true;
+      if (a && b && a.kind === "number" && b.kind === "number") return true;
+      return false;
+    }
+    function displayedDp(numText) {
+      var s = String(numText == null ? "" : numText).replace(/,/g, "").trim();
+      if (s.charAt(0) === "+" || s.charAt(0) === "-") s = s.slice(1);
+      var dot = s.indexOf(".");
+      if (dot < 0) return 0;
+      return s.length - dot - 1;
+    }
+    function dpLabel(n) {
+      return String(n) + " d.p.";
+    }
+    function figWithDp(it) {
+      var fig = it && it.text ? it.text : "";
+      return fig + " (" + dpLabel(displayedDp(it && it.numText)) + ")";
+    }
+    function parseNumTextDigits(numText) {
+      var s = String(numText == null ? "" : numText).replace(/,/g, "").trim();
+      var neg = false;
+      if (s.charAt(0) === "+") s = s.slice(1);
+      if (s.charAt(0) === "-") { neg = true; s = s.slice(1); }
+      if (!/^\d+(?:\.\d+)?$/.test(s)) return null;
+      var parts = s.split(".");
+      return { neg: neg, intPart: parts[0].replace(/^0+(?=\d)/, "") || "0", frac: parts[1] || "" };
+    }
+    function incDigitString(s) {
+      var chars = s.split("");
+      var i = chars.length - 1;
+      var carry = 1;
+      while (i >= 0 && carry) {
+        var d = chars[i].charCodeAt(0) - 48 + carry;
+        if (d >= 10) { chars[i] = "0"; carry = 1; }
+        else { chars[i] = String(d); carry = 0; }
+        i--;
+      }
+      return carry ? "1" + chars.join("") : chars.join("");
+    }
+    function formatRounded(intPart, frac, dp, neg) {
+      if (dp === 0) return (neg ? "-" : "") + intPart;
+      while (frac.length < dp) frac += "0";
+      return (neg ? "-" : "") + intPart + "." + frac;
+    }
+    function roundNumTextToDp(numText, dp, mode) {
+      var d = parseNumTextDigits(numText);
+      if (!d || dp < 0) return null;
+      var frac = d.frac;
+      if (frac.length <= dp) {
+        return formatRounded(d.intPart, frac, dp, d.neg);
+      }
+      var keep = frac.slice(0, dp);
+      var next = frac.charAt(dp);
+      var rest = frac.slice(dp + 1);
+      var inc = false;
+      if (next > "5" || (next === "5" && /[1-9]/.test(rest))) {
+        inc = true;
+      } else if (next === "5") {
+        if (mode === "halfEven") {
+          var last = dp > 0 ? keep.charAt(keep.length - 1) : d.intPart.charAt(d.intPart.length - 1);
+          inc = last === "1" || last === "3" || last === "5" || last === "7" || last === "9";
+        } else {
+          inc = true;
+        }
+      }
+      if (!inc) return formatRounded(d.intPart, keep, dp, d.neg);
+      if (dp === 0) {
+        return formatRounded(incDigitString(d.intPart), "", 0, d.neg);
+      }
+      var bumped = incDigitString(d.intPart + keep);
+      var need = d.intPart.length + keep.length;
+      if (bumped.length > need) {
+        return formatRounded(bumped.slice(0, bumped.length - dp), bumped.slice(bumped.length - dp), dp, d.neg);
+      }
+      return formatRounded(bumped.slice(0, bumped.length - dp), bumped.slice(bumped.length - dp), dp, d.neg);
+    }
+    function numericFallbackRound(value, dp, mode) {
+      var f = Math.pow(10, dp);
+      var sign = value < 0 ? -1 : 1;
+      var x = Math.abs(value) * f;
+      var rounded;
+      if (mode === "halfEven") {
+        var fl = Math.floor(x + 1e-12);
+        var frac = x - fl;
+        if (Math.abs(frac - 0.5) < 1e-9) {
+          rounded = (fl % 2 === 0) ? fl : fl + 1;
+        } else {
+          rounded = Math.round(x + 1e-12);
+        }
+      } else {
+        rounded = Math.round(x + 1e-10);
+      }
+      var raw = (sign * rounded / f).toFixed(dp);
+      return raw;
+    }
+    function roundToDp(item, dp, mode) {
+      var fromText = roundNumTextToDp(item && item.numText, dp, mode);
+      if (fromText != null) return fromText;
+      if (!item || !isFinite(item.value)) return null;
+      return numericFallbackRound(item.value, dp, mode);
+    }
+    function canRoundItems(a, b) {
+      if (!a || !b) return false;
+      if (!sameRoundingFamily(a, b)) return false;
+      if (!isFinite(a.value) || !isFinite(b.value)) return false;
+      if (a.value === b.value) return false;
+      var da = displayedDp(a.numText);
+      var db = displayedDp(b.numText);
+      if (da === db) return false;
+      var finer = da > db ? a : b;
+      var coarser = da > db ? b : a;
+      var cdp = displayedDp(coarser.numText);
+      if (cdp > 4 || displayedDp(finer.numText) <= cdp) return false;
+      var target = roundToDp(coarser, cdp, "halfUp");
+      if (target == null) return false;
+      var up = roundToDp(finer, cdp, "halfUp");
+      if (up === target) return true;
+      var even = roundToDp(finer, cdp, "halfEven");
+      return even === target;
+    }
+
+    var POLARITY_SEP = /[.\u3002\uFF1B;\n]/;
+    function polarityWindow(text, start, end) {
+      var t = text || "";
+      var left = Math.max(0, start - 60);
+      var right = Math.min(t.length, end + 24);
+      var before = t.slice(left, start);
+      var after = t.slice(end, right);
+      var cutB = -1;
+      for (var i = before.length - 1; i >= 0; i--) {
+        if (POLARITY_SEP.test(before.charAt(i))) { cutB = i; break; }
+      }
+      if (cutB >= 0) before = before.slice(cutB + 1);
+      var cutA = after.search(POLARITY_SEP);
+      if (cutA >= 0) after = after.slice(0, cutA);
+      var mid = t.slice(start, end);
+      return { before: before, mid: mid, after: after, text: before + mid + after };
+    }
+    function maskNonDirection(s) {
+      return String(s || "")
+        .replace(/\u7372\u5229\u56de\u5410/g, "        ")
+        .replace(/\bup\s*to\b/gi, "     ")
+        .replace(/\bupto\b/gi, "     ")
+        .replace(/\bcapped\s+at\b/gi, "         ")
+        .replace(/\u6700\u591a/g, "    ")
+        .replace(/\u4e0d\u9ad8\u65bc/g, "      ")
+        .replace(/\bat\s+least\b/gi, "        ")
+        .replace(/\u81f3\u5c11/g, "    ")
+        .replace(/\bhigher\s+of\b/gi, "         ");
+    }
+    function hasNegation(win) {
+      if (/\u4e26\u7121|\u6c92\u6709|\u672a\u6709|\u4e26\u975e|\u4e0d\u6703/.test(win)) return true;
+      var t = String(win || "").replace(/\bno\./gi, "   ");
+      return /\b(?:no|not|neither|without|never|didn't|did\s+not)\b/i.test(t);
+    }
+    var UP_EN = [
+      "an increase", "increase of", "increased", "growth of", "a gain of", "improved by",
+      "rises", "rose", "rising", "grown", "grew", "gained", "climbed", "advanced"
+    ];
+    var DOWN_EN = [
+      "a decrease", "decrease of", "decreased", "a reduction of", "a decline", "fall of",
+      "fallen", "falling", "dropped", "declined", "reduced", "deteriorated", "fell"
+    ];
+    var UP_TC = [
+      "\u6309\u5e74\u5347", "\u540c\u6bd4\u5347", "\u589e\u52a0", "\u4e0a\u5347", "\u589e\u9577", "\u5347\u5e45", "\u63d0\u9ad8"
+    ];
+    var DOWN_TC = [
+      "\u6309\u5e74\u8dcc", "\u540c\u6bd4\u8dcc", "\u6e1b\u5c11", "\u4e0b\u964d", "\u4e0b\u8dcc", "\u56de\u843d", "\u8dcc\u5e45", "\u964d\u4f4e"
+    ];
+    function firstPhrase(hay, phrases, flags) {
+      var hit = null;
+      var at = Infinity;
+      var reFlags = flags || "i";
+      for (var i = 0; i < phrases.length; i++) {
+        var re = new RegExp(phrases[i].replace(/\\s\+/g, "\\s+").replace(/ /g, "\\s+"), reFlags);
+        var m = re.exec(hay);
+        if (m && m.index < at) {
+          at = m.index;
+          hit = m[0];
+        }
+      }
+      return hit;
+    }
+    function detectPolarity(text, item) {
+      if (!item) return { dir: "none", cue: "" };
+      var w = polarityWindow(text, item.start, item.end);
+      var raw = w.text;
+      if (hasNegation(raw)) return { dir: "none", cue: "" };
+      var win = maskNonDirection(raw);
+      var before = maskNonDirection(w.before);
+      var after = maskNonDirection(w.after);
+      var ups = [];
+      var downs = [];
+      var u = firstPhrase(win, UP_EN, "i");
+      if (u) ups.push(u);
+      var d = firstPhrase(win, DOWN_EN, "i");
+      if (d) downs.push(d);
+      var ut = firstPhrase(win, UP_TC, "");
+      if (ut) ups.push(ut);
+      var dt = firstPhrase(win, DOWN_TC, "");
+      if (dt) downs.push(dt);
+      if (/\u8f03(?:(?![.\u3002\uFF1B;\n\u8dcc\u6e1b\u964d]).){0,16}(?:\u5347\u5e45|\u4e0a\u5347|\u589e\u9577|\u63d0\u9ad8|\u5347)/.test(win)) {
+        ups.push("\u8f03\u2026\u5347");
+      }
+      if (/\u8f03(?:(?![.\u3002\uFF1B;\n\u5347\u589e\u63d0]).){0,16}(?:\u8dcc\u5e45|\u4e0b\u8dcc|\u4e0b\u964d|\u6e1b\u5c11|\u964d\u4f4e|\u56de\u843d|\u8dcc)/.test(win)) {
+        downs.push("\u8f03\u2026\u8dcc");
+      }
+      if (/[＋+]\s*$/.test(w.before)) ups.push("+");
+      var minus = w.before.match(/([−–—－\-])(\s*)$/);
+      if (minus) {
+        var glued = minus[2].length === 0;
+        var hyphenOrMinus = minus[1] === "-" || minus[1] === "\u2212" || minus[1] === "\uff0d";
+        if (glued || hyphenOrMinus) {
+          if (!(minus[1] === "\u2014" || (minus[1] === "\u2013" && minus[2].length > 0))) {
+            downs.push(minus[1]);
+          }
+        }
+      }
+      if (/\bup\s+$/i.test(before) && /^\s*(?:\d|\$|HK|US|RMB|CNY|\u20ac|\u00a3|\u00a5|\u6e2f|\u7f8e|\u4eba|%)/.test(w.mid)) {
+        ups.push("up");
+      }
+      if (/\bdown\s+$/i.test(before) && /^\s*(?:\d|\$|HK|US|RMB|CNY|\u20ac|\u00a3|\u00a5|\u6e2f|\u7f8e|\u4eba|%)/.test(w.mid)) {
+        downs.push("down");
+      }
+      if (/^\s*higher\b/i.test(after)) ups.push("higher");
+      if (/^\s*lower\b/i.test(after)) downs.push("lower");
+      if (ups.length && downs.length) return { dir: "none", cue: "" };
+      if (ups.length) return { dir: "up", cue: ups[0] };
+      if (downs.length) return { dir: "down", cue: downs[0] };
+      return { dir: "none", cue: "" };
+    }
+    function directionConflict(srcItem, tgtItem, srcText, tgtText) {
+      var s = detectPolarity(srcText, srcItem);
+      var t = detectPolarity(tgtText, tgtItem);
+      if ((s.dir === "up" || s.dir === "down") && (t.dir === "up" || t.dir === "down") && s.dir !== t.dir) {
+        return { srcCue: s.cue, tgtCue: t.cue, srcDir: s.dir, tgtDir: t.dir };
+      }
+      return null;
+    }
+
+
     function compare(srcText, tgtText) {
       var src = extract(srcText);
       var tgt = extract(tgtText);
@@ -1715,47 +2027,69 @@
         }
         return true;
       });
+      var roundingIssues = [];
+      var missOcc = [];
+      missing.forEach(function (me, mi) {
+        (me.src || []).forEach(function (it, ii) {
+          missOcc.push({ me: me, mi: mi, ii: ii, item: it });
+        });
+      });
+      var extraOcc = [];
+      extra.forEach(function (xe, xi) {
+        (xe.tgt || []).forEach(function (it, jj) {
+          extraOcc.push({ xe: xe, xi: xi, jj: jj, item: it });
+        });
+      });
+      var roundCands = [];
+      missOcc.forEach(function (m, ai) {
+        extraOcc.forEach(function (x, bi) {
+          if (canRoundItems(m.item, x.item)) {
+            roundCands.push({
+              ai: ai,
+              bi: bi,
+              m: m,
+              x: x,
+              rel: relDiff(m.item.value, x.item.value)
+            });
+          }
+        });
+      });
+      roundCands.sort(function (a, b) {
+        return a.rel - b.rel || a.m.item.start - b.m.item.start;
+      });
+      var takenMiss = {};
+      var takenExtra = {};
+      roundCands.forEach(function (c) {
+        var mk = c.m.mi + ":" + c.m.ii;
+        var xk = c.x.xi + ":" + c.x.jj;
+        if (takenMiss[mk] || takenExtra[xk]) return;
+        takenMiss[mk] = true;
+        takenExtra[xk] = true;
+        roundingIssues.push({
+          src: { key: c.m.me.key, kind: c.m.me.kind, src: [c.m.item], tgt: [] },
+          tgt: { key: c.x.xe.key, kind: c.x.xe.kind, src: [], tgt: [c.x.item] },
+          srcDp: displayedDp(c.m.item.numText),
+          tgtDp: displayedDp(c.x.item.numText)
+        });
+      });
+      function rebuildSide(list, side, taken) {
+        var out = [];
+        list.forEach(function (g, gi) {
+          var items = (g[side] || []).filter(function (_, ii) {
+            return !taken[gi + ":" + ii];
+          });
+          if (!items.length) return;
+          var copy = { key: g.key, kind: g.kind, src: [], tgt: [] };
+          copy[side] = items;
+          out.push(copy);
+        });
+        return out;
+      }
+      if (roundingIssues.length) {
+        missing = rebuildSide(missing, "src", takenMiss);
+        extra = rebuildSide(extra, "tgt", takenExtra);
+      }
       var valueIssues = [];
-      function curFamily(it) {
-        var c = ((it && it.cur) || "") + ((it && it.text) || "");
-        if (/HK\$|HKD|\u6e2f\u5e63|\u6e2f\u5e01|\u6e2f\u5143/i.test(c)) return "hkd";
-        if (/US\$|USD|\u7f8e\u5143|\u7f8e\u91d1/i.test(c)) return "usd";
-        if (/RMB|CNY|\u4eba\u6c11\u5e63|\u4eba\u6c11\u5e01/i.test(c)) return "cny";
-        if (/EUR|\u20ac|\u6b50\u5143|\u6b27\u5143/i.test(c)) return "eur";
-        if (/GBP|\u00a3|\u82f1\u938a|\u82f1\u9551/i.test(c)) return "gbp";
-        if (/JPY|\u00a5|\u65e5\u5713|\u65e5\u5143/i.test(c)) return "jpy";
-        return "";
-      }
-      function sameNumericFamily(a, b) {
-        if (!a || !b) return false;
-        if (a.kind === "percent" || b.kind === "percent") return a.kind === b.kind;
-        if (a.kind === "bps" || b.kind === "bps") return a.kind === b.kind;
-        if (a.kind === "pp" || b.kind === "pp") return a.kind === b.kind;
-        if (a.kind === "date" || a.kind === "year" || a.kind === "code") return false;
-        if (b.kind === "date" || b.kind === "year" || b.kind === "code") return false;
-        if (a.kind !== "amount" || b.kind !== "amount") return false;
-        var fa = curFamily(a);
-        var fb = curFamily(b);
-        if (fa && fb && fa !== fb) return false;
-        return true;
-      }
-      function relDiff(a, b) {
-        var va = Math.abs(a);
-        var vb = Math.abs(b);
-        var m = Math.max(va, vb);
-        if (!m) return 1;
-        return Math.abs(va - vb) / m;
-      }
-      function canNearPair(me, xe) {
-        var a = me.src[0];
-        var b = xe.tgt[0];
-        if (!sameNumericFamily(a, b)) return false;
-        var va = Math.abs(a.value);
-        var vb = Math.abs(b.value);
-        if (!isFinite(va) || !isFinite(vb) || va === 0 || vb === 0) return false;
-        if (Math.max(va, vb) / Math.min(va, vb) > 2) return false;
-        return relDiff(va, vb) <= 0.02;
-      }
       var nearCands = [];
       missing.forEach(function (me, mi) {
         extra.forEach(function (xe, xi) {
@@ -1791,12 +2125,72 @@
         if (e.kind === "amount" && e.src[0] && Math.abs(e.src[0].value) === 1) { return false; }
         return true;
       });
+      var normSrc = normalize(preprocessText(srcText));
+      var normTgt = normalize(preprocessText(tgtText));
+      var directionIssues = [];
+      function attachDirection(kind, p, srcItem, tgtItem) {
+        var c = directionConflict(srcItem, tgtItem, normSrc, normTgt);
+        if (!c) return false;
+        c.src = p.src;
+        c.tgt = p.tgt;
+        c.alsoRounding = kind === "rounding";
+        c.alsoValue = kind === "value";
+        c.alsoScale = kind === "scale";
+        if (kind === "rounding") {
+          c.srcDp = p.srcDp;
+          c.tgtDp = p.tgtDp;
+        }
+        p.linkedDirection = true;
+        directionIssues.push(c);
+        return true;
+      }
+      roundingIssues.forEach(function (p) {
+        attachDirection("rounding", p, p.src.src[0], p.tgt.tgt[0]);
+      });
+      valueIssues.forEach(function (p) {
+        attachDirection("value", p, p.src.src[0], p.tgt.tgt[0]);
+      });
+      scaleIssues.forEach(function (p) {
+        attachDirection("scale", p, p.src.src[0], p.tgt.tgt[0]);
+      });
+      var keptMatched = [];
+      matched.forEach(function (e) {
+        var keepSrc = [];
+        var keepTgt = [];
+        var n = Math.min(e.src.length, e.tgt.length);
+        for (var i = 0; i < n; i++) {
+          var c = directionConflict(e.src[i], e.tgt[i], normSrc, normTgt);
+          if (c) {
+            directionIssues.push({
+              src: { key: e.key, kind: e.kind, src: [e.src[i]], tgt: [] },
+              tgt: { key: e.key, kind: e.kind, src: [], tgt: [e.tgt[i]] },
+              srcCue: c.srcCue,
+              tgtCue: c.tgtCue,
+              srcDir: c.srcDir,
+              tgtDir: c.tgtDir
+            });
+          } else {
+            keepSrc.push(e.src[i]);
+            keepTgt.push(e.tgt[i]);
+          }
+        }
+        if (keepSrc.length && keepTgt.length) {
+          keptMatched.push({ key: e.key, kind: e.kind, src: keepSrc, tgt: keepTgt });
+        }
+      });
+      matched = keptMatched;
       function byPos(a, b) { return (a.src[0] || a.tgt[0]).start - (b.src[0] || b.tgt[0]).start; }
       function byPairPos(a, b) { return (a.src.src[0] || a.src.tgt[0]).start - (b.src.src[0] || b.src.tgt[0]).start; }
       matched.sort(byPos); missing.sort(byPos); extra.sort(byPos); countDiffs.sort(byPos);
       scaleIssues.sort(byPairPos); valueIssues.sort(byPairPos);
-      return { src: src, tgt: tgt, matched: matched, missing: missing, extra: extra, countDiffs: countDiffs, scaleIssues: scaleIssues, valueIssues: valueIssues };
+      roundingIssues.sort(byPairPos); directionIssues.sort(byPairPos);
+      return {
+        src: src, tgt: tgt, matched: matched, missing: missing, extra: extra, countDiffs: countDiffs,
+        scaleIssues: scaleIssues, valueIssues: valueIssues, roundingIssues: roundingIssues, directionIssues: directionIssues,
+        srcText: normSrc, tgtText: normTgt
+      };
     }
+
   
     var KIND_NAMES = { date: "date", year: "year", percent: "percentage", bps: "basis points", pp: "percentage points", code: "stock code", amount: "amount", number: "number" };
     /*ENGINE-END*/
@@ -1864,7 +2258,9 @@
     var ISSUE_TYPE_LABEL = {
       miss: "missing",
       extra: "extra",
+      direction: "direction",
       scale: "scale",
+      rounding: "rounding",
       value: "value",
       count: "count"
     };
@@ -1881,10 +2277,12 @@
           ' id="' + esc(meta.id) + '"' +
           ' data-issue-id="' + esc(meta.id) + '"' +
           ' data-issue-type="' + esc(meta.type) + '"' +
+          (meta.secondary ? ' data-secondary-type="' + esc(meta.secondary) + '"' : "") +
           ' tabindex="0" role="button" aria-label="' + esc(banner || "Figure issue") + '"';
       }
       return '<div class="pair-row ' + cls + '"' + attrs + ">" +
         (banner ? '<p class="pair-banner">' + esc(banner) + "</p>" : "") +
+        (meta && meta.sub ? '<p class="pair-sub">' + esc(meta.sub) + "</p>" : "") +
         left + right + "</div>";
     }
     function board(rows) {
@@ -1899,7 +2297,7 @@
       if (!issues.length) return "";
       var h = '<div class="error-strip" id="errorStrip" role="list" aria-label="Figure issues">';
       issues.forEach(function (c) {
-        var tone = c.type === "miss" || c.type === "extra" ? "bad" : c.type === "count" ? "info" : "warn";
+        var tone = c.type === "miss" || c.type === "extra" || c.type === "direction" ? "bad" : c.type === "count" ? "info" : "warn";
         h +=
           '<button type="button" class="chip ' + tone + ' error-chip" role="listitem" data-issue-id="' +
           esc(c.id) +
@@ -2210,7 +2608,7 @@
     }
     function jumpToType(type) {
       if (!type) return;
-      var rows = document.querySelectorAll('.pair-row[data-issue-type="' + type + '"]');
+      var rows = document.querySelectorAll('.pair-row[data-issue-type="' + type + '"], .pair-row[data-secondary-type="' + type + '"]');
       if (!rows.length) return;
       if (jumpTypeCursor.type !== type) {
         jumpTypeCursor.type = type;
@@ -2269,8 +2667,11 @@
       }
       var r = compare(srcText, tgtText);
       var valueIssues = r.valueIssues || [];
+      var roundingIssues = r.roundingIssues || [];
+      var directionIssues = r.directionIssues || [];
       var issueCount =
-        r.missing.length + r.extra.length + r.scaleIssues.length + valueIssues.length + r.countDiffs.length;
+        r.missing.length + r.extra.length + r.scaleIssues.length + valueIssues.length + r.countDiffs.length +
+        roundingIssues.length + directionIssues.length;
       var h = "";
       h += '<div class="summary">';
       h += '<span class="chip ok">\u2713 ' + r.matched.length + " matched</span>";
@@ -2280,8 +2681,14 @@
       if (r.extra.length) {
         h += typeChip("extra", "bad", "\u2717 " + r.extra.length + " not in source");
       }
+      if (directionIssues.length) {
+        h += typeChip("direction", "bad", "\u2717 " + directionIssues.length + " direction conflict");
+      }
       if (r.scaleIssues.length) {
         h += typeChip("scale", "warn", "\u26a0 " + r.scaleIssues.length + " scale/unit to verify");
+      }
+      if (roundingIssues.length) {
+        h += typeChip("rounding", "warn", "\u26a0 " + roundingIssues.length + " rounding to verify");
       }
       if (valueIssues.length) {
         h += typeChip("value", "warn", "\u26a0 " + valueIssues.length + " value mismatch");
@@ -2293,15 +2700,55 @@
       h += "</div>";
       var report = [];
       var issues = [];
-      var typeIndex = { miss: 0, extra: 0, scale: 0, value: 0, count: 0 };
+      var typeIndex = { miss: 0, extra: 0, direction: 0, scale: 0, rounding: 0, value: 0, count: 0 };
       var issueRows = "";
-      function pushIssue(type, cls, banner, left, right, snippet, reportLine) {
+      function pushIssue(type, cls, banner, left, right, snippet, reportLine, extraMeta) {
         var id = "issue-" + type + "-" + typeIndex[type]++;
         issues.push({ id: id, type: type, snippet: chipSnippet(snippet) });
-        issueRows += pairRow(cls, banner, left, right, { id: id, type: type });
+        var meta = { id: id, type: type };
+        if (extraMeta) {
+          if (extraMeta.secondary) meta.secondary = extraMeta.secondary;
+          if (extraMeta.sub) meta.sub = extraMeta.sub;
+        }
+        issueRows += pairRow(cls, banner, left, right, meta);
         report.push(reportLine);
       }
+      function cueNote(cue) {
+        return cue ? ("cue: " + cue) : "";
+      }
+      function roundingSub(p) {
+        var srcIt = p.src.src[0];
+        var tgtIt = p.tgt.tgt[0];
+        return figWithDp(srcIt) + " vs " + figWithDp(tgtIt);
+      }
+      directionIssues.forEach(function (p) {
+        var srcFig = sideTexts(p.src.src);
+        var tgtFig = sideTexts(p.tgt.tgt);
+        var cues = (p.srcCue || "") + " vs " + (p.tgtCue || "");
+        var sub = cues;
+        var secondary = "";
+        var extraLine = "";
+        if (p.alsoRounding) {
+          sub = cues + ". Also: " + roundingSub(p);
+          secondary = "rounding";
+          extraLine = "VERIFY ROUNDING: " + figWithDp(p.src.src[0]) + " (source) vs " + figWithDp(p.tgt.tgt[0]) + " (translation)";
+        } else if (p.alsoValue) {
+          sub = cues + ". Also: paired figures, value differs.";
+          secondary = "value";
+        } else if (p.alsoScale) {
+          sub = cues + ". Also: same digits, different scale — verify.";
+          secondary = "scale";
+        }
+        pushIssue("direction", "is-direction", "Direction of change conflicts — verify",
+          filledCell("Source", p.src.src, cueNote(p.srcCue)),
+          filledCell("Translation", p.tgt.tgt, cueNote(p.tgtCue)),
+          srcFig + " vs " + tgtFig + " — " + cues,
+          "DIRECTION CONFLICT: " + srcFig + " (source) vs " + tgtFig + " (translation) — " + cues,
+          { sub: sub, secondary: secondary });
+        if (extraLine) report.push(extraLine);
+      });
       r.scaleIssues.forEach(function (p) {
+        if (p.linkedDirection) return;
         var srcFig = sideTexts(p.src.src);
         var tgtFig = sideTexts(p.tgt.tgt);
         pushIssue("scale", "is-scale", "Same digits, different scale \u2014 verify",
@@ -2310,7 +2757,20 @@
           srcFig + " vs " + tgtFig,
           "VERIFY SCALE/UNIT: " + srcFig + " (source) vs " + tgtFig + " (translation)");
       });
+      roundingIssues.forEach(function (p) {
+        if (p.linkedDirection) return;
+        var srcFig = sideTexts(p.src.src);
+        var tgtFig = sideTexts(p.tgt.tgt);
+        var sub = roundingSub(p);
+        pushIssue("rounding", "is-rounding", "Same figure, different rounding — verify",
+          filledCell("Source", p.src.src, dpLabel(p.srcDp)),
+          filledCell("Translation", p.tgt.tgt, dpLabel(p.tgtDp)),
+          srcFig + " vs " + tgtFig,
+          "VERIFY ROUNDING: " + figWithDp(p.src.src[0]) + " (source) vs " + figWithDp(p.tgt.tgt[0]) + " (translation)",
+          { sub: sub });
+      });
       valueIssues.forEach(function (p) {
+        if (p.linkedDirection) return;
         var srcVal = sideTexts(p.src.src);
         var tgtVal = sideTexts(p.tgt.tgt);
         pushIssue("value", "is-value", "Paired figures, value differs",
