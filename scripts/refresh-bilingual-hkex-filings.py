@@ -30,13 +30,17 @@ code 50000), including the standard form, share buybacks, and
 resubmissions. AGM repurchase circulars stay, as does an announcement
 that only mentions the form. A dividend announcement marked
 resubmission is not this tier and stays. The tier chip is removed
-from tiers.json;
-warrants, options, and 牛熊證 (CBBCs); Debt and Structured Products
-(債券及結構性產品), code 70000, including cancelled or reissued prefixes,
-and documents-on-display types 57000, 58000, and 59000. Those debt chips
-are removed from tiers.json as well as from filing rows. An issuer with
-no paired filings left is omitted from cache issuers and from the
-hasCache universe.
+from tiers.json. Also warrants, options, and 牛熊證 (CBBCs); Debt and
+Structured Products (債券及結構性產品), code 70000, including cancelled
+or reissued prefixes, and documents-on-display types 57000, 58000, and
+59000. Those debt chips are removed from tiers.json as well as from
+filing rows.
+
+The issuer list drops 04xxx and 05xxx listed debt (including
+上市債務證券（公司債券）), 06000–06029, 06751–06783, coupon tickers such
+as PRC B2710, and every code at or above 10000. Equity codes in the
+rest of 06xxx stay. An issuer with no paired filings left is omitted
+from cache issuers and from the hasCache universe.
 
 Commands (work directory defaults to data/hkex-filings-work/, which is
 gitignored; override with --work or HKEX_FILINGS_ROOT):
@@ -1303,8 +1307,9 @@ def stocks_document(equity: dict[str, dict], issuers: dict[str, dict], snapshot:
         "snapshot": snapshot,
         "note": (
             "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, "
-            "excluding 04xxx and 05xxx listed debt). Warrants, options, CBBCs, "
-            "and 1xxxx counters are excluded. hasCache is true only when the "
+            "excluding 04xxx and 05xxx listed debt, 06000–06029, and 06751–06783 notes). "
+            "Warrants, options, CBBCs, 1xxxx counters, and coupon tickers such as "
+            "PRC B2710 are excluded. hasCache is true only when the "
             "issuer still has at least one paired filing after the build-time strip. "
             "Issuers with no remaining pairs are outside the hasCache universe and "
             "are omitted from the per-issuer filings files."
@@ -1342,7 +1347,9 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
         ),
         "note": (
             f"Beta whole-market cache from on-demand HKEXnews market-wide monthly pulls on {snapshot}. "
-            "Main Board + GEM equity/ETF issuers (stock codes 00001–09999). "
+            "Main Board + GEM equity/ETF issuers (stock codes 00001–09999, "
+            "excluding 04xxx and 05xxx listed debt, 06000–06029, 06751–06783 notes, "
+            "coupon tickers such as PRC B2710, and 1xxxx counters). "
             "Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong "
             "even when the monthly raw file is already complete. "
             "Cache rows for Monthly Returns and the whole Next Day Disclosure Returns tier "
@@ -1729,7 +1736,7 @@ def _cmd_pull(full_repull: bool) -> int:
     except Exception as exc:
         equity = {}
         failures.append(f"equity universe: {exc}")
-    log(f"equity/ETF universe after warrant, option, and CBBC strip: {len(equity)}")
+    log(f"equity/ETF universe after listed-debt, warrant, option, and CBBC strip: {len(equity)}")
 
     def is_complete(lang: str, start: date, end: date) -> bool:
         return raw_is_complete(lang, start, end)
@@ -1813,7 +1820,7 @@ def render_report(
         f"Lookback re-pull: last {LOOKBACK_DAYS} calendar days, including today, even when the monthly raw file is complete",
         "Full three-year re-pull: about once a month, on the studio computer, via pull --full-repull. Not a GitHub Actions cron.",
         f"Stamp: {STAMP}",
-        f"Equity/ETF universe (Main+GEM; warrants, options, and CBBCs stripped): {equity_count}",
+        f"Equity/ETF universe (Main+GEM; 04xxx/05xxx debt, 06000–06029, 06751–06783, coupon tickers, warrants, options, and CBBCs stripped): {equity_count}",
         f"Issuers in the hasCache universe (paired filings > 0): {len(issuers)}",
         f"Total paired filings: {totals['paired']}",
         f"Total excluded at build (Monthly Returns, Next Day Disclosure Returns, Debt and Structured Products): {totals['excluded']}",

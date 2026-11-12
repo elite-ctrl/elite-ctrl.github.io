@@ -1,6 +1,6 @@
 {
   "snapshot": "11 November 2026 (Asia/Hong_Kong)",
-  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, excluding 04xxx and 05xxx listed debt, 06000–06029, and 06751–06783 notes). Warrants, options, CBBCs, 1xxxx counters, and coupon tickers such as PRC B2710 are excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from filings-cache.json issuers.",
+  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, excluding 04xxx and 05xxx listed debt, 06000–06029, and 06751–06783 notes). Warrants, options, CBBCs, 1xxxx counters, and coupon tickers such as PRC B2710 are excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from the per-issuer filings files.",
   "stocks": [
     {
       "c": "00001",

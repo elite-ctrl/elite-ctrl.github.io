@@ -21,7 +21,7 @@ python3 scripts/refresh-bilingual-hkex-filings.py check --work DIR
 python3 scripts/refresh-bilingual-hkex-filings.py all --work DIR
 ```
 
-`check` exits 1 when the build is not shippable: a pull failed, the Main+GEM equity universe is empty, issuer or pair counts sit outside ±20% of the 11 November 2026 Live snapshot (3,072 issuers, 273,418 pairs, after the Debt and Structured Products strip), `tiers.json` still contains debt or structured-product chips, an issuer with no remaining pairs is in the hasCache universe, or the issuer files do not match `cache-meta.json`.
+`check` exits 1 when the build is not shippable: a pull failed, the Main+GEM equity universe is empty, issuer or pair counts sit outside ±20% of the 11 November 2026 Live snapshot (3,069 issuers, 267,618 pairs, after the listed-debt issuer strip and the headline strips), `tiers.json` still contains debt, structured-product, or next-day-disclosure chips, an issuer with no remaining pairs is in the hasCache universe, or the issuer files do not match `cache-meta.json`. The issuer list also drops 04xxx, 05xxx, 06000–06029, 06751–06783, coupon tickers such as PRC B2710, and 1xxxx counters.
 
 ## Lookback and the monthly full re-pull
 
