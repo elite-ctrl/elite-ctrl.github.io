@@ -30,13 +30,17 @@ code 50000), including the standard form, share buybacks, and
 resubmissions. AGM repurchase circulars stay, as does an announcement
 that only mentions the form. A dividend announcement marked
 resubmission is not this tier and stays. The tier chip is removed
-from tiers.json;
-warrants, options, and 牛熊證 (CBBCs); Debt and Structured Products
-(債券及結構性產品), code 70000, including cancelled or reissued prefixes,
-and documents-on-display types 57000, 58000, and 59000. Those debt chips
-are removed from tiers.json as well as from filing rows. An issuer with
-no paired filings left is omitted from cache issuers and from the
-hasCache universe.
+from tiers.json. Also warrants, options, and 牛熊證 (CBBCs); Debt and
+Structured Products (債券及結構性產品), code 70000, including cancelled
+or reissued prefixes, and documents-on-display types 57000, 58000, and
+59000. Those debt chips are removed from tiers.json as well as from
+filing rows.
+
+The issuer list drops 04xxx and 05xxx listed debt (including
+上市債務證券（公司債券）), 06000–06029, 06751–06783, coupon tickers such
+as PRC B2710, and every code at or above 10000. Equity codes in the
+rest of 06xxx stay. An issuer with no paired filings left is omitted
+from cache issuers and from the hasCache universe.
 
 Commands (work directory defaults to data/hkex-filings-work/, which is
 gitignored; override with --work or HKEX_FILINGS_ROOT):
@@ -126,8 +130,8 @@ STAMP = "Beta"
 # check refuses a build whose counts sit outside ±20% of these figures.
 # Revise the baseline when a reviewed ship replaces the Live cache.
 SNAPSHOT_AS_OF = "11 November 2026"
-SNAPSHOT_ISSUERS = 3072
-SNAPSHOT_PAIRS = 273418
+SNAPSHOT_ISSUERS = 3069
+SNAPSHOT_PAIRS = 267618
 SNAPSHOT_TOLERANCE = 0.20
 
 DEBT_TIER_CODES = frozenset({"70000", "57000", "58000", "59000"})
@@ -765,17 +769,49 @@ def _dedupe_news(rows: list[dict]) -> list[dict]:
     return unique
 
 
-def is_derivative_issuer(code: str, name_en: str = "", name_tc: str = "") -> bool:
-    """True for warrant, option, and CBBC wrappers, not ordinary equity or ETFs."""
+def is_excluded_issuer_code(code: str) -> bool:
+    """True for listed-debt and derivative counters that are not equity issuers.
+
+    04xxx and 05xxx are listed debt securities, including 上市債務證券（公司債券）.
+    06000–06029 and 06751–06783 are the same kind of note, sitting beside
+    real 06xxx equities. 1xxxx and every code at or above 10000 are warrants,
+    options, CBBCs, or other non-equity counters. Main Board and GEM equities
+    and ETFs stay.
+    """
     if not code or not str(code).isdigit():
         return True
     number = int(code)
-    # Main and GEM equities and ETFs use 00001–09999. Codes at or above 10000
-    # are derivative warrants, options, callable bull/bear contracts, or
-    # debt and structured-product counters. RMB counters in 8xxxx stay out
-    # of the issuer universe; their filings attach to the primary 0xxxx code.
     if number >= 10000:
         return True
+    if 4000 <= number <= 5999:
+        return True
+    if 6000 <= number <= 6029 or 6751 <= number <= 6783:
+        return True
+    return False
+
+
+# Coupon-and-maturity tickers such as "MEITUAN N3105", "PRC B2710", and "EFN".
+# IMMUNOTECH does not match: the marker needs a coupon code, not the letters NOTE.
+LISTED_NOTE_RE = re.compile(
+    r"(?:^|\s)(?:N|B)\d{4}B?\b|\bPRC B\d|\bEFN\b|PSGCS|SPCS\b",
+    re.I,
+)
+
+
+def is_listed_note_name(name_en: str = "", name_tc: str = "") -> bool:
+    return LISTED_NOTE_RE.search(f"{name_en} {name_tc}") is not None
+
+
+def is_derivative_issuer(code: str, name_en: str = "", name_tc: str = "") -> bool:
+    """True for warrant, option, CBBC, and listed-debt counters, not equity or ETFs."""
+    if is_excluded_issuer_code(code):
+        return True
+    # A note can sit on an equity-range code, for example 01687 PRC B2710.
+    if is_listed_note_name(name_en, name_tc):
+        return True
+    # RMB counters in 8xxxx stay out of the issuer universe; their filings
+    # attach to the primary 0xxxx code. Name markers catch wrappers whose
+    # code is still inside the equity range.
     if DERIV_NAME_RE.search(f"{name_en} {name_tc}"):
         return True
     return False
@@ -1270,8 +1306,10 @@ def stocks_document(equity: dict[str, dict], issuers: dict[str, dict], snapshot:
     return {
         "snapshot": snapshot,
         "note": (
-            "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999); "
-            "warrants, options, and CBBCs excluded. hasCache is true only when the "
+            "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, "
+            "excluding 04xxx and 05xxx listed debt, 06000–06029, and 06751–06783 notes). "
+            "Warrants, options, CBBCs, 1xxxx counters, and coupon tickers such as "
+            "PRC B2710 are excluded. hasCache is true only when the "
             "issuer still has at least one paired filing after the build-time strip. "
             "Issuers with no remaining pairs are outside the hasCache universe and "
             "are omitted from the per-issuer filings files."
@@ -1309,7 +1347,9 @@ def cache_document(issuers: dict[str, dict], snapshot: str) -> dict:
         ),
         "note": (
             f"Beta whole-market cache from on-demand HKEXnews market-wide monthly pulls on {snapshot}. "
-            "Main Board + GEM equity/ETF issuers (stock codes 00001–09999). "
+            "Main Board + GEM equity/ETF issuers (stock codes 00001–09999, "
+            "excluding 04xxx and 05xxx listed debt, 06000–06029, 06751–06783 notes, "
+            "coupon tickers such as PRC B2710, and 1xxxx counters). "
             "Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong "
             "even when the monthly raw file is already complete. "
             "Cache rows for Monthly Returns and the whole Next Day Disclosure Returns tier "
@@ -1696,7 +1736,7 @@ def _cmd_pull(full_repull: bool) -> int:
     except Exception as exc:
         equity = {}
         failures.append(f"equity universe: {exc}")
-    log(f"equity/ETF universe after warrant, option, and CBBC strip: {len(equity)}")
+    log(f"equity/ETF universe after listed-debt, warrant, option, and CBBC strip: {len(equity)}")
 
     def is_complete(lang: str, start: date, end: date) -> bool:
         return raw_is_complete(lang, start, end)
@@ -1780,7 +1820,7 @@ def render_report(
         f"Lookback re-pull: last {LOOKBACK_DAYS} calendar days, including today, even when the monthly raw file is complete",
         "Full three-year re-pull: about once a month, on the studio computer, via pull --full-repull. Not a GitHub Actions cron.",
         f"Stamp: {STAMP}",
-        f"Equity/ETF universe (Main+GEM; warrants, options, and CBBCs stripped): {equity_count}",
+        f"Equity/ETF universe (Main+GEM; 04xxx/05xxx debt, 06000–06029, 06751–06783, coupon tickers, warrants, options, and CBBCs stripped): {equity_count}",
         f"Issuers in the hasCache universe (paired filings > 0): {len(issuers)}",
         f"Total paired filings: {totals['paired']}",
         f"Total excluded at build (Monthly Returns, Next Day Disclosure Returns, Debt and Structured Products): {totals['excluded']}",
@@ -2347,6 +2387,16 @@ def _test_exclusions_and_hascache() -> None:
     empty_issuer["00001"] = issuer_record(equity["00001"], [], {}, date(2023, 11, 10), date(2026, 11, 10))
     _expect(hascache_problems(stocks, empty_issuer), "empty issuers entry must fail")
     _expect(is_derivative_issuer("10000") is True, "derivative code")
+    _expect(is_excluded_issuer_code("04508") is True, "04xxx listed debt")
+    _expect(is_excluded_issuer_code("05834") is True, "05xxx listed debt")
+    _expect(is_excluded_issuer_code("12345") is True, "1xxxx counter")
+    _expect(is_excluded_issuer_code("08001") is False, "GEM equity stays")
+    _expect(is_excluded_issuer_code("06012") is True, "06000-06029 notes")
+    _expect(is_excluded_issuer_code("06030") is False, "06030 equity stays")
+    _expect(is_excluded_issuer_code("06751") is True, "06751-06783 PRC notes")
+    _expect(is_excluded_issuer_code("06745") is False, "06745 equity stays")
+    _expect(is_derivative_issuer("01687", "PRC B2710", "PRC B2710") is True, "note on an equity-range code")
+    _expect(is_derivative_issuer("06978", "IMMUNOTECH-B", "IMMUNOTECH-B") is False, "NOTE inside a company name stays")
     _expect(is_derivative_issuer("00700", "TENCENT", "騰訊") is False, "ordinary equity")
     _expect(is_derivative_filing_row({"STOCK_NAME": "ABC CBBC", "STOCK_CODE": "00700"}) is True, "CBBC row")
 

@@ -1176,14 +1176,32 @@ function setRoute(path) {
   else location.hash = path;
 }
 
+/* 04xxx and 05xxx are listed debt, including 上市債務證券（公司債券）.
+   06000–06029 and 06751–06783 are the same notes beside real 06xxx equities.
+   1xxxx and every code from 10000 up are warrants, options, and CBBCs.
+   A coupon ticker such as "PRC B2710" is a note even on another code.
+   IMMUNOTECH does not match. */
+function excludedIssuerCode(code) {
+  if (!/^\d{5}$/.test(String(code || ""))) return false;
+  var n = parseInt(code, 10);
+  return n >= 10000 || (n >= 4000 && n <= 5999) || (n >= 6000 && n <= 6029) || (n >= 6751 && n <= 6783);
+}
+
+function listedNoteName(name) {
+  return /(?:^|\s)(?:N|B)\d{4}B?\b|\bPRC B\d|\bEFN\b|PSGCS|SPCS\b/i.test(name || "");
+}
+
 function filterStocks(q) {
   var raw = String(q || "").trim();
-  if (!raw) return STOCKS.stocks.filter(function (s) { return s.hasCache; });
+  var universe = STOCKS.stocks.filter(function (s) {
+    return !excludedIssuerCode(s.c) && !listedNoteName(s.n) && !listedNoteName(s.nt);
+  });
+  if (!raw) return universe.filter(function (s) { return s.hasCache; });
   var needle = raw.toLowerCase();
   var digits = raw.replace(/\D/g, "");
   /* Never indexOf(""). An empty code guess matches every stock. */
   var codeGuess = digits ? padCode(raw) : "";
-  return STOCKS.stocks.filter(function (s) {
+  return universe.filter(function (s) {
     var codeHit = false;
     if (codeGuess) codeHit = s.c.indexOf(codeGuess) !== -1 || s.c === codeGuess;
     var en = String(s.n || s.nameEn || "");
@@ -1199,7 +1217,9 @@ function renderHub() {
   var host = document.getElementById("issuer-list");
   var empty = document.getElementById("hub-empty");
   var meta = document.getElementById("hub-meta");
-  var cachedTotal = STOCKS.stocks.filter(function (s) { return s.hasCache; }).length;
+  var cachedTotal = STOCKS.stocks.filter(function (s) {
+    return s.hasCache && !excludedIssuerCode(s.c) && !listedNoteName(s.n) && !listedNoteName(s.nt);
+  }).length;
   if (!String(hubQuery || "").trim()) {
     host.innerHTML = "";
     empty.hidden = false;
@@ -1425,6 +1445,12 @@ function issuerStillCurrent(seq, code) {
 
 function openIssuer(code) {
   var seq = ++issuerSeq;
+  var named = stockByCode(code);
+  if (excludedIssuerCode(code) || (named && (listedNoteName(named.n) || listedNoteName(named.nt)))) {
+    issuerInflight = null;
+    renderIssuer(code);
+    return;
+  }
   var stock = stockByCode(code);
   if (!stock || !stock.hasCache) {
     issuerInflight = null;
@@ -1464,6 +1490,21 @@ function renderIssuer(code) {
   var meta = document.getElementById("issuer-meta");
   var t1Host = document.getElementById("tier1-chips");
   var t2Host = document.getElementById("tier2-chips");
+
+  var noteName = (stock && (listedNoteName(stock.n) || listedNoteName(stock.nt)));
+  if (excludedIssuerCode(code) || noteName) {
+    head.innerHTML =
+      '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+      '<div class="issuer-head__text"><h2>' + escapeHtml(code) + "</h2>" +
+      '<p class="meta">This code is not in the issuer list.</p></div>';
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = "Listed notes are excluded from issuer search, including 04xxx, 05xxx, 06000–06029, 06751–06783, and 1xxxx counters.";
+    meta.textContent = "0 issuers";
+    return;
+  }
 
   if (issuerInflight === code && !pack) {
     head.innerHTML =
