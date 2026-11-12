@@ -54,7 +54,7 @@
         "name": "Does the page query HKEXnews while I search?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. The page reads a published Beta cache (filings-cache.json.gz, stocks.json, and tiers.json) beside this page. It gunzips the filings cache in the browser. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it."
+          "text": "No. Search reads the published issuer index (stocks.json) beside this page. Choosing an issuer loads that issuer’s paired filings. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it."
         }
       },
       {
@@ -597,6 +597,14 @@
       margin-top: 8px;
     }
 
+    .issuer-head__text .hkex-link {
+      color: var(--ink);
+      font-weight: 800;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .issuer-head__text .hkex-link:hover { background: var(--yellow); }
+
     .chips {
       display: flex;
       flex-wrap: wrap;
@@ -958,13 +966,13 @@
             <p class="subtitle" data-cache-dates="cutoff">Bilingual open only when both real PDFs pair. English stubs that only say the filing was published in Chinese are dropped. Beta snapshot: 10 November 2026 (Asia/Hong_Kong).</p>
             <div class="tool-notes">
               <p class="disclaimer" data-cache-dates="from to"><span class="disclaimer__label">Beta cache</span> Offline feed for Main Board and GEM equity and ETF issuers, 10 November 2023 through 10 November 2026. This page does not call HKEXnews on every click. Monthly Returns, Next Day Disclosure Returns for share buybacks, and Debt and Structured Products (債券及結構性產品) are excluded from the published cache. Other next-day disclosure returns stay, as do AGM circulars and announcements about a share repurchase. Confirm against HKEXnews before you rely on a filing.</p>
-              <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. It reads filings-cache.json.gz, stocks.json, and tiers.json beside this page. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
+              <p class="privacy-note" data-cache-dates="cutoff">This page shows a published snapshot dated 10 November 2026. Search uses the issuer index on this page. Choosing an issuer loads that issuer’s paired filings. It does not upload files. Google Analytics may still record a page view, as it does on the rest of the site. See the <a href="privacy.html">Privacy Policy</a>.</p>
               <p class="disclaimer disclaimer--legal" data-cache-dates="cutoff"><span class="disclaimer__label">Disclaimer</span> This index is for information only. It is designed so translation and production teams can retrieve paired English and Traditional Chinese HKEXnews filings more easily. The cache covers the last three years, with a cutoff of 10 November 2026 (Hong Kong time) on this snapshot, and it is updated every Wednesday and Sunday around 08:30 (Hong Kong time). It is not investment advice, a recommendation, or an offer to buy or sell any securities, and it is not a substitute for the official record on HKEXnews.</p>
             </div>
           </header>
 
           <noscript>
-            <p class="disclaimer">This tool needs JavaScript to gunzip the Beta cache in the browser. It does not call HKEXnews.</p>
+            <p class="disclaimer">This tool needs JavaScript to load the issuer index and the issuer you open. It does not call HKEXnews.</p>
           </noscript>
 
           <div class="toolbar">
@@ -975,7 +983,7 @@
           </div>
 
           <div class="panel" id="issuer-results">
-            <div class="result-meta" id="hub-meta" aria-live="polite">Loading the Beta cache…</div>
+            <div class="result-meta" id="hub-meta" aria-live="polite">Loading the issuer index…</div>
             <div class="issuer-list" id="issuer-list"></div>
             <div class="empty-state" id="hub-empty" hidden>No issuers match that search.</div>
           </div>
@@ -1038,7 +1046,7 @@
           </div>
           <div class="faq-item">
             <h3>Does the page query HKEXnews while I search?</h3>
-            <p>No. The page reads a published Beta cache beside this page (filings-cache.json.gz, stocks.json, and tiers.json). It gunzips the filings cache in the browser. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it.</p>
+            <p>No. Search reads the published issuer index (stocks.json) beside this page. Choosing an issuer loads that issuer’s paired filings. It does not call HKEXnews on every click. Confirm a filing on HKEXnews before you rely on it.</p>
           </div>
           <div class="faq-item">
             <h3>Which filings are left out of the cache?</h3>
@@ -1107,13 +1115,16 @@
   </footer>
 
   <script>
-/* Sibling cache: filings-cache.json.gz, stocks.json, tiers.json.
-   The filings file is gzip. The page gunzips it in the browser.
+/* Sibling cache: filings-meta.json, stocks.json, tiers.json.
+   One issuer lives in data/filings/{code}.json and is fetched after a name is chosen.
    Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are removed before publish.
    isExcludedFiling stays as a second check if a later refresh leaves a row in. */
 var STOCKS = null;
-var FILINGS = null;
+var META = null;
 var TIERS = null;
+var issuerPacks = Object.create(null);
+var issuerLoads = Object.create(null);
+var issuerToken = 0;
 var hubQuery = "";
 var titleQuery = "";
 var activeTier1 = new Set();
@@ -1304,44 +1315,151 @@ function isExcludedFiling(f) {
   return !boilerplate;
 }
 
-function renderIssuer(code) {
+function stockByCode(code) {
+  if (!STOCKS || !STOCKS.stocks) return null;
+  var i;
+  for (i = 0; i < STOCKS.stocks.length; i++) {
+    if (STOCKS.stocks[i].c === code) return STOCKS.stocks[i];
+  }
+  return null;
+}
+
+function hkexIssuerHref(stockId) {
+  if (stockId === undefined || stockId === null || stockId === "") return "";
+  var params = new URLSearchParams();
+  params.set("lang", "en");
+  params.set("category", "0");
+  params.set("market", "SEHK");
+  params.set("stockId", String(stockId));
+  params.set("documentType", "-1");
+  return "https://www1.hkexnews.hk/search/titlesearch.xhtml?" + params.toString();
+}
+
+function issuerHeadHtml(code, nameEn, nameTc, detail, stockId) {
+  var href = hkexIssuerHref(stockId);
+  var live = href
+    ? '<p class="meta"><a class="hkex-link" href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">Open this issuer on HKEXnews</a> for filings after this snapshot.</p>'
+    : "";
+  return (
+    '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
+    '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
+    (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
+    (detail ? '<p class="meta">' + detail + "</p>" : "") +
+    live +
+    "</div>"
+  );
+}
+
+function loadIssuer(code) {
+  if (!/^\d{5}$/.test(code)) return Promise.reject(new Error("bad issuer code"));
+  if (Object.prototype.hasOwnProperty.call(issuerPacks, code)) return Promise.resolve(issuerPacks[code]);
+  if (issuerLoads[code]) return issuerLoads[code];
+  issuerLoads[code] = fetch("data/filings/" + code + ".json", { credentials: "same-origin" }).then(function (res) {
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error("data/filings/" + code + ".json HTTP " + res.status);
+    return res.json();
+  }).then(function (pack) {
+    if (pack && pack.filings) pack.filings.forEach(decodeFiling);
+    issuerPacks[code] = pack || null;
+    delete issuerLoads[code];
+    return issuerPacks[code];
+  }, function (err) {
+    delete issuerLoads[code];
+    throw err;
+  });
+  return issuerLoads[code];
+}
+
+function showIssuerLoading(code) {
   document.getElementById("view-hub").hidden = true;
   document.getElementById("view-issuer").hidden = false;
-  var pack = FILINGS.issuers[code];
-  var stock = STOCKS.stocks.find(function (s) { return s.c === code; });
+  var stock = stockByCode(code);
+  document.getElementById("issuer-head").innerHTML = issuerHeadHtml(
+    code,
+    (stock && stock.n) || code,
+    (stock && stock.nt) || "",
+    "Loading paired filings…",
+    stock && stock.i
+  );
+  document.getElementById("tier1-chips").innerHTML = "";
+  document.getElementById("tier2-chips").innerHTML = "";
+  document.getElementById("filing-list").innerHTML = "";
+  document.getElementById("issuer-empty").hidden = true;
+  document.getElementById("issuer-meta").textContent = "Loading paired filings…";
+}
+
+function showIssuer(code) {
+  var token = ++issuerToken;
+  if (!/^\d{5}$/.test(code)) {
+    paintIssuer(code, null, new Error("bad issuer code"));
+    return;
+  }
+  var stock = stockByCode(code);
+  if (stock && stock.hasCache === false) issuerPacks[code] = null;
+  if (Object.prototype.hasOwnProperty.call(issuerPacks, code)) {
+    paintIssuer(code, issuerPacks[code], null);
+    return;
+  }
+  showIssuerLoading(code);
+  loadIssuer(code).then(function (pack) {
+    if (token !== issuerToken) return;
+    paintIssuer(code, pack, null);
+  }, function () {
+    if (token !== issuerToken) return;
+    paintIssuer(code, null, new Error("load failed"));
+  });
+}
+
+function paintIssuer(code, pack, err) {
+  document.getElementById("view-hub").hidden = true;
+  document.getElementById("view-issuer").hidden = false;
+  var stock = stockByCode(code);
   var head = document.getElementById("issuer-head");
   var nameEn = (pack && pack.nameEn) || (stock && stock.n) || code;
   var nameTc = (pack && pack.nameTc) || (stock && stock.nt) || "";
+  var stockId = stock && stock.i !== undefined && stock.i !== null ? stock.i : (pack && pack.stockId);
   var listHost = document.getElementById("filing-list");
   var empty = document.getElementById("issuer-empty");
   var meta = document.getElementById("issuer-meta");
   var t1Host = document.getElementById("tier1-chips");
   var t2Host = document.getElementById("tier2-chips");
 
-  if (!pack || !pack.filings.length) {
-    head.innerHTML =
-      '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
-      '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
-      (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
-      '<p class="meta">No offline bilingual cache for this issuer in this Beta cache.</p></div>';
+  function setHead(detail) {
+    head.innerHTML = issuerHeadHtml(code, nameEn, nameTc, detail, stockId);
+  }
+
+  if (err) {
+    setHead("Paired filings did not load.");
     t1Host.innerHTML = "";
     t2Host.innerHTML = "";
     listHost.innerHTML = "";
     empty.hidden = false;
-    empty.textContent = pack
-      ? "No paired bilingual PDFs in this Beta cache."
-      : "This issuer is in the search universe, and this Beta cache has no paired filing feed for it.";
+    empty.textContent = "This issuer’s filings did not load. Refresh the page and open the issuer again.";
+    meta.textContent = "Filings did not load";
+    return;
+  }
+
+  if (!pack || !pack.filings || !pack.filings.length) {
+    var unknown = !stock && !pack;
+    setHead(unknown
+      ? "This code is not in the issuer index."
+      : "No offline bilingual cache for this issuer in this Beta cache.");
+    t1Host.innerHTML = "";
+    t2Host.innerHTML = "";
+    listHost.innerHTML = "";
+    empty.hidden = false;
+    empty.textContent = unknown
+      ? "This code is not in the issuer index."
+      : (pack
+        ? "No paired bilingual PDFs in this Beta cache."
+        : "This issuer is in the search universe, and this Beta cache has no paired filing feed for it.");
     meta.textContent = "0 paired filings";
     return;
   }
 
   var visibleFilings = pack.filings.filter(function (f) { return !isExcludedFiling(f); });
-  head.innerHTML =
-    '<div class="issuer-head__code">' + escapeHtml(code) + "</div>" +
-    '<div class="issuer-head__text"><h2>' + escapeHtml(nameEn) + "</h2>" +
-    (nameTc ? '<p class="tc">' + escapeHtml(nameTc) + "</p>" : "") +
-    '<p class="meta">' + visibleFilings.length + " paired bilingual filing" + (visibleFilings.length === 1 ? "" : "s") +
-    " in this Beta cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed.</p></div>";
+  setHead(visibleFilings.length + " paired bilingual filing" + (visibleFilings.length === 1 ? "" : "s") +
+    " in this Beta cache. Monthly Returns, NDR Share Buybacks, and Debt and Structured Products are excluded. Unpaired English-only rows are not listed.");
 
   if (!visibleFilings.length) {
     t1Host.innerHTML = "";
@@ -1365,7 +1483,7 @@ function renderIssuer(code) {
     }
   });
 
-  var t1Order = (TIERS.tier1 || []).map(function (t) { return t.code; });
+  var t1Order = ((TIERS && TIERS.tier1) || []).map(function (t) { return t.code; });
   var t1List = Object.keys(t1Counts).map(function (k) { return t1Counts[k]; });
   t1List.sort(function (a, b) {
     var ia = t1Order.indexOf(a.code);
@@ -1406,7 +1524,7 @@ function renderIssuer(code) {
       if (key === "__all") activeTier1.clear();
       else if (activeTier1.has(key)) activeTier1.delete(key);
       else activeTier1.add(key);
-      renderIssuer(code);
+      paintIssuer(code, pack, null);
     });
   });
   t2Host.querySelectorAll("[data-tier2]").forEach(function (btn) {
@@ -1415,7 +1533,7 @@ function renderIssuer(code) {
       if (key === "__all") activeTier2.clear();
       else if (activeTier2.has(key)) activeTier2.delete(key);
       else activeTier2.add(key);
-      renderIssuer(code);
+      paintIssuer(code, pack, null);
     });
   });
 
@@ -1484,7 +1602,7 @@ function renderIssuer(code) {
 }
 
 function render() {
-  if (!STOCKS || !FILINGS || !TIERS) return;
+  if (!STOCKS || !META || !TIERS) return;
   var route = parseRoute();
   if (route.view === "issuer") {
     activeTier1 = new Set();
@@ -1494,9 +1612,10 @@ function render() {
     if (titleInputReset) titleInputReset.value = "";
     var clearReset = document.getElementById("title-search-clear");
     if (clearReset) clearReset.hidden = true;
-    renderIssuer(route.code);
+    showIssuer(route.code);
     window.scrollTo(0, 0);
   } else {
+    issuerToken += 1;
     renderHub();
   }
 }
@@ -1696,10 +1815,10 @@ function showCacheError(err) {
   var meta = document.getElementById("hub-meta");
   var empty = document.getElementById("hub-empty");
   var why = err && err.message ? " " + err.message + "." : "";
-  if (meta) meta.textContent = "The Beta cache did not load." + why + " Refresh the page. This tool reads filings-cache.json.gz beside this page and gunzips it in the browser, with stocks.json and tiers.json. It does not call HKEXnews.";
+  if (meta) meta.textContent = "The issuer index did not load." + why + " Refresh the page. This tool reads stocks.json, tiers.json, and filings-meta.json beside this page. It does not call HKEXnews.";
   if (empty) {
     empty.hidden = false;
-    empty.textContent = "filings-cache.json.gz could not be gunzipped, or a sibling cache file was missing.";
+    empty.textContent = "stocks.json, tiers.json, or filings-meta.json was missing.";
   }
 }
 
@@ -1710,29 +1829,9 @@ function loadJson(name) {
   });
 }
 
-/* Prefer DecompressionStream. If the host already decoded the body, fall back to JSON.
-   If both fail, surface a gunzip error instead of the old uncompressed sample. */
-function loadGzipJson(name) {
-  return fetch(name, { credentials: "same-origin" }).then(function (res) {
-    if (!res.ok) throw new Error(name + " HTTP " + res.status);
-    function asJson(response) {
-      return response.json().catch(function () {
-        throw new Error(name + " gunzip failed");
-      });
-    }
-    if (typeof DecompressionStream !== "function" || !res.body) {
-      return asJson(res);
-    }
-    var raw = res.clone();
-    try {
-      var stream = res.body.pipeThrough(new DecompressionStream("gzip"));
-      return new Response(stream).json().catch(function () {
-        return asJson(raw);
-      });
-    } catch (err) {
-      return asJson(raw);
-    }
-  });
+function repaintIssuer(code) {
+  if (!Object.prototype.hasOwnProperty.call(issuerPacks, code)) return;
+  paintIssuer(code, issuerPacks[code], null);
 }
 
 (function init() {
@@ -1747,7 +1846,7 @@ function loadGzipJson(name) {
   function applyTitleFilter() {
     titleQuery = titleInput ? titleInput.value : "";
     var route = parseRoute();
-    if (STOCKS && route.view === "issuer") renderIssuer(route.code);
+    if (STOCKS && route.view === "issuer") repaintIssuer(route.code);
   }
   if (titleInput) titleInput.addEventListener("input", applyTitleFilter);
   if (titleClear) {
@@ -1756,7 +1855,7 @@ function loadGzipJson(name) {
       if (titleInput) titleInput.value = "";
       titleClear.hidden = true;
       var route = parseRoute();
-      if (STOCKS && route.view === "issuer") renderIssuer(route.code);
+      if (STOCKS && route.view === "issuer") repaintIssuer(route.code);
       if (titleInput) titleInput.focus();
     });
   }
@@ -1770,19 +1869,13 @@ function loadGzipJson(name) {
 
   Promise.all([
     loadJson("stocks.json"),
-    loadGzipJson("filings-cache.json.gz"),
+    loadJson("filings-meta.json"),
     loadJson("tiers.json")
   ]).then(function (parts) {
     STOCKS = parts[0];
-    FILINGS = parts[1];
+    META = parts[1];
     TIERS = parts[2];
-    applyPublishedDates(FILINGS, STOCKS);
-    if (FILINGS && FILINGS.issuers) {
-      Object.keys(FILINGS.issuers).forEach(function (code) {
-        var pack = FILINGS.issuers[code];
-        if (pack && pack.filings) pack.filings.forEach(decodeFiling);
-      });
-    }
+    applyPublishedDates(META, STOCKS);
     if (!location.hash) location.replace("#/");
     render();
   }).catch(function (err) { showCacheError(err); });

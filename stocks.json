@@ -1,6 +1,6 @@
 {
   "snapshot": "11 November 2026 (Asia/Hong_Kong)",
-  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999); warrants, options, and CBBCs excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from filings-cache.json issuers.",
+  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999); warrants, options, and CBBCs excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from data/filings/.",
   "stocks": [
     {
       "c": "00001",
