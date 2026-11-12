@@ -1369,10 +1369,19 @@ function isExcludedFiling(f) {
     cat.indexOf("Next Day Disclosure") !== -1 ||
     t1Tc.indexOf("翌日披露") !== -1 ||
     catTc.indexOf("翌日披露") !== -1;
-  if (!isNdr) return false;
-  /* Next Day Disclosure Return (Resubmission), including RE-SUBMISSION and 重新提交.
+  /* The marker must start at a letter boundary, so "presubmission" does not match.
+     A title that names the form is excluded even when the tier chip is blank.
      A dividend announcement that says resubmission is not an NDR and stays. */
-  if (/re-?submission/i.test(title) || title.indexOf("重新提交") !== -1 || titleTc.indexOf("重新提交") !== -1) return true;
+  function resubmissionMarker(text) {
+    return /(?:^|[^A-Za-z])re-?submission/i.test(text) || text.indexOf("重新提交") !== -1;
+  }
+  function titleNamesNdrResubmission(text) {
+    if (!text || !resubmissionMarker(text)) return false;
+    return /next day disclosure/i.test(text) || text.indexOf("翌日披露") !== -1;
+  }
+  if (titleNamesNdrResubmission(title) || titleNamesNdrResubmission(titleTc)) return true;
+  if (!isNdr) return false;
+  if (resubmissionMarker(title) || resubmissionMarker(titleTc)) return true;
   var buybackChip =
     t2.indexOf("Share Buyback") !== -1 || t2.indexOf("Share Buy-back") !== -1 ||
     cat.indexOf("Share Buyback") !== -1 || cat.indexOf("Share Buy-back") !== -1 ||

@@ -857,17 +857,29 @@ def is_debt_or_structured_product(tier1_code: str, tier1_name: str, category: st
     return contains_any(blob, DEBT_NAME_MARKERS)
 
 
-def is_ndr_resubmission_title(title: str) -> bool:
-    """True for a Next Day Disclosure Return filed again, not a dividend resubmission.
+def is_resubmission_marker(title: str) -> bool:
+    """True when the title says it was filed again.
 
-    Matches (Resubmission), RE-SUBMISSION, and 重新提交. The caller already
-    knows the row is an NDR, so a dividend announcement that says resubmission
-    never reaches this check.
+    The marker must start at a word boundary, so "presubmission" does not match.
     """
     text = clean_text(title)
     if "重新提交" in text:
         return True
-    return re.search(r"re-?submission", text, re.I) is not None
+    return re.search(r"(?<![A-Za-z])re-?submission", text, re.I) is not None
+
+
+def is_ndr_resubmission_title(title: str) -> bool:
+    """True when this title itself is a Next Day Disclosure Return filed again.
+
+    Used before tier classification, so a blank chip cannot keep
+    "NEXT DAY DISCLOSURE RETURN (RESUBMISSION)" or 翌日披露報表 (重新提交).
+    A dividend announcement that says resubmission does not name the form.
+    """
+    text = clean_text(title)
+    if not is_resubmission_marker(text):
+        return False
+    folded = text.casefold()
+    return "next day disclosure" in folded or "翌日披露" in text
 
 
 def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str, title: str = "") -> bool:
@@ -882,6 +894,8 @@ def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str
     tier2 = clean_text(tier2_name)
     cat = clean_text(category)
     filing_title = clean_text(title)
+    if is_ndr_resubmission_title(filing_title):
+        return True
     if is_debt_or_structured_product(tier1_code, tier1_name, category):
         return True
     if (
@@ -901,7 +915,7 @@ def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str
     )
     if not is_ndr:
         return False
-    if is_ndr_resubmission_title(filing_title):
+    if is_resubmission_marker(filing_title):
         return True
     if any(token in tier2 or token in cat for token in ("Share Buyback", "Share Buy-back", "股份購回")):
         return True
@@ -1028,36 +1042,49 @@ def pair_filings(en_rows: list[dict], tc_rows: list[dict], maps) -> tuple[list[d
 
         stamp = en.get("DATE_TIME") or ""
         en_id = news_id_int(en.get("NEWS_ID"))
-        candidates = [item for item in tc_by_dt.get(stamp, []) if item.get("NEWS_ID") not in used_tc]
-        if not candidates:
-            stats["unpaired"] += 1
-            continue
-
+        # A stripped TC row, such as a resubmission, can sit closer in NEWS_ID
+        # than the real translation. Skip that TC and keep looking. Do not drop the EN.
         best = None
-        best_dist = 10**18
-        for candidate in candidates:
-            dist = abs(news_id_int(candidate.get("NEWS_ID")) - en_id)
-            if dist <= 5 and dist < best_dist:
-                best, best_dist = candidate, dist
-        if best is None:
+        cls_tc = None
+        tc_title = ""
+        tc_link = ""
+        while True:
+            candidates = [item for item in tc_by_dt.get(stamp, []) if item.get("NEWS_ID") not in used_tc]
+            if not candidates:
+                stats["unpaired"] += 1
+                break
+            pick = None
+            best_dist = 10**18
             for candidate in candidates:
                 dist = abs(news_id_int(candidate.get("NEWS_ID")) - en_id)
-                if dist <= 20 and dist < best_dist:
-                    best, best_dist = candidate, dist
+                if dist <= 5 and dist < best_dist:
+                    pick, best_dist = candidate, dist
+            if pick is None:
+                for candidate in candidates:
+                    dist = abs(news_id_int(candidate.get("NEWS_ID")) - en_id)
+                    if dist <= 20 and dist < best_dist:
+                        pick, best_dist = candidate, dist
+            if pick is None:
+                stats["unpaired"] += 1
+                break
+            link_tc = pick.get("FILE_LINK") or ""
+            if not link_tc or not str(link_tc).lower().endswith(".pdf"):
+                stats["unpaired"] += 1
+                break
+            picked_cls = classify_row(pick, t1c, t2c_by_t1)
+            picked_title = clean_text(pick.get("TITLE") or "")
+            if is_excluded(
+                picked_cls["tier1Code"], picked_cls["tier1Name"], picked_cls["tier2Name"],
+                picked_cls["category"], picked_title,
+            ):
+                used_tc.add(pick.get("NEWS_ID"))
+                continue
+            best = pick
+            cls_tc = picked_cls
+            tc_title = picked_title
+            tc_link = link_tc
+            break
         if best is None:
-            stats["unpaired"] += 1
-            continue
-
-        tc_link = best.get("FILE_LINK") or ""
-        if not tc_link or not str(tc_link).lower().endswith(".pdf"):
-            stats["unpaired"] += 1
-            continue
-
-        cls_tc = classify_row(best, t1c, t2c_by_t1)
-        tc_title = clean_text(best.get("TITLE") or "")
-        if is_excluded(cls_tc["tier1Code"], cls_tc["tier1Name"], cls_tc["tier2Name"], cls_tc["category"], tc_title):
-            stats["excludedAtBuild"] += 1
-            stats["excludedMonthlyOrNdrBuyback"] += 1
             continue
 
         used_tc.add(best.get("NEWS_ID"))
@@ -2257,6 +2284,26 @@ def _test_exclusions_and_hascache() -> None:
         maps,
     )
     _expect(len(dividend_resub) == 1 and dividend_stats["excludedAtBuild"] == 0, "dividend resubmission stays")
+
+    rescued, rescued_stats = pair_filings(
+        [_row("60", "Next Day Disclosure Return - changes in issued share capital", "Next Day Disclosure Returns - [Others]")],
+        [
+            _row("61", "翌日披露報表 (重新提交)", "翌日披露報表 - [其他]"),
+            _row("64", "翌日披露報表 - 已發行股本變動", "翌日披露報表 - [其他]"),
+        ],
+        maps,
+    )
+    _expect(
+        len(rescued) == 1 and rescued[0]["newsIdTc"] == "64" and rescued_stats["excludedAtBuild"] == 0,
+        "a nearer resubmission must not swallow the real translation",
+    )
+
+    untitled, untitled_stats = pair_filings(
+        [_row("66", "NEXT DAY DISCLOSURE RETURN (RESUBMISSION)", "")],
+        [_row("67", "翌日披露報表 (重新提交)", "")],
+        maps,
+    )
+    _expect(untitled == [] and untitled_stats["excludedAtBuild"] == 1, "resubmission with a blank tier chip")
 
     agm, agm_stats = pair_filings(
         [_row("44", "Proposed general mandate and share repurchase", "Circulars - [Repurchase Mandate]")],
