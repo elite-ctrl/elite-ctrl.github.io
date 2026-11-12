@@ -1,6 +1,6 @@
 {
   "snapshot": "11 November 2026 (Asia/Hong_Kong)",
-  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, excluding 04xxx and 05xxx listed debt). Warrants, options, CBBCs, and 1xxxx counters are excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from filings-cache.json issuers.",
+  "note": "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, excluding 04xxx and 05xxx listed debt, 06000–06029, and 06751–06783 notes). Warrants, options, CBBCs, 1xxxx counters, and coupon tickers such as PRC B2710 are excluded. hasCache is true only when the issuer still has at least one paired filing after the build-time strip. Issuers with no remaining pairs are outside the hasCache universe and are omitted from filings-cache.json issuers.",
   "stocks": [
     {
       "c": "00001",
@@ -8690,13 +8690,6 @@
       "hasCache": true
     },
     {
-      "c": "01687",
-      "i": 3108,
-      "n": "PRC B2710",
-      "nt": "PRC B2710",
-      "hasCache": false
-    },
-    {
       "c": "01688",
       "i": 1000306891,
       "n": "LINGYI ITECH",
@@ -12834,13 +12827,6 @@
       "hasCache": true
     },
     {
-      "c": "02527",
-      "i": 9453,
-      "n": "PTT N3508",
-      "nt": "PTT N3508",
-      "hasCache": false
-    },
-    {
       "c": "02528",
       "i": 1000019707,
       "n": "FW FASHION INT",
@@ -13035,13 +13021,6 @@
       "n": "QINIU",
       "nt": "七牛智能",
       "hasCache": true
-    },
-    {
-      "c": "02568",
-      "i": 6471,
-      "n": "CNOOC F03 N3305",
-      "nt": "CNOOC F03 N3305",
-      "hasCache": false
     },
     {
       "c": "02569",
@@ -16964,132 +16943,6 @@
       "hasCache": true
     },
     {
-      "c": "06000",
-      "i": 222837,
-      "n": "IFC DEV N2904",
-      "nt": "IFC DEV N2904",
-      "hasCache": false
-    },
-    {
-      "c": "06001",
-      "i": 1000279757,
-      "n": "DEYANG N2810",
-      "nt": "DEYANG N2810",
-      "hasCache": false
-    },
-    {
-      "c": "06002",
-      "i": 1000279940,
-      "n": "SR INVT B2810",
-      "nt": "SR INVT B2810",
-      "hasCache": false
-    },
-    {
-      "c": "06004",
-      "i": 1000208869,
-      "n": "PION REW N2611",
-      "nt": "PION REW N2611",
-      "hasCache": false
-    },
-    {
-      "c": "06005",
-      "i": 1000280113,
-      "n": "GLP HLD N2904",
-      "nt": "GLP HLD N2904",
-      "hasCache": false
-    },
-    {
-      "c": "06006",
-      "i": 1000280584,
-      "n": "MEITUAN N3105",
-      "nt": "MEITUAN N3105",
-      "hasCache": false
-    },
-    {
-      "c": "06007",
-      "i": 1000208985,
-      "n": "LUSO BANK B3405",
-      "nt": "LUSO BANK B3405",
-      "hasCache": false
-    },
-    {
-      "c": "06009",
-      "i": 1000280585,
-      "n": "MEITUAN N3211",
-      "nt": "MEITUAN N3211",
-      "hasCache": false
-    },
-    {
-      "c": "06010",
-      "i": 1000280586,
-      "n": "MEITUAN N3511",
-      "nt": "MEITUAN N3511",
-      "hasCache": false
-    },
-    {
-      "c": "06012",
-      "i": 1000280587,
-      "n": "PEAK RE PSGCSB",
-      "nt": "PEAK RE PSGCSB",
-      "hasCache": false
-    },
-    {
-      "c": "06013",
-      "i": 1000280885,
-      "n": "GTJAHLD B3211",
-      "nt": "GTJAHLD B3211",
-      "hasCache": false
-    },
-    {
-      "c": "06014",
-      "i": 1000281087,
-      "n": "BOCL N3011",
-      "nt": "BOCL N3011",
-      "hasCache": false
-    },
-    {
-      "c": "06016",
-      "i": 1000281088,
-      "n": "CDB LEAS B3511",
-      "nt": "CDB LEAS B3511",
-      "hasCache": false
-    },
-    {
-      "c": "06017",
-      "i": 1000281721,
-      "n": "GAOXIN B2811",
-      "nt": "GAOXIN B2811",
-      "hasCache": false
-    },
-    {
-      "c": "06018",
-      "i": 1000281722,
-      "n": "CINDA20 N2811",
-      "nt": "CINDA20 N2811",
-      "hasCache": false
-    },
-    {
-      "c": "06024",
-      "i": 1000208986,
-      "n": "CCB N2611",
-      "nt": "CCB N2611",
-      "hasCache": false
-    },
-    {
-      "c": "06025",
-      "i": 101795,
-      "n": "MTRC(CI) N2902",
-      "nt": "MTRC(CI) N2902",
-      "hasCache": false
-    },
-    {
-      "c": "06029",
-      "i": 1000208987,
-      "n": "CCB N2611B",
-      "nt": "CCB N2611B",
-      "hasCache": false
-    },
-    {
       "c": "06030",
       "i": 67019,
       "n": "CITIC SEC",
@@ -17858,174 +17711,6 @@
       "n": "BEFAR GROUP",
       "nt": "濱化股份",
       "hasCache": true
-    },
-    {
-      "c": "06751",
-      "i": 166582,
-      "n": "PRC B2711",
-      "nt": "PRC B2711",
-      "hasCache": false
-    },
-    {
-      "c": "06753",
-      "i": 203845,
-      "n": "PRC B2810",
-      "nt": "PRC B2810",
-      "hasCache": false
-    },
-    {
-      "c": "06754",
-      "i": 203846,
-      "n": "PRC B4810",
-      "nt": "PRC B4810",
-      "hasCache": false
-    },
-    {
-      "c": "06757",
-      "i": 1000017412,
-      "n": "PRC B2912",
-      "nt": "PRC B2912",
-      "hasCache": false
-    },
-    {
-      "c": "06758",
-      "i": 1000017414,
-      "n": "PRC B3912",
-      "nt": "PRC B3912",
-      "hasCache": false
-    },
-    {
-      "c": "06761",
-      "i": 1000061641,
-      "n": "PRC B3010",
-      "nt": "PRC B3010",
-      "hasCache": false
-    },
-    {
-      "c": "06762",
-      "i": 1000061642,
-      "n": "PRC B5010",
-      "nt": "PRC B5010",
-      "hasCache": false
-    },
-    {
-      "c": "06764",
-      "i": 1000067387,
-      "n": "PRC B3011",
-      "nt": "PRC B3011",
-      "hasCache": false
-    },
-    {
-      "c": "06765",
-      "i": 1000067388,
-      "n": "PRC B3511B",
-      "nt": "PRC B3511B",
-      "hasCache": false
-    },
-    {
-      "c": "06768",
-      "i": 1000121542,
-      "n": "PRC B3110",
-      "nt": "PRC B3110",
-      "hasCache": false
-    },
-    {
-      "c": "06769",
-      "i": 1000121543,
-      "n": "PRC B5110",
-      "nt": "PRC B5110",
-      "hasCache": false
-    },
-    {
-      "c": "06771",
-      "i": 1000124856,
-      "n": "PRC B2811",
-      "nt": "PRC B2811",
-      "hasCache": false
-    },
-    {
-      "c": "06772",
-      "i": 1000124857,
-      "n": "PRC B3311",
-      "nt": "PRC B3311",
-      "hasCache": false
-    },
-    {
-      "c": "06773",
-      "i": 1000237329,
-      "n": "PRC B2710B",
-      "nt": "PRC B2710B",
-      "hasCache": false
-    },
-    {
-      "c": "06774",
-      "i": 1000237330,
-      "n": "PRC B3110B",
-      "nt": "PRC B3110B",
-      "hasCache": false
-    },
-    {
-      "c": "06775",
-      "i": 1000241443,
-      "n": "PRC B2711B",
-      "nt": "PRC B2711B",
-      "hasCache": false
-    },
-    {
-      "c": "06776",
-      "i": 1000241444,
-      "n": "PRC B2911",
-      "nt": "PRC B2911",
-      "hasCache": false
-    },
-    {
-      "c": "06777",
-      "i": 1000281723,
-      "n": "PRC B2811B",
-      "nt": "PRC B2811B",
-      "hasCache": false
-    },
-    {
-      "c": "06778",
-      "i": 1000281724,
-      "n": "PRC B3011B",
-      "nt": "PRC B3011B",
-      "hasCache": false
-    },
-    {
-      "c": "06779",
-      "i": 1000283338,
-      "n": "PRC B2911B",
-      "nt": "PRC B2911B",
-      "hasCache": false
-    },
-    {
-      "c": "06780",
-      "i": 1000283339,
-      "n": "PRC B3211",
-      "nt": "PRC B3211",
-      "hasCache": false
-    },
-    {
-      "c": "06781",
-      "i": 1000309383,
-      "n": "PRC B3107",
-      "nt": "PRC B3107",
-      "hasCache": false
-    },
-    {
-      "c": "06782",
-      "i": 1000309384,
-      "n": "PRC B3407",
-      "nt": "PRC B3407",
-      "hasCache": false
-    },
-    {
-      "c": "06783",
-      "i": 1000309385,
-      "n": "PRC B3807",
-      "nt": "PRC B3807",
-      "hasCache": false
     },
     {
       "c": "06802",

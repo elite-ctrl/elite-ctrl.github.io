@@ -769,20 +769,41 @@ def is_excluded_issuer_code(code: str) -> bool:
     """True for listed-debt and derivative counters that are not equity issuers.
 
     04xxx and 05xxx are listed debt securities, including 上市債務證券（公司債券）.
-    1xxxx and every code at or above 10000 are warrants, options, CBBCs, or
-    other non-equity counters. Main Board and GEM equities and ETFs stay.
+    06000–06029 and 06751–06783 are the same kind of note, sitting beside
+    real 06xxx equities. 1xxxx and every code at or above 10000 are warrants,
+    options, CBBCs, or other non-equity counters. Main Board and GEM equities
+    and ETFs stay.
     """
     if not code or not str(code).isdigit():
         return True
     number = int(code)
     if number >= 10000:
         return True
-    return 4000 <= number <= 5999
+    if 4000 <= number <= 5999:
+        return True
+    if 6000 <= number <= 6029 or 6751 <= number <= 6783:
+        return True
+    return False
+
+
+# Coupon-and-maturity tickers such as "MEITUAN N3105", "PRC B2710", and "EFN".
+# IMMUNOTECH does not match: the marker needs a coupon code, not the letters NOTE.
+LISTED_NOTE_RE = re.compile(
+    r"(?:^|\s)(?:N|B)\d{4}B?\b|\bPRC B\d|\bEFN\b|PSGCS|SPCS\b",
+    re.I,
+)
+
+
+def is_listed_note_name(name_en: str = "", name_tc: str = "") -> bool:
+    return LISTED_NOTE_RE.search(f"{name_en} {name_tc}") is not None
 
 
 def is_derivative_issuer(code: str, name_en: str = "", name_tc: str = "") -> bool:
     """True for warrant, option, CBBC, and listed-debt counters, not equity or ETFs."""
     if is_excluded_issuer_code(code):
+        return True
+    # A note can sit on an equity-range code, for example 01687 PRC B2710.
+    if is_listed_note_name(name_en, name_tc):
         return True
     # RMB counters in 8xxxx stay out of the issuer universe; their filings
     # attach to the primary 0xxxx code. Name markers catch wrappers whose
@@ -2363,6 +2384,12 @@ def _test_exclusions_and_hascache() -> None:
     _expect(is_excluded_issuer_code("05834") is True, "05xxx listed debt")
     _expect(is_excluded_issuer_code("12345") is True, "1xxxx counter")
     _expect(is_excluded_issuer_code("08001") is False, "GEM equity stays")
+    _expect(is_excluded_issuer_code("06012") is True, "06000-06029 notes")
+    _expect(is_excluded_issuer_code("06030") is False, "06030 equity stays")
+    _expect(is_excluded_issuer_code("06751") is True, "06751-06783 PRC notes")
+    _expect(is_excluded_issuer_code("06745") is False, "06745 equity stays")
+    _expect(is_derivative_issuer("01687", "PRC B2710", "PRC B2710") is True, "note on an equity-range code")
+    _expect(is_derivative_issuer("06978", "IMMUNOTECH-B", "IMMUNOTECH-B") is False, "NOTE inside a company name stays")
     _expect(is_derivative_issuer("00700", "TENCENT", "騰訊") is False, "ordinary equity")
     _expect(is_derivative_filing_row({"STOCK_NAME": "ABC CBBC", "STOCK_CODE": "00700"}) is True, "CBBC row")
 

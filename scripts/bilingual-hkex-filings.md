@@ -64,6 +64,6 @@ Contains match, including a cancelled or reissued prefix, not an exact or starts
 - Next Day Disclosure Returns, the whole tier (翌日披露報表, code 50000), including the standard form, share buybacks, and resubmissions. AGM repurchase circulars stay. An announcement that only mentions the form stays. The tier chip is removed from tiers.json
 - Warrants, options, and 牛熊證 (CBBCs)
 - Debt and Structured Products (債券及結構性產品), code 70000, and documents-on-display types 57000, 58000, and 59000
-- Issuer codes 04xxx and 05xxx (listed debt, including 上市債務證券（公司債券）) and 1xxxx counters. They are omitted from the issuer list and from the filings files.
+- Issuer codes 04xxx and 05xxx (listed debt, including 上市債務證券（公司債券）), 06000–06029, 06751–06783, coupon tickers such as PRC B2710, and 1xxxx counters. They are omitted from the issuer list and from the filings files. Equity codes in the rest of 06xxx stay.
 
 Those debt chips are removed from `tiers.json` as well as from filing rows. An issuer with no paired filings left is omitted from the per-issuer filings files and is stored in `stocks.json` with `hasCache` false, so it is outside the hasCache universe. The Live page already uses that flag as the bilingual feed.
