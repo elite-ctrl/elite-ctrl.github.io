@@ -61,8 +61,7 @@ If the studio keeps a Netscape `cookies.txt`, put it at `data/_local/cookies.txt
 Contains match, including a cancelled or reissued prefix, not an exact or startswith match:
 
 - Monthly Returns, the whole Tier 1, including 月報表 and 51500
-- Next Day Disclosure share buybacks (other NDRs stay, including the standard form title "changes in issued share capital and/or share buybacks" / 已發行股本及/或股份購回; AGM repurchase circulars stay)
-- Next Day Disclosure Return (Resubmission), including RE-SUBMISSION and 翌日披露報表 (重新提交). A dividend announcement marked resubmission is not an NDR and stays
+- Next Day Disclosure Returns, the whole tier (翌日披露報表, code 50000), including the standard form, share buybacks, and resubmissions. AGM repurchase circulars stay. An announcement that only mentions the form stays. The tier chip is removed from tiers.json
 - Warrants, options, and 牛熊證 (CBBCs)
 - Debt and Structured Products (債券及結構性產品), code 70000, and documents-on-display types 57000, 58000, and 59000
 
