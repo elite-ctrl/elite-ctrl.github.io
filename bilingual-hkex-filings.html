@@ -1328,19 +1328,22 @@ function isExcludedFiling(f) {
      and an empty tier1Code, so they slipped the published strip and the old UI check. */
   var t1 = f.tier1En || "";
   var t1Tc = f.tier1Tc || "";
+  var t2 = f.tier2En || "";
+  var t2Tc = f.tier2Tc || "";
   var cat = f.categoryEn || "";
   var catTc = f.categoryTc || "";
   var title = f.titleEn || "";
   var titleTc = f.titleTc || "";
+  /* The result row prints the detail chip and both titles. A debt headline can
+     sit there even when the tier-1 chip is Announcements. */
+  var shown = [t1, t1Tc, t2, t2Tc, cat, catTc, title, titleTc].join("\n");
   if (
     f.tier1Code === "70000" ||
     f.tier1Code === "57000" ||
     f.tier1Code === "58000" ||
     f.tier1Code === "59000" ||
-    t1.indexOf("Debt and Structured Products") !== -1 ||
-    cat.indexOf("Debt and Structured Products") !== -1 ||
-    t1Tc.indexOf("債券及結構性產品") !== -1 ||
-    catTc.indexOf("債券及結構性產品") !== -1 ||
+    shown.indexOf("Debt and Structured Products") !== -1 ||
+    shown.indexOf("債券及結構性產品") !== -1 ||
     t1.indexOf("Documents on Display (Debt Issuance Programmes)") !== -1 ||
     cat.indexOf("Documents on Display (Debt Issuance Programmes)") !== -1 ||
     t1.indexOf("Documents on Display (Debt Securities)") !== -1 ||

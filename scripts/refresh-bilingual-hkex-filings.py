@@ -844,16 +844,24 @@ def classify_row(row: dict, t1_name_to_code: dict, t2_by_t1: dict) -> dict:
     }
 
 
-def is_debt_or_structured_product(tier1_code: str, tier1_name: str, category: str) -> bool:
+def is_debt_or_structured_product(
+    tier1_code: str,
+    tier1_name: str,
+    category: str,
+    tier2_name: str = "",
+    title: str = "",
+) -> bool:
     """Whole Tier 1 Debt and Structured Products, including a cancelled or reissued prefix.
 
     Also the related documents-on-display types 57000, 58000, and 59000.
-    A contains match, so a prefix does not hide the chip. Generic announcements
-    that merely mention a debt security are not this tier and stay.
+    A contains match, so a prefix does not hide the chip. The detail chip and
+    the title are checked too: the search result prints both, and a row filed
+    under Announcements can still carry 債券及結構性產品 there.
+    Issue of Debt Securities (發行債務證券) does not contain that name and stays.
     """
     if str(tier1_code or "").strip() in DEBT_TIER_CODES:
         return True
-    blob = f"{clean_text(tier1_name)} {clean_text(category)}"
+    blob = " ".join(clean_text(part) for part in (tier1_name, tier2_name, category, title))
     return contains_any(blob, DEBT_NAME_MARKERS)
 
 
@@ -886,7 +894,7 @@ def is_excluded(tier1_code: str, tier1_name: str, tier2_name: str, category: str
     filing_title = clean_text(title)
     if is_ndr_form_title(filing_title):
         return True
-    if is_debt_or_structured_product(tier1_code, tier1_name, category):
+    if is_debt_or_structured_product(tier1_code, tier1_name, category, tier2_name, filing_title):
         return True
     if (
         tier1_code == "51500"
@@ -2283,6 +2291,24 @@ def _test_exclusions_and_hascache() -> None:
     _expect(
         len(supplemental) == 1 and supplemental_stats["excludedAtBuild"] == 0,
         "an announcement that only mentions the form stays",
+    )
+    debt_title, debt_title_stats = pair_filings(
+        [_row("94", "債券及結構性產品 - [其他 － 債務證券]", "Announcements and Notices - [Other]")],
+        [_row("95", "其他", "公告及通告 - [其他]")],
+        maps,
+    )
+    _expect(
+        debt_title == [] and debt_title_stats["excludedAtBuild"] == 1,
+        "債券及結構性產品 in the title is excluded from search results",
+    )
+    debt_issue, debt_issue_stats = pair_filings(
+        [_row("96", "Completion of Issuance of Tier 2 Capital Bonds", "Announcements and Notices - [Issue of Debt Securities]")],
+        [_row("97", "關於完成發行二級資本債券的公告", "公告及通告 - [發行債務證券]")],
+        maps,
+    )
+    _expect(
+        len(debt_issue) == 1 and debt_issue_stats["excludedAtBuild"] == 0,
+        "issue of debt securities stays",
     )
 
     untitled, untitled_stats = pair_filings(
