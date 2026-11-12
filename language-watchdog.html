@@ -34,6 +34,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png">
   <link rel="apple-touch-icon" href="/brand/apple-touch-180.png">
   <link rel="stylesheet" href="/assets/nav-menu.css">
+  <link rel="stylesheet" href="/assets/watchdog-hits.css">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1102,6 +1103,166 @@
 
     <div class="journal">
       <div class="wrap">
+        <section class="archive" aria-labelledby="archive-title">
+          <h2 id="archive-title">Hits on file</h2>
+          <p class="archive__intro">Types are a grouping, not a locked classification. A linguist seat has not locked the tags.</p>
+          <div class="filter">
+            <p class="filter__title">Filter by type of miss</p>
+            <p class="filter__hint">Select one or more types. A Hit is shown if it matches any selected type.</p>
+            <div class="chips" role="group" aria-label="Filter by type">
+              <button type="button" class="chip" data-type="figure or date" aria-pressed="false">figure or date</button>
+              <button type="button" class="chip" data-type="weekday" aria-pressed="false">weekday</button>
+              <button type="button" class="chip" data-type="terminology" aria-pressed="false">terminology</button>
+              <button type="button" class="chip" data-type="omission" aria-pressed="false">omission</button>
+              <button type="button" class="chip" data-type="added content" aria-pressed="false">added content</button>
+              <button type="button" class="chip" data-type="collocation" aria-pressed="false">collocation</button>
+              <button type="button" class="chip" data-type="defined term" aria-pressed="false">defined term</button>
+              <button type="button" class="chip chip--clear" id="filter-clear">Show all</button>
+            </div>
+            <p class="filter__count" id="hit-count" aria-live="polite"></p>
+          </div>
+          <p class="empty-state" id="empty-state" hidden>No notes of this type on file yet.</p>
+          <div class="hit-list">
+            <div class="hit-list__legend" aria-hidden="true">
+              <span>Date</span><span>Issuer</span><span>Hit</span><span>Type</span><span>Read</span>
+            </div>
+            <ol class="hit-list__items">
+              <li class="hit-row" data-types="collocation" data-id="byd-1">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">1. An Awkward Collocation: First-Mover Advantage</p>
+                <p class="hit-row__type">collocation</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="byd-2">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">2. “Leading” and “Largest”</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="added content" data-id="byd-3">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">3. Whose Forecast?</p>
+                <p class="hit-row__type">added content</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s3">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="added content" data-id="byd-4">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">4. An Added Qualifier: “High Growth Potential”</p>
+                <p class="hit-row__type">added content</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s4">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="omission" data-id="byd-5">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">5. The Missing Segment Qualifier</p>
+                <p class="hit-row__type">omission</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s5">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="added content" data-id="byd-6">
+                <time class="hit-row__date" datetime="2026-11-10">10 Nov 2026</time>
+                <p class="hit-row__issuer">BYD Electronic (00285)</p>
+                <p class="hit-row__heading">6. What Has Market Potential?</p>
+                <p class="hit-row__type">added content</p>
+                <a class="hit-row__go" href="language-watchdog-byd-electronic-00285.html#s6">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="nongfu-1">
+                <time class="hit-row__date" datetime="2026-11-07">7 Nov 2026</time>
+                <p class="hit-row__issuer">Nongfu Spring (09633)</p>
+                <p class="hit-row__heading">1. Predicate specificity — p. 19</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-nongfu-spring-09633.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="nongfu-2">
+                <time class="hit-row__date" datetime="2026-11-07">7 Nov 2026</time>
+                <p class="hit-row__issuer">Nongfu Spring (09633)</p>
+                <p class="hit-row__heading">2. Event roles and measurement — p. 21</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-nongfu-spring-09633.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="nongfu-3">
+                <time class="hit-row__date" datetime="2026-11-07">7 Nov 2026</time>
+                <p class="hit-row__issuer">Nongfu Spring (09633)</p>
+                <p class="hit-row__heading">3. Scope of negation — p. 23</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-nongfu-spring-09633.html#s3">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="defined term" data-id="fibocom-1">
+                <time class="hit-row__date" datetime="2026-11-03">3 Nov 2026</time>
+                <p class="hit-row__issuer">Fibocom (00638)</p>
+                <p class="hit-row__heading">1. One Defined Term, the Wrong Exchange</p>
+                <p class="hit-row__type">defined term</p>
+                <a class="hit-row__go" href="language-watchdog-fibocom-00638.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="fibocom-2">
+                <time class="hit-row__date" datetime="2026-11-03">3 Nov 2026</time>
+                <p class="hit-row__issuer">Fibocom (00638)</p>
+                <p class="hit-row__heading">2. A Repayment Restriction Becomes a Pledge</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-fibocom-00638.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="fibocom-3">
+                <time class="hit-row__date" datetime="2026-11-03">3 Nov 2026</time>
+                <p class="hit-row__issuer">Fibocom (00638)</p>
+                <p class="hit-row__heading">3. One Director, Two Spellings</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-fibocom-00638.html#s3">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="schroders-1">
+                <time class="hit-row__date" datetime="2026-11-02">2 Nov 2026</time>
+                <p class="hit-row__issuer">Schroders Monthly Markets</p>
+                <p class="hit-row__heading">1. House-passed → 參議院: when Congress has one chamber too many</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-schroders-monthly-markets-2026-01.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="schroders-2">
+                <time class="hit-row__date" datetime="2026-11-02">2 Nov 2026</time>
+                <p class="hit-row__issuer">Schroders Monthly Markets</p>
+                <p class="hit-row__heading">2. Profit-taking → 套利: when selling gains becomes a trading strategy</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-schroders-monthly-markets-2026-01.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="everest-1">
+                <time class="hit-row__date" datetime="2026-11-02">2 Nov 2026</time>
+                <p class="hit-row__issuer">Everest Medicines (01952)</p>
+                <p class="hit-row__heading">1. “Intelligence” → 智慧: when market data becomes a TED Talk</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-everest-medicines-01952.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="defined term" data-id="everest-2">
+                <time class="hit-row__date" datetime="2026-11-02">2 Nov 2026</time>
+                <p class="hit-row__issuer">Everest Medicines (01952)</p>
+                <p class="hit-row__heading">2. 「上市許可持有人」指上市許可持有人: the definition that defines itself into oblivion</p>
+                <p class="hit-row__type">defined term</p>
+                <a class="hit-row__go" href="language-watchdog-everest-medicines-01952.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="figure or date" data-id="cpic-1">
+                <time class="hit-row__date" datetime="2026-10-28">28 Oct 2026</time>
+                <p class="hit-row__issuer">CPIC</p>
+                <p class="hit-row__heading">Coverage counted as policies instead of person-times</p>
+                <p class="hit-row__type">figure or date</p>
+                <a class="hit-row__go" href="language-watchdog-cpic-2026-q3.html#s1">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="terminology" data-id="cpic-2">
+                <time class="hit-row__date" datetime="2026-10-28">28 Oct 2026</time>
+                <p class="hit-row__issuer">CPIC</p>
+                <p class="hit-row__heading">“Confirming to” instead of “conforming to”</p>
+                <p class="hit-row__type">terminology</p>
+                <a class="hit-row__go" href="language-watchdog-cpic-2026-q3.html#s2">View Hit</a>
+              </li>
+              <li class="hit-row" data-types="omission" data-id="cpic-3">
+                <time class="hit-row__date" datetime="2026-10-28">28 Oct 2026</time>
+                <p class="hit-row__issuer">CPIC</p>
+                <p class="hit-row__heading">The enquiry-and-confirmation step disappears</p>
+                <p class="hit-row__type">omission</p>
+                <a class="hit-row__go" href="language-watchdog-cpic-2026-q3.html#s3">View Hit</a>
+              </li>
+            </ol>
+          </div>
+        </section>
         <div class="journal__col">
           <section class="journal-block" aria-labelledby="column-title">
             <h2 id="column-title">What this column is</h2>
@@ -1268,5 +1429,6 @@
   </footer>
 
   <script src="/assets/nav-menu.js"></script>
+  <script src="/assets/watchdog-archive.js"></script>
 </body>
 </html>
