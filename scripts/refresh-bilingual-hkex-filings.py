@@ -126,8 +126,8 @@ STAMP = "Beta"
 # check refuses a build whose counts sit outside ±20% of these figures.
 # Revise the baseline when a reviewed ship replaces the Live cache.
 SNAPSHOT_AS_OF = "11 November 2026"
-SNAPSHOT_ISSUERS = 3072
-SNAPSHOT_PAIRS = 273418
+SNAPSHOT_ISSUERS = 3069
+SNAPSHOT_PAIRS = 267618
 SNAPSHOT_TOLERANCE = 0.20
 
 DEBT_TIER_CODES = frozenset({"70000", "57000", "58000", "59000"})
@@ -765,17 +765,28 @@ def _dedupe_news(rows: list[dict]) -> list[dict]:
     return unique
 
 
-def is_derivative_issuer(code: str, name_en: str = "", name_tc: str = "") -> bool:
-    """True for warrant, option, and CBBC wrappers, not ordinary equity or ETFs."""
+def is_excluded_issuer_code(code: str) -> bool:
+    """True for listed-debt and derivative counters that are not equity issuers.
+
+    04xxx and 05xxx are listed debt securities, including 上市債務證券（公司債券）.
+    1xxxx and every code at or above 10000 are warrants, options, CBBCs, or
+    other non-equity counters. Main Board and GEM equities and ETFs stay.
+    """
     if not code or not str(code).isdigit():
         return True
     number = int(code)
-    # Main and GEM equities and ETFs use 00001–09999. Codes at or above 10000
-    # are derivative warrants, options, callable bull/bear contracts, or
-    # debt and structured-product counters. RMB counters in 8xxxx stay out
-    # of the issuer universe; their filings attach to the primary 0xxxx code.
     if number >= 10000:
         return True
+    return 4000 <= number <= 5999
+
+
+def is_derivative_issuer(code: str, name_en: str = "", name_tc: str = "") -> bool:
+    """True for warrant, option, CBBC, and listed-debt counters, not equity or ETFs."""
+    if is_excluded_issuer_code(code):
+        return True
+    # RMB counters in 8xxxx stay out of the issuer universe; their filings
+    # attach to the primary 0xxxx code. Name markers catch wrappers whose
+    # code is still inside the equity range.
     if DERIV_NAME_RE.search(f"{name_en} {name_tc}"):
         return True
     return False
@@ -1270,8 +1281,9 @@ def stocks_document(equity: dict[str, dict], issuers: dict[str, dict], snapshot:
     return {
         "snapshot": snapshot,
         "note": (
-            "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999); "
-            "warrants, options, and CBBCs excluded. hasCache is true only when the "
+            "SEHK Main Board + GEM equity/ETF universe (codes 00001–09999, "
+            "excluding 04xxx and 05xxx listed debt). Warrants, options, CBBCs, "
+            "and 1xxxx counters are excluded. hasCache is true only when the "
             "issuer still has at least one paired filing after the build-time strip. "
             "Issuers with no remaining pairs are outside the hasCache universe and "
             "are omitted from the per-issuer filings files."
@@ -2347,6 +2359,10 @@ def _test_exclusions_and_hascache() -> None:
     empty_issuer["00001"] = issuer_record(equity["00001"], [], {}, date(2023, 11, 10), date(2026, 11, 10))
     _expect(hascache_problems(stocks, empty_issuer), "empty issuers entry must fail")
     _expect(is_derivative_issuer("10000") is True, "derivative code")
+    _expect(is_excluded_issuer_code("04508") is True, "04xxx listed debt")
+    _expect(is_excluded_issuer_code("05834") is True, "05xxx listed debt")
+    _expect(is_excluded_issuer_code("12345") is True, "1xxxx counter")
+    _expect(is_excluded_issuer_code("08001") is False, "GEM equity stays")
     _expect(is_derivative_issuer("00700", "TENCENT", "騰訊") is False, "ordinary equity")
     _expect(is_derivative_filing_row({"STOCK_NAME": "ABC CBBC", "STOCK_CODE": "00700"}) is True, "CBBC row")
 

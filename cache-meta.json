@@ -11,7 +11,7 @@
     "pdfBase": "https://www1.hkexnews.hk"
   },
   "pairing": "Match EN↔TC by NEWS_ID within ±5 (usually ±1) on the same DATE_TIME; fall back to closest unused same-time TC row within ±20. Drop EN stubs that only say published in Chinese. Require real PDF FILE_LINKs on both sides. Bilingual open only for paired rows.",
-  "note": "Beta whole-market cache from on-demand HKEXnews market-wide monthly pulls on 11 November 2026 (Asia/Hong_Kong). Main Board + GEM equity/ETF issuers (stock codes 00001–09999). Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong even when the monthly raw file is already complete. Cache rows for Monthly Returns and the whole Next Day Disclosure Returns tier (翌日披露報表, code 50000, including share buybacks and resubmissions), Debt and Structured Products (債券及結構性產品, including related debt and structured-product documents on display), and warrants, options, and CBBCs (牛熊證) are stripped at build (not only hidden in the UI). Metadata and FILE_LINK hyperlinks only; PDF bodies are not stored.",
+  "note": "Beta whole-market cache from on-demand HKEXnews market-wide monthly pulls on 11 November 2026 (Asia/Hong_Kong). Main Board + GEM equity/ETF issuers (stock codes 00001–09999, excluding 04xxx and 05xxx listed debt and 1xxxx counters). Each incremental run re-pulls the last 14 calendar days in Asia/Hong_Kong even when the monthly raw file is already complete. Cache rows for Monthly Returns and the whole Next Day Disclosure Returns tier (翌日披露報表, code 50000, including share buybacks and resubmissions), Debt and Structured Products (債券及結構性產品, including related debt and structured-product documents on display), and warrants, options, and CBBCs (牛熊證) are stripped at build (not only hidden in the UI). Metadata and FILE_LINK hyperlinks only; PDF bodies are not stored.",
   "exclusions": {
     "monthlyReturns": "tier1 Monthly Returns / 月報表 / code 51500, contains match, including cancelled or reissued prefixes",
     "nextDayDisclosureReturns": "The whole tier Next Day Disclosure Returns / 翌日披露報表 / code 50000, including the standard form, share buybacks, resubmissions, and cancelled or reissued prefixes. AGM repurchase circulars stay. An announcement that only mentions the form stays.",
@@ -19,8 +19,8 @@
     "warrantsOptionsCbbc": "Warrants, options, and CBBCs (牛熊證 / 窩輪 / 認股證): stock codes >=10000 and derivative name markers stripped from the issuer universe and from filing rows",
     "strippedAtBuild": true
   },
-  "issuerCount": 3072,
-  "pairCount": 267704,
+  "issuerCount": 3069,
+  "pairCount": 267618,
   "sourceWindow": {
     "from": "20231111",
     "to": "20261111",
