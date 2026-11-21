@@ -591,13 +591,6 @@
       gap: 12px;
     }
 
-    .hero__cta-tools {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-
     @media (min-width: 768px) {
       .hero__cta { margin-top: 32px; }
     }
@@ -698,8 +691,6 @@
         margin-top: 24px;
       }
 
-      .hero__cta-tools { justify-content: flex-start; }
-
       .hero__paths {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -770,6 +761,27 @@
 
 
 
+
+    /* One yellow action in the hero; desk tools as quiet links */
+    .hero__links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+    .hero__links a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    .hero__links a:hover { background: var(--yellow); }
+    @media (min-width: 900px) {
+      .hero__links { justify-content: flex-start; }
+    }
 
     /* —— Hero visual panel (audit item 7) —— */
     .hero-visual {
@@ -1998,29 +2010,20 @@
 
             <div class="hero__cta">
               <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
-              <div class="hero__cta-tools">
-                <a class="btn btn--lg btn--cream" href="figure-checker.html">Try Call the Ledger</a>
-                <a class="btn btn--lg btn--cream" href="call-the-gaps.html">Try Call the Gaps</a>
-              </div>
-              <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
+              <p class="hero__links"><a href="figure-checker.html">Try Call the Ledger</a><a href="call-the-gaps.html">Try Call the Gaps</a></p>
             </div>
           </div>
 
           <div class="hero__paths" aria-label="Paths">
             <article class="hero-path">
-              <h2 class="hero-path__title">Work with us</h2>
-              <p class="hero-path__body">Brief the desk for the four lanes.</p>
-              <a class="btn" href="#engage">Engage the Studio</a>
-            </article>
-            <article class="hero-path">
               <h2 class="hero-path__title">Join our journey</h2>
               <p class="hero-path__body">Part-time, remote practice on a Hong Kong financial language desk.</p>
-              <a class="btn" href="trainee.html">Language Trainee</a>
+              <a class="btn btn--cream" href="trainee.html">Language Trainee</a>
             </article>
             <article class="hero-path">
               <h2 class="hero-path__title">Lost in the context</h2>
               <p class="hero-path__body">Language Watchdog and The Trade in Words: when a metaphor or a filing parallel is lost.</p>
-              <a class="btn" href="language-watchdog.html">Language Watchdog</a>
+              <a class="btn btn--cream" href="language-watchdog.html">Language Watchdog</a>
             </article>
           </div>
         </div>
