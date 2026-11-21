@@ -1,0 +1,384 @@
+From ba0db86acff445ac5f5101c5bad4dcb92ff2e811 Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 15:52:40 +0000
+Subject: [PATCH 1/6] Keep one yellow action in the homepage hero
+
+---
+ index.html | 45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
+
+diff --git a/index.html b/index.html
+index b367a6e..ebd2026 100644
+--- a/index.html
++++ b/index.html
+@@ -591,13 +591,6 @@
+       gap: 12px;
+     }
+ 
+-    .hero__cta-tools {
+-      display: flex;
+-      flex-wrap: wrap;
+-      justify-content: center;
+-      gap: 12px;
+-    }
+-
+     @media (min-width: 768px) {
+       .hero__cta { margin-top: 32px; }
+     }
+@@ -698,8 +691,6 @@
+         margin-top: 24px;
+       }
+ 
+-      .hero__cta-tools { justify-content: flex-start; }
+-
+       .hero__paths {
+         grid-template-columns: 1fr;
+         gap: 16px;
+@@ -771,6 +762,27 @@
+ 
+ 
+ 
++    /* One yellow action in the hero; desk tools as quiet links */
++    .hero__links {
++      display: flex;
++      flex-wrap: wrap;
++      justify-content: center;
++      gap: 8px 24px;
++      font-size: 14px;
++      font-weight: 700;
++      line-height: 20px;
++    }
++    .hero__links a {
++      color: var(--ink);
++      text-decoration: underline;
++      text-decoration-thickness: 2px;
++      text-underline-offset: 4px;
++    }
++    .hero__links a:hover { background: var(--yellow); }
++    @media (min-width: 900px) {
++      .hero__links { justify-content: flex-start; }
++    }
++
+     /* —— Hero visual panel (audit item 7) —— */
+     .hero-visual {
+       margin: 32px auto 0;
+@@ -1998,29 +2010,20 @@
+ 
+             <div class="hero__cta">
+               <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+-              <div class="hero__cta-tools">
+-                <a class="btn btn--lg btn--cream" href="figure-checker.html">Try Call the Ledger</a>
+-                <a class="btn btn--lg btn--cream" href="call-the-gaps.html">Try Call the Gaps</a>
+-              </div>
+-              <a class="btn btn--lg btn--cream" href="#language-watchdog">Learn what makes us stand out</a>
++              <p class="hero__links"><a href="figure-checker.html">Try Call the Ledger</a><a href="call-the-gaps.html">Try Call the Gaps</a></p>
+             </div>
+           </div>
+ 
+           <div class="hero__paths" aria-label="Paths">
+-            <article class="hero-path">
+-              <h2 class="hero-path__title">Work with us</h2>
+-              <p class="hero-path__body">Brief the desk for the four lanes.</p>
+-              <a class="btn" href="#engage">Engage the Studio</a>
+-            </article>
+             <article class="hero-path">
+               <h2 class="hero-path__title">Join our journey</h2>
+               <p class="hero-path__body">Part-time, remote practice on a Hong Kong financial language desk.</p>
+-              <a class="btn" href="trainee.html">Language Trainee</a>
++              <a class="btn btn--cream" href="trainee.html">Language Trainee</a>
+             </article>
+             <article class="hero-path">
+               <h2 class="hero-path__title">Lost in the context</h2>
+               <p class="hero-path__body">Language Watchdog and The Trade in Words: when a metaphor or a filing parallel is lost.</p>
+-              <a class="btn" href="language-watchdog.html">Language Watchdog</a>
++              <a class="btn btn--cream" href="language-watchdog.html">Language Watchdog</a>
+             </article>
+           </div>
+         </div>
+-- 
+2.49.0
+
+
+From d84d6a602fd9f1c54edb51ea984b6553295d896c Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 16:02:06 +0000
+Subject: [PATCH 2/6] Restore the PRODUCT.md titles on Home and Trainee and the
+ Short pilot badge
+
+---
+ index.html   | 12 ++++++------
+ trainee.html |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/index.html b/index.html
+index ebd2026..8945ef4 100644
+--- a/index.html
++++ b/index.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Financial storytelling from the desk | LedgerLex Language Studio</title>
++  <title>Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex</title>
+   <meta name="description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/">
+-  <meta property="og:title" content="Financial storytelling from the desk | LedgerLex Language Studio">
++  <meta property="og:title" content="Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex">
+   <meta property="og:description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Financial storytelling from the desk | LedgerLex Language Studio">
++  <meta name="twitter:title" content="Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex">
+   <meta name="twitter:description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -66,8 +66,8 @@
+     },
+     {
+       "@type": "WebPage",
+-      "name": "Financial storytelling from the desk | LedgerLex Language Studio",
+-      "headline": "Financial storytelling from the desk | LedgerLex Language Studio",
++      "name": "Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex",
++      "headline": "Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex",
+       "url": "https://ledgerlexlanguagestudio.net/",
+       "description": "Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.",
+       "isPartOf": {
+@@ -2032,7 +2032,7 @@
+           <div class="proof-strip" role="list" aria-label="Desk proof points">
+             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>10 years on the desk</span>
+             <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Priced before you commit</span>
+-            <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Pilot slice, no fee</span>
++            <span class="proof-chip" role="listitem"><span class="dot dot--sm" aria-hidden="true"></span>Short pilot, no fee</span>
+           </div>
+           <div class="hero-visual">
+             <div class="hero-visual__frame">
+diff --git a/trainee.html b/trainee.html
+index 1f26a8c..ebfd8bf 100644
+--- a/trainee.html
++++ b/trainee.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Language Trainee | Hong Kong Desk — LedgerLex</title>
++  <title>Financial Language Trainee | Hong Kong Desk — LedgerLex</title>
+   <meta name="description" content="LedgerLex Language Studio runs a Language Trainee programme. Part-time, remote practice on a Hong Kong financial language desk.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/trainee.html">
+-  <meta property="og:title" content="Language Trainee | Hong Kong Desk — LedgerLex">
++  <meta property="og:title" content="Financial Language Trainee | Hong Kong Desk — LedgerLex">
+   <meta property="og:description" content="LedgerLex Language Studio runs a Language Trainee programme. Part-time, remote practice on a Hong Kong financial language desk.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/trainee.html">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Language Trainee | Hong Kong Desk — LedgerLex">
++  <meta name="twitter:title" content="Financial Language Trainee | Hong Kong Desk — LedgerLex">
+   <meta name="twitter:description" content="LedgerLex Language Studio runs a Language Trainee programme. Part-time, remote practice on a Hong Kong financial language desk.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+-- 
+2.49.0
+
+
+From 19c37a30437512ff8d134328e2c23ca66efa9d3e Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 16:07:50 +0000
+Subject: [PATCH 3/6] Give the Finance page its own title
+
+---
+ financial-translation.html | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/financial-translation.html b/financial-translation.html
+index 0565093..033c96c 100644
+--- a/financial-translation.html
++++ b/financial-translation.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Hong Kong Financial Translation — Funds, IPO, and IR | LedgerLex</title>
++  <title>Hong Kong Finance Translation Services | LedgerLex</title>
+   <meta name="description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/financial-translation.html">
+-  <meta property="og:title" content="Hong Kong Financial Translation — Funds, IPO, and IR | LedgerLex">
++  <meta property="og:title" content="Hong Kong Finance Translation Services | LedgerLex">
+   <meta property="og:description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/financial-translation.html">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Hong Kong Financial Translation — Funds, IPO, and IR | LedgerLex">
++  <meta name="twitter:title" content="Hong Kong Finance Translation Services | LedgerLex">
+   <meta name="twitter:description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -62,7 +62,7 @@
+     },
+     {
+       "@type": "WebPage",
+-      "name": "Hong Kong Financial Translation — Funds, IPO, and IR | LedgerLex",
++      "name": "Hong Kong Finance Translation Services | LedgerLex",
+       "url": "https://ledgerlexlanguagestudio.net/financial-translation.html",
+       "isPartOf": {
+         "@type": "WebSite",
+-- 
+2.49.0
+
+
+From 145e856766ab53f8d8c51205c1825b1734e2339a Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 16:09:18 +0000
+Subject: [PATCH 4/6] Use short pilot in the Home and Finance FAQ and closing
+ line
+
+---
+ financial-translation.html |  8 ++++----
+ index.html                 | 10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/financial-translation.html b/financial-translation.html
+index 033c96c..7a3dbd2 100644
+--- a/financial-translation.html
++++ b/financial-translation.html
+@@ -115,10 +115,10 @@
+         },
+         {
+           "@type": "Question",
+-          "name": "What is the pilot slice?",
++          "name": "What is the short pilot?",
+           "acceptedAnswer": {
+             "@type": "Answer",
+-            "text": "A short pilot on a live job, with no fee for that pilot slice, so you can feel the house voice before a larger engagement."
++            "text": "A short pilot on a live job, with no fee for that pilot, so you can feel the house voice before a larger engagement."
+           }
+         },
+         {
+@@ -1585,8 +1585,8 @@
+               <p class="faq-a">As in the process step: delivery timing depends on volume and complexity and is locked in the quote before work starts.</p>
+             </details>
+             <details class="faq-item">
+-              <summary>What is the pilot slice?</summary>
+-              <p class="faq-a">A short pilot on a live job, with no fee for that pilot slice, so you can feel the house voice before a larger engagement.</p>
++              <summary>What is the short pilot?</summary>
++              <p class="faq-a">A short pilot on a live job, with no fee for that pilot, so you can feel the house voice before a larger engagement.</p>
+             </details>
+             <details class="faq-item">
+               <summary>How is confidentiality handled?</summary>
+diff --git a/index.html b/index.html
+index 8945ef4..f7fad2e 100644
+--- a/index.html
++++ b/index.html
+@@ -105,10 +105,10 @@
+         },
+         {
+           "@type": "Question",
+-          "name": "What is the pilot slice?",
++          "name": "What is the short pilot?",
+           "acceptedAnswer": {
+             "@type": "Answer",
+-            "text": "A short pilot on a live job, with no fee for that pilot slice, so you can feel the house voice before a larger engagement."
++            "text": "A short pilot on a live job, with no fee for that pilot, so you can feel the house voice before a larger engagement."
+           }
+         },
+         {
+@@ -2356,8 +2356,8 @@
+               <p class="faq-a">As in How it works: delivery timing depends on volume and complexity and is locked in the quote before work starts.</p>
+             </details>
+             <details class="faq-item">
+-              <summary>What is the pilot slice?</summary>
+-              <p class="faq-a">A short pilot on a live job, with no fee for that pilot slice, so you can feel the house voice before a larger engagement.</p>
++              <summary>What is the short pilot?</summary>
++              <p class="faq-a">A short pilot on a live job, with no fee for that pilot, so you can feel the house voice before a larger engagement.</p>
+             </details>
+             <details class="faq-item">
+               <summary>How is confidentiality handled?</summary>
+@@ -2380,7 +2380,7 @@
+           <div class="final-cta__actions">
+             <a class="btn btn--lg" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+           </div>
+-          <p class="final-cta__note">No fee for the pilot slice on a live job.</p>
++          <p class="final-cta__note">No fee for the short pilot on a live job.</p>
+         </div>
+       </div>
+     </section>
+-- 
+2.49.0
+
+
+From 7db909bcbefbba594d6a564b61531d6cadf4a3ab Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 16:10:18 +0000
+Subject: [PATCH 5/6] Use short pilot in Terms
+
+---
+ terms.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/terms.html b/terms.html
+index c4361aa..67e46fe 100644
+--- a/terms.html
++++ b/terms.html
+@@ -533,7 +533,7 @@
+           <section class="prose-card" aria-labelledby="fees">
+             <h2 id="fees">Quotes, fees, and payment</h2>
+             <p>A rate card is available on request. Fees for a job are confirmed before we start billable work, unless we agree otherwise in writing.</p>
+-            <p>As stated on the homepage, a pilot slice on a live job may carry no fee, so you can feel the house voice before a larger engagement. That courtesy does not extend to inventing other free services. Payment terms for paid work are set in the quote or invoice.</p>
++            <p>As stated on the homepage, a short pilot on a live job may carry no fee, so you can feel the house voice before a larger engagement. That courtesy does not extend to inventing other free services. Payment terms for paid work are set in the quote or invoice.</p>
+           </section>
+ 
+           <section class="prose-card" aria-labelledby="liability">
+-- 
+2.49.0
+
+
+From 1959406157e2533fe3a0f8a2b834a9dc1858c0a8 Mon Sep 17 00:00:00 2001
+From: draft <draft@local>
+Date: Sat, 21 Nov 2026 16:21:24 +0000
+Subject: [PATCH 6/6] Move the Terms effective date to 22 November 2026
+
+---
+ sitemap.xml | 2 +-
+ terms.html  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sitemap.xml b/sitemap.xml
+index 08025ed..9055475 100644
+--- a/sitemap.xml
++++ b/sitemap.xml
+@@ -104,7 +104,7 @@
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/terms.html</loc>
+-    <lastmod>2026-10-28</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>yearly</changefreq>
+     <priority>0.3</priority>
+   </url>
+diff --git a/terms.html b/terms.html
+index 67e46fe..04e662e 100644
+--- a/terms.html
++++ b/terms.html
+@@ -494,7 +494,7 @@
+         <div class="article-hero__inner">
+           <p class="eyebrow">Legal</p>
+           <h1>Terms of Use</h1>
+-          <p class="article-hero__sub">Effective 10 November 2026. For site visitors and work engaged by email.</p>
++          <p class="article-hero__sub">Effective 22 November 2026. For site visitors and work engaged by email.</p>
+         </div>
+       </div>
+     </header>
+-- 
+2.49.0
+
