@@ -1,0 +1,668 @@
+diff --git a/bilingual-hkex-filings.html b/bilingual-hkex-filings.html
+index b694f0c..f9c39d9 100644
+--- a/bilingual-hkex-filings.html
++++ b/bilingual-hkex-filings.html
+@@ -11,13 +11,13 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Bilingual HKEX filings | LedgerLex Language Studio</title>
+-  <meta name="description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 11 November 2026. Main Board and GEM equity and ETF cache, 11 November 2023 through 11 November 2026.">
++  <title>Bilingual HKEX filings: English and Chinese PDFs | LedgerLex</title>
++  <meta name="description" content="Search a Hong Kong issuer and open its paired English and Traditional Chinese HKEXnews filings together. Beta snapshot: 11 November 2026.">
+   <meta name="robots" content="index, follow">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
+-  <meta property="og:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
+-  <meta property="og:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 11 November 2026. Main Board and GEM equity and ETF cache, 11 November 2023 through 11 November 2026.">
++  <meta property="og:title" content="Bilingual HKEX filings: English and Chinese PDFs | LedgerLex">
++  <meta property="og:description" content="Search a Hong Kong issuer and open its paired English and Traditional Chinese HKEXnews filings together. Beta snapshot: 11 November 2026.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html">
+   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+@@ -25,8 +25,8 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Bilingual HKEX filings | LedgerLex Language Studio">
+-  <meta name="twitter:description" content="Search a Hong Kong issuer, open paired English and Traditional Chinese HKEXnews PDFs together, Beta snapshot: 11 November 2026. Main Board and GEM equity and ETF cache, 11 November 2023 through 11 November 2026.">
++  <meta name="twitter:title" content="Bilingual HKEX filings: English and Chinese PDFs | LedgerLex">
++  <meta name="twitter:description" content="Search a Hong Kong issuer and open its paired English and Traditional Chinese HKEXnews filings together. Beta snapshot: 11 November 2026.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+@@ -887,6 +887,24 @@
+       .btn:hover, .btn:active, .chip:hover { transform: none; }
+     }
+   </style>
++  <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "WebApplication",
++  "name": "Bilingual filings",
++  "url": "https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html",
++  "description": "Search a Hong Kong issuer and open its paired English and Traditional Chinese HKEXnews filings together.",
++  "applicationCategory": "BusinessApplication",
++  "operatingSystem": "Any",
++  "browserRequirements": "Requires a modern web browser",
++  "publisher": {
++    "@type": "Organization",
++    "@id": "https://ledgerlexlanguagestudio.net/#studio",
++    "name": "LedgerLex Language Studio",
++    "url": "https://ledgerlexlanguagestudio.net/"
++  }
++}
++  </script>
+ </head>
+ <body>
+   <a class="skip" href="#main">Skip to content</a>
+diff --git a/board-meeting-heatmap.html b/board-meeting-heatmap.html
+index 92e60b7..47a2dbe 100644
+--- a/board-meeting-heatmap.html
++++ b/board-meeting-heatmap.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Board meeting heat map | LedgerLex Language Studio</title>
++  <title>HKEX board meeting calendar heat map | LedgerLex</title>
+   <meta name="description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html">
+-  <meta property="og:title" content="Board meeting heat map | LedgerLex Language Studio">
++  <meta property="og:title" content="HKEX board meeting calendar heat map | LedgerLex">
+   <meta property="og:description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Board meeting heat map | LedgerLex Language Studio">
++  <meta name="twitter:title" content="HKEX board meeting calendar heat map | LedgerLex">
+   <meta name="twitter:description" content="HKEX board meeting date heat map for financial printers and ops — see upcoming Main and GEM meeting intensity at a glance. Beta desk tool on LedgerLex Language Studio.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -987,6 +987,24 @@
+       }
+     }
+   </style>
++  <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "WebApplication",
++  "name": "Board meeting heat map",
++  "url": "https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html",
++  "description": "Heat map of upcoming HKEX Main Board and GEM board meeting dates, for financial printers and production teams.",
++  "applicationCategory": "BusinessApplication",
++  "operatingSystem": "Any",
++  "browserRequirements": "Requires a modern web browser",
++  "publisher": {
++    "@type": "Organization",
++    "@id": "https://ledgerlexlanguagestudio.net/#studio",
++    "name": "LedgerLex Language Studio",
++    "url": "https://ledgerlexlanguagestudio.net/"
++  }
++}
++  </script>
+ </head>
+ <body>
+   <a class="skip" href="#main">Skip to content</a>
+diff --git a/call-the-gaps.html b/call-the-gaps.html
+index cc0d240..718d53b 100644
+--- a/call-the-gaps.html
++++ b/call-the-gaps.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Call the Gaps | LedgerLex Language Studio</title>
++  <title>Compare two document versions, PDF or Word | Call the Gaps</title>
+   <meta name="description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/call-the-gaps.html">
+-  <meta property="og:title" content="Call the Gaps | LedgerLex Language Studio">
++  <meta property="og:title" content="Compare two document versions, PDF or Word | Call the Gaps">
+   <meta property="og:description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/call-the-gaps.html">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Call the Gaps | LedgerLex Language Studio">
++  <meta name="twitter:title" content="Compare two document versions, PDF or Word | Call the Gaps">
+   <meta name="twitter:description" content="Call text gaps — inserts, deletes, and moves — across a bilingual pack in your browser. PDF or Word on both sides; nothing is uploaded for the check.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -961,6 +961,24 @@
+       }
+     }
+   </style>
++  <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "WebApplication",
++  "name": "Call the Gaps",
++  "url": "https://ledgerlexlanguagestudio.net/call-the-gaps.html",
++  "description": "Finds inserts, deletes, and moves between a precedent and a later file, PDF or Word. Runs in the browser; files are not uploaded.",
++  "applicationCategory": "BusinessApplication",
++  "operatingSystem": "Any",
++  "browserRequirements": "Requires a modern web browser",
++  "publisher": {
++    "@type": "Organization",
++    "@id": "https://ledgerlexlanguagestudio.net/#studio",
++    "name": "LedgerLex Language Studio",
++    "url": "https://ledgerlexlanguagestudio.net/"
++  }
++}
++  </script>
+ </head>
+ <body>
+   <a class="skip" href="#main">Skip to content</a>
+diff --git a/figure-checker.html b/figure-checker.html
+index 1f09767..8b5b216 100644
+--- a/figure-checker.html
++++ b/figure-checker.html
+@@ -11,11 +11,11 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Call the Ledger | LedgerLex Language Studio</title>
++  <title>Bilingual figure checker for PDF and Word | Call the Ledger</title>
+   <meta name="description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/figure-checker.html">
+-  <meta property="og:title" content="Call the Ledger | LedgerLex Language Studio">
++  <meta property="og:title" content="Bilingual figure checker for PDF and Word | Call the Ledger">
+   <meta property="og:description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/figure-checker.html">
+@@ -24,7 +24,7 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Call the Ledger | LedgerLex Language Studio">
++  <meta name="twitter:title" content="Bilingual figure checker for PDF and Word | Call the Ledger">
+   <meta name="twitter:description" content="Call the figures on a source PDF or Word file and its translation in the browser. All data stays on your machine — the files are not uploaded for the check.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+@@ -959,6 +959,24 @@
+       }
+     }
+   </style>
++  <script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "WebApplication",
++  "name": "Call the Ledger",
++  "url": "https://ledgerlexlanguagestudio.net/figure-checker.html",
++  "description": "Checks that the figures in a source PDF or Word file match its translation. Runs in the browser; files are not uploaded.",
++  "applicationCategory": "BusinessApplication",
++  "operatingSystem": "Any",
++  "browserRequirements": "Requires a modern web browser",
++  "publisher": {
++    "@type": "Organization",
++    "@id": "https://ledgerlexlanguagestudio.net/#studio",
++    "name": "LedgerLex Language Studio",
++    "url": "https://ledgerlexlanguagestudio.net/"
++  }
++}
++  </script>
+ </head>
+ <body>
+   <a class="skip" href="#main">Skip to content</a>
+diff --git a/financial-translation.html b/financial-translation.html
+index 6f330a4..6194587 100644
+--- a/financial-translation.html
++++ b/financial-translation.html
+@@ -11,12 +11,12 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Hong Kong Finance Translation Services | LedgerLex</title>
+-  <meta name="description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <title>Financial Translation Services in Hong Kong | LedgerLex</title>
++  <meta name="description" content="Financial translation services in Hong Kong for fund factsheets, prospectuses, annual and interim reports, and investor materials. Priced before you commit.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/financial-translation.html">
+-  <meta property="og:title" content="Hong Kong Finance Translation Services | LedgerLex">
+-  <meta property="og:description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <meta property="og:title" content="Financial Translation Services in Hong Kong | LedgerLex">
++  <meta property="og:description" content="Financial translation services in Hong Kong for fund factsheets, prospectuses, annual and interim reports, and investor materials. Priced before you commit.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/financial-translation.html">
+   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+@@ -24,8 +24,8 @@
+   <meta property="og:image:height" content="630">
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+-  <meta name="twitter:title" content="Hong Kong Finance Translation Services | LedgerLex">
+-  <meta name="twitter:description" content="Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <meta name="twitter:title" content="Financial Translation Services in Hong Kong | LedgerLex">
++  <meta name="twitter:description" content="Financial translation services in Hong Kong for fund factsheets, prospectuses, annual and interim reports, and investor materials. Priced before you commit.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+@@ -39,30 +39,25 @@
+   "@context": "https://schema.org",
+   "@graph": [
+     {
+-      "@type": "ProfessionalService",
+-      "name": "LedgerLex Language Studio",
++      "@type": "Service",
++      "name": "Financial translation services",
++      "serviceType": "Financial translation",
+       "url": "https://ledgerlexlanguagestudio.net/financial-translation.html",
+-      "email": "elite@ledgerlexlanguagestudio.com",
+-      "logo": "https://ledgerlexlanguagestudio.net/brand/logo-nav.png",
+-      "image": "https://ledgerlexlanguagestudio.net/og-share.png",
+-      "description": "Hong Kong financial translation for funds, IPO, and IR. Share the language pair in your brief and we confirm coverage with the quote.",
++      "description": "Financial translation in Hong Kong for fund documents, IPO prospectuses, annual and interim reports, and investor relations materials.",
+       "areaServed": {
+         "@type": "Place",
+         "name": "Hong Kong"
+       },
+-      "address": {
+-        "@type": "PostalAddress",
+-        "addressLocality": "Hong Kong",
+-        "addressCountry": "HK"
+-      },
+-      "serviceType": "Financial translation",
+-      "sameAs": [
+-        "https://www.linkedin.com/company/ledgerlex-language-studio/"
+-      ]
++      "provider": {
++        "@type": "ProfessionalService",
++        "@id": "https://ledgerlexlanguagestudio.net/#studio",
++        "name": "LedgerLex Language Studio",
++        "url": "https://ledgerlexlanguagestudio.net/"
++      }
+     },
+     {
+       "@type": "WebPage",
+-      "name": "Hong Kong Finance Translation Services | LedgerLex",
++      "name": "Financial Translation Services in Hong Kong | LedgerLex",
+       "url": "https://ledgerlexlanguagestudio.net/financial-translation.html",
+       "isPartOf": {
+         "@type": "WebSite",
+@@ -776,6 +771,7 @@
+     }
+ 
+     .cov-card__title {
++      margin-top: 0;
+       font-size: 16px;
+       font-weight: 800;
+       line-height: 24px;
+@@ -1470,20 +1466,20 @@
+           <p class="section-lede" style="color:var(--ink);">Four areas, one set of voice standards.</p>
+           <div class="cov-grid">
+             <div class="cov-card">
+-              <p class="cov-card__title">Funds</p>
++              <h3 class="cov-card__title">Fund factsheets and reports</h3>
+               <p class="cov-card__body">Factsheets, product key facts, marketing packs, and periodic reports that keep product voice intact across the languages in the brief.</p>
+             </div>
+             <div class="cov-card">
+-              <p class="cov-card__title">IPO</p>
++              <h3 class="cov-card__title">IPO prospectuses</h3>
+               <p class="cov-card__body">Offering narrative, roadshow language, and prospectus copy under tight timelines and tight review chains.</p>
+             </div>
+             <div class="cov-card">
+-              <p class="cov-card__title">IR</p>
++              <h3 class="cov-card__title">Investor relations materials</h3>
+               <p class="cov-card__body">Investor decks, press releases, and ongoing IR communications that stay on brand across markets and cycles.</p>
+             </div>
+             <div class="cov-card">
+-              <p class="cov-card__title">Listed reporting</p>
+-              <p class="cov-card__body">Results narratives and board-facing copy where numbers and language have to track together.</p>
++              <h3 class="cov-card__title">Annual and interim reports</h3>
++              <p class="cov-card__body">Annual and interim narratives, results announcements, and board-facing copy where numbers and language have to track together.</p>
+             </div>
+           </div>
+         </div>
+@@ -1549,7 +1545,7 @@
+           <article class="case-card">
+             <p class="eyebrow">From the Desk</p>
+             <h2 class="case-card__title" id="case-study-title">The Trade in Words</h2>
+-            <p class="case-card__lede">A case study on how a literal market metaphor can look tidy and still misprice the meaning.</p>
++            <p class="case-card__lede">A case study on how a literal market metaphor can look tidy and still misprice the meaning. More worked examples from real filings are in the <a href="language-watchdog.html">Language Watchdog</a>.</p>
+             <p class="case-card__hook">The mistake looks small: one word, “put.” The damage is larger. Once that point is missed, the translation can look technically tidy and still lose the trade.</p>
+             <a class="btn btn--lg" href="trade-in-words.html">Read the case study</a>
+           </article>
+diff --git a/index.html b/index.html
+index 0e1d275..55e7993 100644
+--- a/index.html
++++ b/index.html
+@@ -12,11 +12,11 @@
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+   <title>Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex</title>
+-  <meta name="description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <meta name="description" content="LedgerLex is a Hong Kong financial language studio: translation for funds, IPO, and IR, browser tools for bilingual packs, and the Language Watchdog journal.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/">
+   <meta property="og:title" content="Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex">
+-  <meta property="og:description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <meta property="og:description" content="LedgerLex is a Hong Kong financial language studio: translation for funds, IPO, and IR, browser tools for bilingual packs, and the Language Watchdog journal.">
+   <meta property="og:type" content="website">
+   <meta property="og:url" content="https://ledgerlexlanguagestudio.net/">
+   <meta property="og:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+@@ -25,7 +25,7 @@
+   <meta property="og:image:alt" content="LedgerLex — Financial storytelling from the desk that never drops a language">
+   <meta name="twitter:card" content="summary_large_image">
+   <meta name="twitter:title" content="Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex">
+-  <meta name="twitter:description" content="Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.">
++  <meta name="twitter:description" content="LedgerLex is a Hong Kong financial language studio: translation for funds, IPO, and IR, browser tools for bilingual packs, and the Language Watchdog journal.">
+   <meta name="twitter:image" content="https://ledgerlexlanguagestudio.net/og-share.png">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+@@ -40,6 +40,7 @@
+   "@graph": [
+     {
+       "@type": "ProfessionalService",
++      "@id": "https://ledgerlexlanguagestudio.net/#studio",
+       "name": "LedgerLex Language Studio",
+       "url": "https://ledgerlexlanguagestudio.net/",
+       "email": "elite@ledgerlexlanguagestudio.com",
+@@ -69,7 +70,7 @@
+       "name": "Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex",
+       "headline": "Hong Kong Financial Translation — Funds, IPO, IR | LedgerLex",
+       "url": "https://ledgerlexlanguagestudio.net/",
+-      "description": "Hong Kong financial translation desk for funds, listed reporting, IPO, and IR. Share the language pair in your brief. We confirm coverage with the quote. Priced before you commit.",
++      "description": "LedgerLex is a Hong Kong financial language studio: translation for funds, IPO, and IR, browser tools for bilingual packs, and the Language Watchdog journal.",
+       "isPartOf": {
+         "@type": "WebSite",
+         "name": "LedgerLex Language Studio",
+diff --git a/language-watchdog-byd-electronic-00285.html b/language-watchdog-byd-electronic-00285.html
+index 321a4bb..b660045 100644
+--- a/language-watchdog-byd-electronic-00285.html
++++ b/language-watchdog-byd-electronic-00285.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>BYD Electronic (00285): six translation pitfalls in the 2024 interim results | Language Watchdog</title>
++  <title>BYD Electronic (00285): six translation pitfalls | LedgerLex</title>
+   <meta name="description" content="BYD Electronic (00285) 2024 interim results: six C2E pitfalls where the English shifts collocation, ranking, attribution, or scope — “we foresee” for an IDC outlook, and an added “high” on growth potential.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-byd-electronic-00285.html">
+@@ -961,6 +961,18 @@
+ 
+           <p class="disclaimer">This article is for translation discussion and educational purposes only. The suggested translations are the author’s interpretations, not official corrections or statements by BYD Electronic. Nothing in this article constitutes investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-nongfu-spring-09633.html">Nongfu Spring (09633): when fluent English changes the disclosure</a></li>
++              <li><a href="language-watchdog-fibocom-00638.html">Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not</a></li>
++              <li><a href="language-watchdog-schroders-monthly-markets-2026-01.html">Schroders Monthly Markets: when you pay to make unprofessional errors</a></li>
++              <li><a href="language-watchdog-everest-medicines-01952.html">Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧</a></li>
++              <li><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/language-watchdog-cpic-2026-q3.html b/language-watchdog-cpic-2026-q3.html
+index 739a6c8..339f262 100644
+--- a/language-watchdog-cpic-2026-q3.html
++++ b/language-watchdog-cpic-2026-q3.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese | Language Watchdog</title>
++  <title>CPIC 2026 Q3: where the English and Chinese differ | LedgerLex</title>
+   <meta name="description" content="China Pacific Insurance’s 2026 Q3 A+H filing: three spots where the English parts company with the Chinese — including person-times turned into policies.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-cpic-2026-q3.html">
+@@ -857,6 +857,18 @@
+ 
+           <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-byd-electronic-00285.html">BYD Electronic (00285): six translation pitfalls in the 2024 interim results</a></li>
++              <li><a href="language-watchdog-nongfu-spring-09633.html">Nongfu Spring (09633): when fluent English changes the disclosure</a></li>
++              <li><a href="language-watchdog-fibocom-00638.html">Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not</a></li>
++              <li><a href="language-watchdog-schroders-monthly-markets-2026-01.html">Schroders Monthly Markets: when you pay to make unprofessional errors</a></li>
++              <li><a href="language-watchdog-everest-medicines-01952.html">Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/language-watchdog-everest-medicines-01952.html b/language-watchdog-everest-medicines-01952.html
+index 64947f0..ffd932b 100644
+--- a/language-watchdog-everest-medicines-01952.html
++++ b/language-watchdog-everest-medicines-01952.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧 | Language Watchdog</title>
++  <title>Everest Medicines (01952): “intelligence” as 智慧 | LedgerLex</title>
+   <meta name="description" content="Everest Medicines (01952) CCT circular: market “intelligence” rendered as 智慧, and an MAH definition that defines itself. English prevails.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-everest-medicines-01952.html">
+@@ -891,6 +891,18 @@
+ 
+           <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-byd-electronic-00285.html">BYD Electronic (00285): six translation pitfalls in the 2024 interim results</a></li>
++              <li><a href="language-watchdog-nongfu-spring-09633.html">Nongfu Spring (09633): when fluent English changes the disclosure</a></li>
++              <li><a href="language-watchdog-fibocom-00638.html">Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not</a></li>
++              <li><a href="language-watchdog-schroders-monthly-markets-2026-01.html">Schroders Monthly Markets: when you pay to make unprofessional errors</a></li>
++              <li><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/language-watchdog-fibocom-00638.html b/language-watchdog-fibocom-00638.html
+index c90b559..080f95d 100644
+--- a/language-watchdog-fibocom-00638.html
++++ b/language-watchdog-fibocom-00638.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not | Language Watchdog</title>
++  <title>Fibocom (00638) circular: three translation slips | LedgerLex</title>
+   <meta name="description" content="Fibocom (00638) circular: “the Stock Exchange” means HKEX in an A-share plan, a repayment limb becomes a pledge, and Wu Chenggang is spelled two ways. Chinese prevails.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-fibocom-00638.html">
+@@ -919,6 +919,18 @@
+ 
+           <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-byd-electronic-00285.html">BYD Electronic (00285): six translation pitfalls in the 2024 interim results</a></li>
++              <li><a href="language-watchdog-nongfu-spring-09633.html">Nongfu Spring (09633): when fluent English changes the disclosure</a></li>
++              <li><a href="language-watchdog-schroders-monthly-markets-2026-01.html">Schroders Monthly Markets: when you pay to make unprofessional errors</a></li>
++              <li><a href="language-watchdog-everest-medicines-01952.html">Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧</a></li>
++              <li><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/language-watchdog-nongfu-spring-09633.html b/language-watchdog-nongfu-spring-09633.html
+index 4fca8bc..260780a 100644
+--- a/language-watchdog-nongfu-spring-09633.html
++++ b/language-watchdog-nongfu-spring-09633.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Nongfu Spring (09633): when fluent English changes the disclosure | Language Watchdog</title>
++  <title>Nongfu Spring (09633): three translation slips | LedgerLex</title>
+   <meta name="description" content="Nongfu Spring (09633) 2024 annual results: three C2E slips where fluent English changes the event, the roles, or the strength of the claim — prosecution for 處置, participating for 覆蓋, and indistinguishable for 無法完全區分.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-nongfu-spring-09633.html">
+@@ -887,6 +887,18 @@
+ 
+           <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-byd-electronic-00285.html">BYD Electronic (00285): six translation pitfalls in the 2024 interim results</a></li>
++              <li><a href="language-watchdog-fibocom-00638.html">Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not</a></li>
++              <li><a href="language-watchdog-schroders-monthly-markets-2026-01.html">Schroders Monthly Markets: when you pay to make unprofessional errors</a></li>
++              <li><a href="language-watchdog-everest-medicines-01952.html">Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧</a></li>
++              <li><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/language-watchdog-schroders-monthly-markets-2026-01.html b/language-watchdog-schroders-monthly-markets-2026-01.html
+index 2eca795..e9012a7 100644
+--- a/language-watchdog-schroders-monthly-markets-2026-01.html
++++ b/language-watchdog-schroders-monthly-markets-2026-01.html
+@@ -11,7 +11,7 @@
+     gtag('js', new Date());
+     gtag('config', 'G-6YMJ8X3SVM');
+   </script>
+-  <title>Schroders Monthly Markets: when you pay to make unprofessional errors | Language Watchdog</title>
++  <title>Schroders Monthly Markets: two translation slips | LedgerLex</title>
+   <meta name="description" content="Schroders Monthly markets review, January 2026: House-passed rendered as 參議院, and profit-taking rendered as 套利. English prevails.">
+   <meta name="theme-color" content="#FFFFFB">
+   <link rel="canonical" href="https://ledgerlexlanguagestudio.net/language-watchdog-schroders-monthly-markets-2026-01.html">
+@@ -1033,6 +1033,18 @@
+ 
+           <p class="disclaimer">A translation commentary for professional reference only; not investment advice.</p>
+ 
++          <section class="prose-card" aria-labelledby="more-notes">
++            <h2 id="more-notes">More Language Watchdog notes</h2>
++            <ul>
++              <li><a href="language-watchdog-byd-electronic-00285.html">BYD Electronic (00285): six translation pitfalls in the 2024 interim results</a></li>
++              <li><a href="language-watchdog-nongfu-spring-09633.html">Nongfu Spring (09633): when fluent English changes the disclosure</a></li>
++              <li><a href="language-watchdog-fibocom-00638.html">Fibocom (00638): when “the Stock Exchange” quietly means HKEX — and your A-share plan did not</a></li>
++              <li><a href="language-watchdog-everest-medicines-01952.html">Everest Medicines (01952): congratulations, your “intelligence” platform is now full of 智慧</a></li>
++              <li><a href="language-watchdog-cpic-2026-q3.html">Three Places Where the English of CPIC’s 2026 Q3 Report Parts Company with the Chinese</a></li>
++            </ul>
++            <p>Need the same check on your own filing? See <a href="financial-translation.html">financial translation services</a>.</p>
++          </section>
++
+           <div class="article-cta">
+             <a class="btn" href="language-watchdog.html">All Language Watchdog notes</a>
+             <a class="btn btn--cream" href="mailto:elite@ledgerlexlanguagestudio.com?subject=Studio%20enquiry">Engage the Studio</a>
+diff --git a/sitemap.xml b/sitemap.xml
+index 9055475..6d77276 100644
+--- a/sitemap.xml
++++ b/sitemap.xml
+@@ -2,13 +2,13 @@
+ <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/</loc>
+-    <lastmod>2026-11-10</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>weekly</changefreq>
+     <priority>1.0</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/financial-translation.html</loc>
+-    <lastmod>2026-10-28</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>weekly</changefreq>
+     <priority>0.9</priority>
+   </url>
+@@ -26,61 +26,61 @@
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog.html</loc>
+-    <lastmod>2026-11-10</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>weekly</changefreq>
+     <priority>0.8</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-byd-electronic-00285.html</loc>
+-    <lastmod>2026-11-10</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-nongfu-spring-09633.html</loc>
+-    <lastmod>2026-11-07</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-fibocom-00638.html</loc>
+-    <lastmod>2026-11-03</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-schroders-monthly-markets-2026-01.html</loc>
+-    <lastmod>2026-11-02</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-everest-medicines-01952.html</loc>
+-    <lastmod>2026-11-02</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/language-watchdog-cpic-2026-q3.html</loc>
+-    <lastmod>2026-10-28</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.7</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/figure-checker.html</loc>
+-    <lastmod>2026-11-04</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.6</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/call-the-gaps.html</loc>
+-    <lastmod>2026-11-04</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.6</priority>
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/board-meeting-heatmap.html</loc>
+-    <lastmod>2026-11-09</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.6</priority>
+   </url>
+@@ -92,7 +92,7 @@
+   </url>
+   <url>
+     <loc>https://ledgerlexlanguagestudio.net/bilingual-hkex-filings.html</loc>
+-    <lastmod>2026-11-09</lastmod>
++    <lastmod>2026-11-22</lastmod>
+     <changefreq>monthly</changefreq>
+     <priority>0.6</priority>
+   </url>
