@@ -139,6 +139,21 @@ def fail(message: str) -> None:
     raise RefreshError(message)
 
 
+DATE_CELL = re.compile(r"\d{1,2}/\d{1,2}/\d{4}")
+
+
+def cell_text(raw: str) -> str:
+    """Text of one BMN cell.
+
+    The live header leaves a `<font>` unclosed around the next `<td>`, and a
+    wrapped name can contain `<br/>`. Strip tags before the row is read so a
+    line break cannot leak into the company name or the date check.
+    """
+    text = re.sub(r"<\s*br\s*/?\s*>", " ", raw, flags=re.I)
+    text = re.sub(r"<[^>]+>", "", text)
+    return clean_text(text)
+
+
 def clean_text(value: str) -> str:
     text = unescape(value)
     text = (
@@ -258,7 +273,10 @@ def map_period(period_zh: str) -> str:
         text,
     )
     if match:
-        count = parse_cn_count(match.group(2))
+        try:
+            count = parse_cn_count(match.group(2))
+        except ValueError:
+            fail(f"unknown period {period_zh!r}")
         if not 1 <= count <= 24:
             fail(f"unexpected period length in {period_zh!r}")
         day, month, year = (int(part) for part in match.group(1).split("/"))
@@ -306,16 +324,21 @@ def parse_meetings(html: str, board: str) -> list[dict]:
     if not page_ok(html):
         fail(f"{board}: response is not a Board Meeting Notice page")
     meetings = []
+    date_rows = 0
     for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", html, flags=re.I | re.S):
-        cells = re.findall(r"<font\b[^>]*>(.*?)</font>", tr, flags=re.I | re.S)
-        if not cells:
+        raw_cells = re.findall(r"<font\b[^>]*>(.*?)</font>", tr, flags=re.I | re.S)
+        if not raw_cells:
             continue
-        first = clean_text(cells[0])
-        if not re.fullmatch(r"\d{2}/\d{2}/\d{4}", first):
+        cells = [cell_text(cell) for cell in raw_cells]
+        first = cells[0]
+        # One or two digits: a zero-padded-only check dropped 9/11/2026 and the
+        # old marker regex dropped it too, so the row vanished without a failure.
+        if not DATE_CELL.fullmatch(first):
             continue
+        date_rows += 1
         if len(cells) != 6:
             fail(f"{board}: meeting row {first} has {len(cells)} cells, expected 6")
-        date_s, _spacer, name, code, purpose, period = (clean_text(cell) for cell in cells)
+        date_s, _spacer, name, code, purpose, period = cells
         if not name:
             fail(f"{board}: missing company name on {date_s}")
         purpose_en, purpose_bucket = map_purpose(purpose)
@@ -333,14 +356,9 @@ def parse_meetings(html: str, board: str) -> list[dict]:
             }
         )
 
-    markers = re.findall(
-        r"<font\b[^>]*>\s*(\d{2}/\d{2}/\d{4})\s*</font>",
-        html,
-        flags=re.I,
-    )
-    if len(markers) != len(meetings):
+    if date_rows != len(meetings):
         fail(
-            f"{board}: saw {len(markers)} dated cells but parsed {len(meetings)} rows; "
+            f"{board}: saw {date_rows} dated rows but parsed {len(meetings)}; "
             "refusing a partial table"
         )
     return meetings
@@ -685,6 +703,12 @@ def self_test() -> None:
         pass
     else:
         raise AssertionError("unknown period should fail")
+    try:
+        map_period("截至30/09/26止二三個月")
+    except RefreshError:
+        pass
+    else:
+        raise AssertionError("unparsed Chinese count should fail closed")
 
     expected = {
         "股息": ("Dividend", "Dividend"),
@@ -727,6 +751,37 @@ def self_test() -> None:
     assert meetings[1]["name"] == "ＴＣＬ電子"
     assert meetings[1]["period"] == "9 months ended 30/09/26"
     assert meetings[1]["purposeEn"] == "Quarterly results"
+
+    unpadded = parse_meetings(
+        _sample_page("06/11/2026", [("9/11/2026", "俄鋁", "0486", "股息", "")]),
+        "Main",
+    )
+    assert unpadded[0]["date"] == "2026-11-09"
+    assert unpadded[0]["dateDisplay"] == "09/11/2026"
+    assert unpadded[0]["code"] == "486"
+
+    wrapped = _sample_page("06/11/2026", [("09/11/2026", "俄鋁", "0486", "股息", "")])
+    wrapped = wrapped.replace(">俄鋁<", ">俄<br/>鋁<")
+    assert parse_meetings(wrapped, "Main")[0]["name"] == "俄 鋁"
+
+    # Live HKEX header leaves <font> open across the code cell. That must not
+    # swallow the data row, and an unpadded date plus a <br/> must still parse.
+    broken_header = (
+        "<html><body><span>董事會會議通知</span>"
+        "<font>日期 : 6/11/2026<br/>會議日期 column</font>"
+        "<table><tr><td><font>會議日期</font></td><td><font></font></td>"
+        "<td><font>證券簡稱<td><font>&nbsp;代號</font></td>"
+        "<td><font>目的</font></td><td><font>期間</font></td></font></td></tr>"
+        "<tr><td><font>9/11/2026</font></td><td><font></font></td>"
+        "<td><font>俄<br/>鋁</font></td><td><font>&nbsp;&nbsp;0486</font></td>"
+        "<td><font>股息</font></td><td><font></font></td></tr></table></html>"
+    )
+    broken_rows = parse_meetings(broken_header, "Main")
+    assert len(broken_rows) == 1
+    assert broken_rows[0]["name"] == "俄 鋁"
+    assert broken_rows[0]["code"] == "486"
+    assert broken_rows[0]["date"] == "2026-11-09"
+    assert parse_list_date(broken_header, "Main") == "2026-11-06"
 
     heatmap_meetings = []
     for row in meetings:
