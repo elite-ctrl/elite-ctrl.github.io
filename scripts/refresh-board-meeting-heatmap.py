@@ -117,6 +117,25 @@ CN_DIGITS = {
     "九": 9,
 }
 
+# Compact year + quarter on HKEX BMN pages: 2026年第三季 / 2026年第三季度 / 2026年首季.
+# The English BMN page prints "THIRD QUARTER 2026"; the heat map uses sentence case.
+QUARTER_ORDINALS = {
+    "一": 1,
+    "二": 2,
+    "三": 3,
+    "四": 4,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+}
+QUARTER_EN = {
+    1: "First quarter",
+    2: "Second quarter",
+    3: "Third quarter",
+    4: "Fourth quarter",
+}
+
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -282,6 +301,15 @@ def map_period(period_zh: str) -> str:
     if match:
         shown = match.group(1) or match.group(2)
         return f"Year ended {shown}"
+
+    match = re.fullmatch(r"(\d{4})年(?:第([一二三四1-4])|首)季度?", text)
+    if match:
+        year = int(match.group(1))
+        if not 1990 <= year <= 2099:
+            fail(f"unexpected period year in {period_zh!r}")
+        token = match.group(2)
+        quarter = 1 if token is None else QUARTER_ORDINALS[token]
+        return f"{QUARTER_EN[quarter]} {year}"
 
     fail(f"unknown period {period_zh!r}")
 
@@ -679,12 +707,26 @@ def self_test() -> None:
     assert map_period("截至31/12/25止十二個月") == "12 months ended 31/12/25"
     assert map_period("截至31/03/26止1個月") == "1 month ended 31/03/26"
     assert map_period("截至３０／０９／２６止９個月") == "9 months ended 30/09/26"
+    assert map_period("2026年第三季") == "Third quarter 2026"
+    assert map_period("2026年第三季度") == "Third quarter 2026"
+    assert map_period("2026年第一季") == "First quarter 2026"
+    assert map_period("2026年第二季") == "Second quarter 2026"
+    assert map_period("2026年第四季") == "Fourth quarter 2026"
+    assert map_period("2026年首季") == "First quarter 2026"
+    assert map_period("2026年第3季") == "Third quarter 2026"
+    assert map_period("２０２６年第三季") == "Third quarter 2026"
     try:
         map_period("不適用")
     except RefreshError:
         pass
     else:
         raise AssertionError("unknown period should fail")
+    try:
+        map_period("2026年第五季")
+    except RefreshError:
+        pass
+    else:
+        raise AssertionError("out-of-range Chinese quarter should fail")
 
     expected = {
         "股息": ("Dividend", "Dividend"),
@@ -728,6 +770,13 @@ def self_test() -> None:
     assert meetings[1]["period"] == "9 months ended 30/09/26"
     assert meetings[1]["purposeEn"] == "Quarterly results"
 
+    quarter_rows = parse_meetings(
+        _sample_page("06/11/2026", [("27/11/2026", "美團－Ｗ", "3690", "業績", "2026年第三季")]),
+        "Main",
+    )
+    assert quarter_rows[0]["period"] == "Third quarter 2026"
+    assert quarter_rows[0]["purposeEn"] == "Results"
+
     heatmap_meetings = []
     for row in meetings:
         copied = dict(row)
@@ -758,7 +807,11 @@ def self_test() -> None:
         main_path.write_text(
             _sample_page(
                 "11/11/2026",
-                base_rows + [("12/11/2026", "新公司", "1", "末期業績/股息", "年度30/06/26")],
+                base_rows
+                + [
+                    ("12/11/2026", "新公司", "1", "末期業績/股息", "年度30/06/26"),
+                    ("27/11/2026", "美團－Ｗ", "3690", "業績", "2026年第三季"),
+                ],
             ),
             encoding="utf-8",
         )
@@ -778,10 +831,11 @@ def self_test() -> None:
         assert "Stock code watchlist" in updated
         assert "新公司" in updated
         assert "Year ended 30/06/26" in updated
+        assert "Third quarter 2026" in updated
         assert "const BUCKETS = " in updated
         payload = data_span(updated)[2]
         assert payload["sourceDate"] == "2026-11-11"
-        assert len(payload["meetings"]) == 4
+        assert len(payload["meetings"]) == 5
 
         # Empty and challenge pages must fail without a further write.
         sealed = html_path.read_text(encoding="utf-8")
